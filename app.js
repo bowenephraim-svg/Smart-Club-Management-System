@@ -6,8 +6,10 @@ const db = require('./config/db');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+app.set('trust proxy', 1);
+
+const PORT = process.env.PORT || 3000;
 // ===============================
 // ROUTE IMPORTS
 // ===============================
@@ -60,12 +62,12 @@ app.use(
 
         saveUninitialized: false,
 
-        cookie: {
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 1000 * 60 * 60 * 24
-        }
+      cookie: {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    maxAge: 1000 * 60 * 60 * 24
+}
     })
 );
 
