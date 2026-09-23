@@ -1,5 +1,5 @@
 // controllers/galleryController.js
-const Gallery = require('../models/Gallery');
+const Gallery = require('../models/gallery');
 const Club = require('../models/Club');
 const Student = require('../models/Student');
 const fs = require('fs');
