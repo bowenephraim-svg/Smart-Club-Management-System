@@ -4,3 +4,4 @@ node_modules/
 !.env.example
 uploads/
 cookies.txt
+victory_school_membership_system.sql

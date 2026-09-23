@@ -493,14 +493,13 @@ app.use((err, req, res, next) => {
 // ===============================
 // START SERVER
 // ===============================
-app.listen(PORT, () => {
 
+
+app.listen(PORT, '0.0.0.0', () => {
     console.log('====================================');
-
     console.log(
-        `🚀 Victory School Smart Club System running on http://localhost:${PORT}`
+        `🚀 Victory School Smart Club System running on port ${PORT}`
     );
-
     console.log('====================================');
-
 });
+
