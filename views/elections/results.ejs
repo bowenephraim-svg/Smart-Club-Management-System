@@ -1,0 +1,221 @@
+<% if (typeof isAdminView !== 'undefined' && isAdminView) { %>
+    <%- include('../partials/header') %>
+    <div class="app-layout-container">
+        <%- include('../partials/sidebar') %>
+        <div class="main-content-window">
+            <%- include('../partials/navbar') %>
+            <main class="workspace-viewport">
+<% } else { %>
+    <%- include('../partials/student-header') %>
+    <div class="student-layout">
+        <%- include('../partials/student-sidebar') %>
+        <main class="content">
+            <%- include('../partials/student-navbar') %>
+<% } %>
+
+            <div class="back-navigation-row">
+                <a href="<%= typeof isAdminView !== 'undefined' && isAdminView ? '/elections' : '/elections/available' %>" class="back-link"><i class="fas fa-arrow-left"></i> Return to Elections</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Results Header -->
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-trophy"></i> Election Results</h2>
+                    <p><%= election.title %> — <%= election.club_name %></p>
+                </div>
+                <div class="activity-action-group">
+                    <a href="/elections/<%= election.election_id %>" class="btn btn-muted"><i class="fas fa-eye"></i> View Details</a>
+                    <% if (typeof isAdminView !== 'undefined' && isAdminView && election.status === 'Open') { %>
+                        <form method="POST" action="/elections/<%= election.election_id %>/close" onsubmit="return confirm('Close this election? Voting will no longer be available.');" style="display:inline;">
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-stop"></i> Close & Finalize</button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Results Summary -->
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Election</span>
+                            <h2 style="font-size:20px;"><%= election.title %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-alt"></i> <%= election.election_date %></small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-vote-yea"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Status</span>
+                            <h2 style="font-size:20px;"><span class="election-status-pill <%= (election.status || '').toLowerCase() %>"><%= election.status %></span></h2>
+                            <small class="stat-change"><i class="fas fa-info-circle"></i> Current state</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-info-circle"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Votes</span>
+                            <h2 style="font-size:20px;"><%= results.totalVotes || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-check-circle"></i> Ballots cast</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Participation</span>
+                            <h2 style="font-size:20px;"><%= turnout.turnoutPercentage || 0 %>%</h2>
+                            <small class="stat-change"><i class="fas fa-users"></i> <%= turnout.votedCount || 0 %> of <%= turnout.eligibleCount || 0 %> eligible</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-users"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results by Position -->
+            <% if (results.byPosition && results.byPosition.length > 0) { %>
+                <% results.byPosition.forEach(group => { %>
+                    <div class="data-table-card" style="margin-bottom: 24px;">
+                        <div class="table-search-header">
+                            <h3 class="table-card-title">
+                                <i class="fas fa-user-tie"></i> <%= group.position %>
+                            </h3>
+                            <% if (group.winner) { %>
+                                <span class="badge badge-success" style="font-size:13px;">
+                                    <i class="fas fa-crown"></i> Winner: <%= group.winner.candidate_name %>
+                                </span>
+                            <% } else { %>
+                                <span class="coming-soon-badge"><i class="fas fa-hourglass-half"></i> No votes recorded</span>
+                            <% } %>
+                        </div>
+
+                        <div class="responsive-table-wrapper">
+                            <table class="system-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Candidate</th>
+                                        <th>Admission No</th>
+                                        <th>Class</th>
+                                        <th>Votes</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% group.candidates.forEach(candidate => { %>
+                                        <tr class="<%= group.winner && group.winner.candidate_id === candidate.candidate_id ? 'result-winner-row' : '' %>">
+                                            <td>
+                                                <div class="activity-name-block">
+                                                    <strong>
+                                                        <%= candidate.candidate_name %>
+                                                        <% if (group.winner && group.winner.candidate_id === candidate.candidate_id) { %>
+                                                            <i class="fas fa-crown" style="color:var(--warning); margin-left:6px;" title="Winner"></i>
+                                                        <% } %>
+                                                    </strong>
+                                                </div>
+                                            </td>
+                                            <td><span class="badge badge-primary"><%= candidate.admission_no %></span></td>
+                                            <td><%= candidate.class || '—' %></td>
+                                            <td><span class="badge badge-purple"><%= candidate.vote_count || 0 %></span></td>
+                                            <td>
+                                                <div class="result-percentage-cell">
+                                                    <div class="result-percentage-bar">
+                                                        <div class="result-percentage-fill <%= group.winner && group.winner.candidate_id === candidate.candidate_id ? 'winner' : '' %>"
+                                                             style="width: <%= candidate.percentage || 0 %>%"></div>
+                                                    </div>
+                                                    <span class="result-percentage-value"><%= candidate.percentage || 0 %>%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="empty-state-container">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h2>No Results Available</h2>
+                    <p>There are no candidates registered for this election, so results cannot be generated.</p>
+                    <a href="/elections/<%= election.election_id %>" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Election</a>
+                </div>
+            <% } %>
+
+            <!-- Votes Chart -->
+            <% if (results.byPosition && results.byPosition.length > 0) { %>
+                <div class="dashboard-charts-layout">
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <h4><i class="fas fa-chart-bar" style="color: var(--primary-color); margin-right: 8px;"></i> Votes by Candidate</h4>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="electionResultsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <h4><i class="fas fa-pie-chart" style="color: var(--secondary-color); margin-right: 8px;"></i> Vote Share by Position</h4>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="positionShareChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <h4><i class="fas fa-users" style="color: var(--success); margin-right: 8px;"></i> Voter Turnout</h4>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="turnoutChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            </main>
+        </div>
+    </div>
+<% if (typeof isAdminView !== 'undefined' && isAdminView) { %>
+    <%- include('../partials/footer') %>
+<% } else { %>
+    <%- include('../partials/student-footer') %>
+<% } %>
+
+<!-- Chart data serialized for the elections.js renderer -->
+<script type="application/json" id="electionResultsData">
+{
+  "candidates": [
+    <% (results.byPosition || []).forEach((group, gi) => { %>
+      <% group.candidates.forEach((candidate, ci) => { %>
+        <%= (gi > 0 || ci > 0) ? ',' : '' %> { "name": "<%= String(candidate.candidate_name || '').replace(/"/g, '\\"') %>", "votes": <%= candidate.vote_count || 0 %> }
+      <% }); %>
+    <% }); %>
+  ],
+  "positions": [
+    <% (results.byPosition || []).forEach((group, index) => { %>
+      <%= index > 0 ? ',' : '' %> { "position": "<%= String(group.position || '').replace(/"/g, '\\"') %>", "votes": <%= group.totalVotes || 0 %> }
+    <% }); %>
+  ],
+  "turnout": {
+    "voted": <%= turnout.votedCount || 0 %>,
+    "eligible": <%= turnout.eligibleCount || 0 %>,
+    "percentage": <%= turnout.turnoutPercentage || 0 %>
+  }
+}
+</script>
+
+<script src="/js/elections.js"></script>

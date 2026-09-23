@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/events" class="back-link"><i class="fas fa-arrow-left"></i> Return to Events</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3><%= pageTitle || 'Create Event' %></h3>
+                    <p>Capture the event details, club assignment, and venue information with clear validation.</p>
+                </div>
+
+                <form action="<%= action %>" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="club_id">Club <span class="required">*</span></label>
+                            <select id="club_id" name="club_id" required>
+                                <option value="" disabled <%= !formData.club_id ? 'selected' : '' %>>Select a club...</option>
+                                <% if (clubs && clubs.length > 0) { %>
+                                    <% clubs.forEach(club => { %>
+                                        <option value="<%= club.club_id %>" <%= String(formData.club_id) === String(club.club_id) ? 'selected' : '' %>><%= club.club_name %></option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="title">Event Title <span class="required">*</span></label>
+                            <input type="text" id="title" name="title" value="<%= formData.title || '' %>" placeholder="e.g. Annual Hackathon Showcase" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="event_date">Event Date <span class="required">*</span></label>
+                            <input type="date" id="event_date" name="event_date" value="<%= formData.event_date || '' %>" required>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="venue">Venue</label>
+                            <input type="text" id="venue" name="venue" value="<%= formData.venue || '' %>" placeholder="e.g. Science Complex Lab 3B">
+                        </div>
+                    </div>
+
+                    <div class="input-field-wrapper">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Add a short description for the event..."><%= formData.description || '' %></textarea>
+                    </div>
+
+                    <div class="form-action-footer-row">
+                        <a href="/events" class="btn btn-muted">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <%= submitLabel || 'Save Event' %></button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

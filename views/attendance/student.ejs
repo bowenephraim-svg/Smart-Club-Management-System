@@ -1,0 +1,152 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-user-check"></i> My Attendance</h2>
+                    <p>View your attendance history across all club activities.</p>
+                </div>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Stats Cards -->
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Sessions</span>
+                            <h2><%= stats.totalRecords || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-check"></i> Attended</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-check"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Present</span>
+                            <h2><%= stats.presentCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-check-circle"></i> <%= stats.attendanceRate || 0 %>% rate</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Late</span>
+                            <h2><%= stats.lateCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-clock"></i> Arrived late</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-clock"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Absent</span>
+                            <h2><%= stats.absentCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-times-circle"></i> Did not attend</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-times-circle"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Excused</span>
+                            <h2><%= stats.excusedCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-file-alt"></i> Approved absence</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-file-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Filter History</h3>
+                </div>
+                <form method="GET" action="/attendance/student" class="activity-toolbar-form" style="padding:16px 20px;">
+                    <div class="activity-toolbar-group">
+                        <select name="status">
+                            <option value="">All Statuses</option>
+                            <option value="Present" <%= String(filters.status) === 'Present' ? 'selected' : '' %>>Present</option>
+                            <option value="Absent" <%= String(filters.status) === 'Absent' ? 'selected' : '' %>>Absent</option>
+                            <option value="Late" <%= String(filters.status) === 'Late' ? 'selected' : '' %>>Late</option>
+                            <option value="Excused" <%= String(filters.status) === 'Excused' ? 'selected' : '' %>>Excused</option>
+                        </select>
+                        <input type="date" name="date_from" value="<%= filters.date_from || '' %>" placeholder="From">
+                        <input type="date" name="date_to" value="<%= filters.date_to || '' %>" placeholder="To">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                        <a href="/attendance/student" class="btn btn-muted">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- History Table -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Attendance History</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Club</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (records && records.length > 0) { %>
+                                <% records.forEach(record => { %>
+                                    <tr>
+                                        <td><%= record.attendance_date %></td>
+                                        <td><%= record.activity_name %></td>
+                                        <td><span class="badge badge-info"><%= record.club_name %></span></td>
+                                        <td>
+                                            <% if (record.status === 'Present') { %>
+                                                <span class="badge badge-success"><%= record.status %></span>
+                                            <% } else if (record.status === 'Absent') { %>
+                                                <span class="badge badge-danger"><%= record.status %></span>
+                                            <% } else if (record.status === 'Late') { %>
+                                                <span class="badge badge-warning"><%= record.status %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-muted"><%= record.status %></span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= record.notes || '—' %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="table-empty-state">
+                                        <i class="fas fa-clipboard-check"></i>
+                                        <p>No attendance records found.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

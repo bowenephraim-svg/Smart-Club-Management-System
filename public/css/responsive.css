@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Victory School Smart Club Membership System V2 - Mobile Responsiveness
+   ========================================================================== */
+
+/* --- 1. MEDIA BREAKPOINT: LAPTOPS & DESKTOPS (1024px and below) --- */
+@media screen and (max-width: 1024px) {
+    .analytics-section {
+        grid-template-columns: 1fr; /* Stack the main charts vertically */
+    }
+
+    .form-card {
+        max-width: 100%;
+        padding: 1.5rem;
+    }
+}
+
+/* --- 2. MEDIA BREAKPOINT: TABLETS & PHABLETS (768px and below) --- */
+@media screen and (max-width: 768px) {
+    :root {
+        --sidebar-width: 0px; /* Collapse the fixed space for the sidebar */
+    }
+
+    /* Collapse out-of-view sidebar offcanvas style */
+    .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+    }
+
+    /* Active state to reveal drawer sidebar via JS class injection */
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+
+    .navbar {
+        padding: 0 1rem;
+    }
+
+    .content-body {
+        padding: 1.25rem;
+    }
+
+    /* Stack splitting analytical sections vertically */
+    .split-dashboard-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* Switch input layouts to a single column */
+    }
+
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+
+    /* Adjust navbar controls layout */
+    .user-info {
+        display: none; /* Hide profile name text on smaller widths */
+    }
+}
+
+/* --- 3. MEDIA BREAKPOINT: MOBILE SMARTPHONES (480px and below) --- */
+@media screen and (max-width: 480px) {
+    .navbar-page-title {
+        font-size: 1rem;
+    }
+
+    .table-controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box-wrapper {
+        max-width: 100%;
+    }
+
+    .filter-actions-group {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* Stack metric indicators sequentially */
+    }
+
+    .form-actions-bar {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .form-actions-bar .btn {
+        width: 100%;
+    }
+}

@@ -1,0 +1,152 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>School Expenses</h2>
+                    <p>Manage all school expenses and expenditures.</p>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <a href="/finance/expenses/add" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Expense
+                    </a>
+                    <a href="/finance/summary" class="btn btn-success">
+                        <i class="fas fa-chart-bar"></i> View Summary
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="table-card" style="margin-top:24px; margin-bottom:24px;">
+                <div class="table-header">
+                    <h3>Filter Expenses</h3>
+                </div>
+                <form method="GET" action="/finance/expenses" class="activity-toolbar-form" style="padding:16px 20px;">
+                    <div class="activity-toolbar-group">
+                        <select name="club_id">
+                            <option value="">All Clubs</option>
+                            <% clubs.forEach(club => { %>
+                                <option value="<%= club.club_id %>" <%= String(filters.club_id) === String(club.club_id) ? 'selected' : '' %>><%= club.club_name %></option>
+                            <% }); %>
+                        </select>
+                        <select name="category">
+                            <option value="">All Categories</option>
+                            <option value="Equipment" <%= String(filters.category) === 'Equipment' ? 'selected' : '' %>>Equipment</option>
+                            <option value="Events" <%= String(filters.category) === 'Events' ? 'selected' : '' %>>Events</option>
+                            <option value="Transport" <%= String(filters.category) === 'Transport' ? 'selected' : '' %>>Transport</option>
+                            <option value="Refreshments" <%= String(filters.category) === 'Refreshments' ? 'selected' : '' %>>Refreshments</option>
+                            <option value="Stationery" <%= String(filters.category) === 'Stationery' ? 'selected' : '' %>>Stationery</option>
+                            <option value="Maintenance" <%= String(filters.category) === 'Maintenance' ? 'selected' : '' %>>Maintenance</option>
+                            <option value="Other Expenses" <%= String(filters.category) === 'Other Expenses' ? 'selected' : '' %>>Other Expenses</option>
+                        </select>
+                        <input type="date" name="date_from" value="<%= filters.date_from || '' %>" placeholder="From">
+                        <input type="date" name="date_to" value="<%= filters.date_to || '' %>" placeholder="To">
+                        <input type="text" name="search" value="<%= filters.search || '' %>" placeholder="Search expense...">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                        <a href="/finance/expenses" class="btn btn-muted">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="dashboard-stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger);">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="stat-data-block">
+                        <h3>KES <%= Number(totals?.total_expenses || 0).toLocaleString() %></h3>
+                        <p>Total Expenses</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper" style="background-color: rgba(245, 158, 11, 0.1); color: var(--warning);">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-data-block">
+                        <h3>KES <%= Number(totals?.month_expenses || 0).toLocaleString() %></h3>
+                        <p>This Month</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success);">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="stat-data-block">
+                        <h3><%= totals?.transactions || 0 %></h3>
+                        <p>Transactions</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper" style="background-color: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <div class="stat-data-block">
+                        <h3><%= expenses.length %></h3>
+                        <p>Expense Records</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="table-card" style="margin-top:24px;">
+
+                <div class="table-header">
+                    <h3>Expense Records</h3>
+                </div>
+
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Category</th>
+                                <th>Club</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        <% expenses.forEach(expense=>{ %>
+
+                            <tr>
+
+                                <td><%= expense.expense_name %></td>
+                                <td><%= expense.category || '—' %></td>
+                                <td><%= expense.club_name || '-' %></td>
+                                <td>KES <%= Number(expense.amount).toLocaleString() %></td>
+                                <td><%= expense.expense_date %></td>
+                                <td class="text-center">
+                                    <a href="/finance/expenses/edit/<%= expense.expense_id %>" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="/finance/expenses/delete/<%= expense.expense_id %>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this expense?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

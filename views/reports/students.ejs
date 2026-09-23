@@ -1,0 +1,105 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+    
+    <div class="page-header-actions">
+
+    <div class="header-text-block">
+        <h2>Student Report</h2>
+        <p>Registered students in the club management system.</p>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+
+    <a href="/reports" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to Reports
+    </a>
+
+    <button onclick="window.print()" class="btn btn-primary">
+        <i class="fas fa-print"></i>
+        Print
+    </button>
+
+    <a href="/reports/students/pdf" class="btn btn-danger">
+        <i class="fas fa-file-pdf"></i>
+        PDF
+    </a>
+
+    <a href="/reports/students/excel" class="btn btn-success">
+        <i class="fas fa-file-excel"></i>
+        Excel
+    </a>
+
+</div>
+
+</div>
+
+        <div class="table-card">
+
+            <div class="table-header">
+
+                <h3>Total Students: <%= students.length %></h3>
+
+            </div>
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Admission No</th>
+
+                        <th>Name</th>
+
+                        <th>Gender</th>
+
+                        <th>Class</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                <% students.forEach((student,index)=>{ %>
+
+                    <tr>
+
+                        <td><%= index+1 %></td>
+
+                        <td><%= student.admission_no %></td>
+
+                        <td><%= student.first_name %> <%= student.last_name %></td>
+
+                        <td><%= student.gender %></td>
+
+                        <td><%= student.class %></td>
+
+                    </tr>
+
+                <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+    </div>
+
+</div>
+
+<%- include('../partials/footer') %>

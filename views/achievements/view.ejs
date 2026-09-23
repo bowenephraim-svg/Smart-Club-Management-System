@@ -1,0 +1,87 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="page-header-actions" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px;">
+                <div class="header-text-block">
+                    <h2 style="color: #fff; margin: 0; font-size: 1.75rem;"><%= achievement.title %></h2>
+                    <p style="color: #94a3b8; margin: 5px 0 0 0;">Achievement details.</p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <a href="/achievements" class="btn btn-muted">
+                        <i class="fas fa-arrow-left"></i> Back to Achievements
+                    </a>
+                    <% if (user && user.role === 'Admin') { %>
+                        <a href="/achievements/edit/<%= achievement.achievement_id %>" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+
+            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 32px; margin-top: 30px; max-width: 900px;">
+                <% if (achievement.image) { %>
+                    <div style="margin-bottom: 24px;">
+                        <img src="<%= achievement.image %>" alt="<%= achievement.title %>" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 12px;">
+                    </div>
+                <% } %>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+                    <% if (achievement.student_name) { %>
+                        <span style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                            <i class="fas fa-user-graduate"></i> <%= achievement.student_name %>
+                        </span>
+                    <% } %>
+                    <% if (achievement.club_name) { %>
+                        <span style="background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                            <i class="fas fa-users"></i> <%= achievement.club_name %>
+                        </span>
+                    <% } %>
+                    <% if (achievement.category) { %>
+                        <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                            <i class="fas fa-tag"></i> <%= achievement.category %>
+                        </span>
+                    <% } %>
+                    <% if (achievement.achievement_date) { %>
+                        <span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                            <i class="far fa-calendar-alt"></i> <%= new Date(achievement.achievement_date).toISOString().split('T')[0] %>
+                        </span>
+                    <% } %>
+                    <span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                        <i class="fas fa-circle"></i> <%= achievement.status %>
+                    </span>
+                </div>
+
+                <% if (achievement.position || achievement.award) { %>
+                    <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+                        <% if (achievement.position) { %>
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 16px 24px; text-align: center;">
+                                <small style="color: #64748b; display: block;">Position</small>
+                                <strong style="color: #f8fafc; font-size: 1.2rem;"><%= achievement.position %></strong>
+                            </div>
+                        <% } %>
+                        <% if (achievement.award) { %>
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 16px 24px; text-align: center;">
+                                <small style="color: #64748b; display: block;">Award</small>
+                                <strong style="color: #f8fafc; font-size: 1.2rem;"><%= achievement.award %></strong>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <% if (achievement.description) { %>
+                    <div style="border-top: 1px solid #334155; padding-top: 20px;">
+                        <h4 style="color: #f8fafc; margin: 0 0 8px 0;">Description</h4>
+                        <p style="color: #94a3b8; margin: 0; line-height: 1.6;"><%= achievement.description %></p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

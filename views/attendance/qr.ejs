@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Attendance Control Center</h2>
+                    <p>Select an activity from the calendar to open a live roll-call sheet.</p>
+                </div>
+                <a href="/activities" class="btn btn-primary">
+                    <i class="fas fa-calendar-check"></i> Open Activities
+                </a>
+            </div>
+
+            <section class="attendance-hero">
+                <div>
+                    <span class="sync-pill"><i class="fas fa-cloud"></i> Live tracking ready</span>
+                    <h2 style="margin-top: 14px;">Track attendance by event</h2>
+                    <p>Attendance sheets are created from club membership rosters when you open an event tracking page.</p>
+                </div>
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+            </section>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>1. Schedule Activity</h3>
+                    <p>Create an activity and attach it to a club.</p>
+                </div>
+                <div class="settings-card">
+                    <h3>2. Open Roll Call</h3>
+                    <p>Use the Track Attendance button from the activities table.</p>
+                </div>
+                <div class="settings-card">
+                    <h3>3. Sync Status</h3>
+                    <p>Mark students as Present, Absent, or Excused from the live sheet.</p>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

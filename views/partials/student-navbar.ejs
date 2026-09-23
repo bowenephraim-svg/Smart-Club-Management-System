@@ -1,0 +1,100 @@
+<!-- =====================================================
+     STUDENT TOP NAVBAR
+====================================================== -->
+
+<div class="topbar">
+
+    <button class="student-mobile-menu" id="studentMobileMenuBtn" type="button" aria-label="Open navigation" title="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Page Information -->
+
+    <div>
+
+        <h3>
+            <%= typeof pageTitle !== 'undefined'
+                ? pageTitle
+                : 'Student Portal'
+            %>
+        </h3>
+
+        <small>
+            Welcome back,
+            <%= typeof student !== 'undefined' &&
+                student &&
+                student.full_name
+                    ? student.full_name
+                    : (
+                        typeof user !== 'undefined' &&
+                        user &&
+                        user.full_name
+                            ? user.full_name
+                            : 'Student'
+                    )
+            %>
+            👋
+        </small>
+
+    </div>
+
+
+    <!-- Student Profile -->
+
+    <div class="student-topbar-actions">
+        <a class="student-nav-btn" href="/student/notifications" aria-label="Notifications" title="Notifications">
+            <i class="fas fa-bell"></i>
+        </a>
+
+        <button class="student-nav-btn" id="studentThemeBtn" type="button" data-theme-toggle aria-label="Use dark theme" title="Use dark theme">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <div class="profile">
+
+        <a
+            href="/student/profile"
+            title="My Profile"
+        >
+
+            <% if (
+                typeof student !== 'undefined' &&
+                student &&
+                student.profile_image
+            ) { %>
+
+                <img
+                    src="<%= student.profile_image %>"
+                    alt="Student Profile"
+                    class="profile-img"
+                >
+
+            <% } else { %>
+
+                <div class="profile-avatar-fallback">
+                    <%= typeof student !== 'undefined' &&
+                        student &&
+                        student.first_name
+                            ? student.first_name.charAt(0).toUpperCase()
+                            : (
+                                typeof user !== 'undefined' &&
+                                user &&
+                                user.first_name
+                                    ? user.first_name.charAt(0).toUpperCase()
+                                    : 'S'
+                            )
+                    %>
+                </div>
+
+            <% } %>
+
+        </a>
+
+        </div>
+
+        <a class="student-nav-btn" href="/auth/logout" aria-label="Log out" title="Log out">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </div>
+
+</div>

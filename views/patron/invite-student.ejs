@@ -1,0 +1,168 @@
+<%- include('../partials/header') %>
+
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+        <style>
+    .invitation-page {
+        max-width: 980px;
+        margin: 0 auto;
+    }
+
+    .invitation-card {
+        overflow: hidden;
+        border: 1px solid #dbe4ee;
+        border-radius: 14px;
+        background: #ffffff;
+        box-shadow: 0 18px 45px rgba(28, 52, 84, 0.12);
+    }
+
+    .invitation-card-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem 1.75rem;
+        color: #ffffff;
+        background: linear-gradient(135deg, #1769aa, #218c8d);
+    }
+
+    .invitation-card-icon {
+        display: grid;
+        flex: 0 0 46px;
+        width: 46px;
+        height: 46px;
+        place-items: center;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.18);
+        font-size: 1.2rem;
+    }
+
+    .invitation-card-header h3,
+    .invitation-card-header p {
+        margin: 0;
+    }
+
+    .invitation-card-header p {
+        margin-top: .25rem;
+        color: rgba(255, 255, 255, .82);
+        font-size: .9rem;
+    }
+
+    .invitation-card-body {
+        padding: 1.75rem;
+    }
+
+    .invitation-card .form-label {
+        color: #24364b;
+        font-weight: 700;
+    }
+
+    .invitation-card .form-control,
+    .invitation-card .form-select {
+        min-height: 46px;
+        border-color: #cfdbe8;
+        border-radius: 8px;
+    }
+
+    .invitation-card textarea.form-control {
+        min-height: 140px;
+        resize: vertical;
+    }
+
+    @media (max-width: 640px) {
+        .invitation-card-header,
+        .invitation-card-body {
+            padding: 1.15rem;
+        }
+    }
+</style>
+
+<div class="container-fluid p-4 invitation-page">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="fas fa-paper-plane"></i> Invite a Student</h2>
+            <p class="text-muted">Send an invitation to one student or every student in the school.</p>
+        </div>
+        <a href="/patron/dashboard" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Dashboard
+        </a>
+    </div>
+
+    <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+        <div class="alert alert-danger"><%= error_msg %></div>
+    <% } %>
+    <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+        <div class="alert alert-success"><%= success_msg %></div>
+    <% } %>
+
+    <div class="invitation-card">
+        <div class="invitation-card-header">
+            <div class="invitation-card-icon"><i class="fas fa-paper-plane"></i></div>
+            <div>
+                <h3>Build your invitation</h3>
+                <p>Choose the audience and add the club or event details they need.</p>
+            </div>
+        </div>
+        <div class="invitation-card-body">
+            <form action="/patron/invite-student" method="POST">
+                <div class="mb-3">
+                    <label for="recipient" class="form-label">Send to</label>
+                    <select id="recipient" name="recipient" class="form-select" required>
+                        <option value="" disabled selected>Select a recipient</option>
+                        <option value="all">All students</option>
+                        <% students.forEach(student => { %>
+                            <option value="<%= student.user_id %>">
+                                <%= student.full_name %> - <%= student.admission_no %> (<%= student.email %>)
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="club_id" class="form-label">Club invitation (optional)</label>
+                        <select id="club_id" name="club_id" class="form-select">
+                            <option value="">No club selected</option>
+                            <% clubs.forEach(club => { %>
+                                <option value="<%= club.club_id %>"><%= club.club_name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="event_id" class="form-label">Event invitation (optional)</label>
+                        <select id="event_id" name="event_id" class="form-select">
+                            <option value="">No event selected</option>
+                            <% events.forEach(event => { %>
+                                <option value="<%= event.activity_id %>">
+                                    <%= event.title %> - <%= new Date(event.event_date).toLocaleDateString('en-GB') %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label">Invitation message</label>
+                    <textarea id="message" name="message" class="form-control" rows="6" required placeholder="Write the invitation details for the student..."></textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="/patron/dashboard" class="btn btn-light">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Invitation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</main>
+
+<%- include('../partials/footer') %>
+
+</div>

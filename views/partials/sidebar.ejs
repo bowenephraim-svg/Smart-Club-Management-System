@@ -1,0 +1,188 @@
+<!-- ===========================================================
+     SIDEBAR — Victory School Design System
+     Role-aware navigation: Admin | Patron | Student
+================================================================ -->
+<aside class="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+        <div class="logo-circle">
+            <% if (schoolSettings && schoolSettings.school_logo) { %>
+                <img src="<%= schoolSettings.school_logo %>"
+                     alt="School Logo"
+                     style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+            <% } else { %>
+                <i class="fas fa-graduation-cap"></i>
+            <% } %>
+        </div>
+
+        <div class="logo-text">
+            <h2><%= schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System' %></h2>
+            <span>Smart Club System V2</span>
+        </div>
+    </div>
+
+    <!-- User Card -->
+    <div class="sidebar-user">
+
+        <div class="user-avatar">
+            <% if (user && user.profile_image) { %>
+                <img src="<%= user.profile_image %>" alt="Profile image" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+            <% } else if(user){ %>
+                <%= user.name ? user.name.charAt(0).toUpperCase() : (user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U') %>
+            <% } else { %>
+                A
+            <% } %>
+        </div>
+
+        <div class="user-info">
+            <h4>
+                <%= user ? (user.name || user.full_name || 'User') : "Administrator" %>
+            </h4>
+
+            <span>
+                <%= user ? user.role : "Admin" %>
+            </span>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <ul class="sidebar-menu">
+
+        <% if (user && user.role === 'Patron') { %>
+        <!-- ==========================================
+             PATRON NAVIGATION
+        =========================================== -->
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/patron/dashboard') ? 'active' : '' %>">
+            <a href="/patron/dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/patron/clubs') ? 'active' : '' %>">
+            <a href="/patron/clubs">
+                <i class="fas fa-users"></i>
+                <span>My Clubs</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/patron/members') ? 'active' : '' %>">
+            <a href="/patron/members">
+                <i class="fas fa-id-card"></i>
+                <span>Members</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/activities') ? 'active' : '' %>">
+            <a href="/activities">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Activities</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/attendance') ? 'active' : '' %>">
+            <a href="/attendance">
+                <i class="fas fa-clipboard-check"></i>
+                <span>Attendance</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/events') ? 'active' : '' %>">
+            <a href="/events">
+                <i class="fas fa-calendar-check"></i>
+                <span>Events</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/achievements') ? 'active' : '' %>">
+            <a href="/achievements">
+                <i class="fas fa-trophy"></i>
+                <span>Achievements</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/elections') ? 'active' : '' %>">
+            <a href="/elections">
+                <i class="fas fa-vote-yea"></i>
+                <span>Elections</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && (currentPath.startsWith('/patron/notifications') || currentPath.startsWith('/notifications')) ? 'active' : '' %>">
+            <a href="/patron/notifications">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                <% if (typeof navbarUnreadCount !== 'undefined' && navbarUnreadCount > 0) { %>
+                    <span class="badge" style="background:var(--danger);color:#fff;border-radius:999px;padding:2px 7px;font-size:0.7rem;margin-left:auto;"><%= navbarUnreadCount %></span>
+                <% } %>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/patron/profile') ? 'active' : '' %>">
+            <a href="/patron/profile">
+                <i class="fas fa-user-circle"></i>
+                <span>My Profile</span>
+            </a>
+        </li>
+
+        <% } else { %>
+        <!-- ==========================================
+             ADMIN / STAFF NAVIGATION
+        =========================================== -->
+
+        <li class="<%= typeof currentPath !== 'undefined' && (currentPath === '/admin' || currentPath.startsWith('/admin/dashboard')) ? 'active' : '' %>">
+            <a href="/admin/dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/students') ? 'active' : '' %>">
+            <a href="/students">
+                <i class="fas fa-user-graduate"></i>
+                <span>Students</span>
+            </a>
+        </li>
+
+        <% if (user && user.role === 'Admin') { %>
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/patrons') ? 'active' : '' %>">
+            <a href="/patrons">
+                <i class="fas fa-user-tie"></i>
+                <span>Patrons</span>
+            </a>
+        </li>
+        <% } %>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/reports') ? 'active' : '' %>">
+            <a href="/reports">
+                <i class="fas fa-chart-line"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/admin/profile') ? 'active' : '' %>">
+            <a href="/admin/profile">
+                <i class="fas fa-user-circle"></i>
+                <span>My Profile</span>
+            </a>
+        </li>
+
+        <% } %>
+
+    </ul>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+
+        <a href="/auth/logout" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+
+            Logout
+        </a>
+
+    </div>
+
+</aside>

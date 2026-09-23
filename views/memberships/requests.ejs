@@ -1,0 +1,142 @@
+<%- include('../partials/header') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header">
+
+            <h2>Membership Requests</h2>
+
+            <p>Approve or reject students requesting to join clubs.</p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon-wrapper"
+                style="background:rgba(245,158,11,.15);color:#f59e0b;">
+
+                <i class="fas fa-user-clock"></i>
+
+            </div>
+
+            <div class="stat-data-block">
+
+                <h3><%= requests.length %></h3>
+
+                <p>Pending Requests</p>
+
+            </div>
+
+        </div>
+
+        <table class="table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Student</th>
+
+                    <th>Club</th>
+
+                    <th>Join Date</th>
+
+                    <th>Payment</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            <% if(requests.length === 0){ %>
+
+                <tr>
+
+                    <td colspan="6" style="text-align:center;">
+
+                        No pending membership requests.
+
+                    </td>
+
+                </tr>
+
+            <% } %>
+
+            <% requests.forEach(request => { %>
+
+                <tr>
+
+                    <td>
+
+                        <%= request.student_name %>
+
+                    </td>
+
+                    <td>
+
+                        <%= request.club_name %>
+
+                    </td>
+
+                    <td>
+
+                        <%= request.join_date %>
+
+                    </td>
+
+                    <td>
+                        <span class="badge <%= request.payment_status === 'Paid' || request.payment_status === 'Not required' ? 'bg-success' : 'bg-warning' %>">
+                            <%= request.payment_status || 'Pending verification' %>
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <span class="badge bg-warning">
+
+                            Pending
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <form action="/memberships/approve/<%= request.membership_id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fas fa-check"></i>
+                                Approve
+                            </button>
+                        </form>
+
+                        <form action="/memberships/reject/<%= request.membership_id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject this request?')">
+                                <i class="fas fa-times"></i>
+                                Reject
+                            </button>
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,122 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/activities" class="back-link"><i class="fas fa-chevron-left"></i> Return to Master Calendar Hub</a>
+            </div>
+
+            <!-- Upper Meta Info Panel Bar Card -->
+            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;"><%= activity.club_name %></span>
+                    <h2 style="margin: 6px 0; color: #fff;"><%= activity.title %></h2>
+                    <div style="font-size: 0.9rem; color: #cbd5e1; display: flex; gap: 16px;">
+                        <span><i class="fas fa-calendar"></i> <%= new Date(activity.activity_date).toISOString().split('T')[0] %></span>
+                        <span><i class="fas fa-map-marker-alt"></i> Room: <%= activity.venue %></span>
+                    </div>
+                </div>
+                <div id="saveNotificationMarker" style="padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; background: #111827; border: 1px solid #334155; color: #94a3b8; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-cloud" style="color: #10b981;"></i> All status states synced live
+                </div>
+            </div>
+
+            <!-- Main Tracking Roster Matrix Grid Card -->
+            <div class="data-table-card" style="margin: 0;">
+                <div style="padding: 16px 20px; border-bottom: 1px solid #334155;">
+                    <h4 style="margin:0; color:#fff; font-size: 1rem; font-weight:600;">Active Session Roll Call Sheet</h4>
+                </div>
+
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Admission No</th>
+                                <th>Student Scholar Name</th>
+                                <th>Academic Form</th>
+                                <th>Stream</th>
+                                <th>Roll-Call Check State Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (roster && roster.length > 0) { %>
+                                <% roster.forEach(row => { %>
+                                    <tr id="student-row-<%= row.student_id %>">
+                                        <td><code><%= row.admission_no %></code></td>
+                                        <td><strong><%= row.first_name %> <%= row.last_name %></strong></td>
+                                        <td>Form <%= row.form %></td>
+                                        <td><span class="badge badge-muted"><%= row.stream %></span></td>
+                                        <td>
+                                            <!-- Asynchronous Action Strike Dropdown Listener Matrix -->
+                                            <select class="attendance-state-selector" 
+                                                    data-activity="<%= activity.activity_id %>" 
+                                                    data-student="<%= row.student_id %>"
+                                                    style="background: #0f172a; border: 1px solid #334155; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; cursor: pointer; transition: border-color 0.2s;">
+                                                <option value="Absent" <%= row.status === 'Absent' ? 'selected' : '' %>>❌ Absent</option>
+                                                <option value="Present" <%= row.status === 'Present' ? 'selected' : '' %>>✅ Present</option>
+                                                <option value="Excused" <%= row.status === 'Excused' ? 'selected' : '' %>>📝 Excused</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
+                                        No active student registration instances found in this club roster to populate tracking lines.
+                                    </td>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>
+
+<!-- Asynchronous Background API Processing Logic Pipeline -->
+<script>
+    document.querySelectorAll('.attendance-state-selector').forEach(dropdown => {
+        dropdown.addEventListener('change', async function() {
+            const activityId = this.getAttribute('data-activity');
+            const studentId = this.getAttribute('data-student');
+            const statusValue = this.value;
+            const notification = document.getElementById('saveNotificationMarker');
+
+            // Visual feedback indicator update trigger
+            notification.innerHTML = `<i class="fas fa-spinner fa-spin" style="color: #3b82f6;"></i> Syncing changes to server...`;
+            notification.style.borderColor = "#3b82f6";
+
+            try {
+                const response = await fetch('/attendance/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        activity_id: activityId,
+                        student_id: studentId,
+                        status: statusValue
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    setTimeout(() => {
+                        notification.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> Matrix synced successfully`;
+                        notification.style.borderColor = "#10b981";
+                    }, 400);
+                } else {
+                    alert("Relational mutation error: " + result.error);
+                }
+            } catch (err) {
+                console.error(err);
+                notification.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Sync broken`;
+                notification.style.borderColor = "#ef4444";
+            }
+        });
+    });
+</script>

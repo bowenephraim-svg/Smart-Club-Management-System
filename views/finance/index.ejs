@@ -1,0 +1,190 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-chart-line"></i> Finance Dashboard</h2>
+                    <p>Complete financial overview for the school and all clubs.</p>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="/finance/payments/add" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Add Income
+                    </a>
+                    <a href="/finance/expenses/add" class="btn btn-danger">
+                        <i class="fas fa-plus"></i> Add Expense
+                    </a>
+                    <a href="/finance/transactions" class="btn btn-info">
+                        <i class="fas fa-list"></i> Transactions
+                    </a>
+                    <a href="/finance/reports" class="btn btn-primary">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </a>
+                </div>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Summary Stats -->
+            <div class="dashboard-stats-grid">
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Income</span>
+                            <h2>KES <%= Number(stats.totalIncome || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-arrow-trend-up"></i> All time</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-arrow-trend-up"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Expenses</span>
+                            <h2>KES <%= Number(stats.totalExpenses || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-arrow-trend-down"></i> All time</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-arrow-trend-down"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Net Balance</span>
+                            <h2>KES <%= Number(stats.balance || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-scale-balanced"></i> Income - Expenses</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-scale-balanced"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>This Month</span>
+                            <h2>KES <%= Number(stats.monthBalance || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-alt"></i> Monthly net</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Today Income</span>
+                            <h2>KES <%= Number(stats.todayIncome || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-day"></i> Today</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-day"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Today Expenses</span>
+                            <h2>KES <%= Number(stats.todayExpenses || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-day"></i> Today</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-day"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Quick Access</h3>
+                </div>
+                <div class="settings-grid" style="padding:20px;">
+                    <a href="/finance/payments" class="settings-card" style="text-decoration:none;">
+                        <div class="stat-icon-wrapper" style="background:rgba(16,185,129,0.1);color:var(--success);">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <h4 style="margin-top:12px;color:var(--text-main);">Payments & Income</h4>
+                        <p style="color:var(--text-muted);font-size:13px;">Manage all incoming payments and fees.</p>
+                    </a>
+                    <a href="/finance/expenses" class="settings-card" style="text-decoration:none;">
+                        <div class="stat-icon-wrapper" style="background:rgba(239,68,68,0.1);color:var(--danger);">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <h4 style="margin-top:12px;color:var(--text-main);">Expenses</h4>
+                        <p style="color:var(--text-muted);font-size:13px;">Track and manage all expenditures.</p>
+                    </a>
+                    <a href="/finance/transactions" class="settings-card" style="text-decoration:none;">
+                        <div class="stat-icon-wrapper" style="background:rgba(59,130,246,0.1);color:var(--info-blue);">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <h4 style="margin-top:12px;color:var(--text-main);">Transactions</h4>
+                        <p style="color:var(--text-muted);font-size:13px;">View complete transaction history.</p>
+                    </a>
+                    <a href="/finance/reports" class="settings-card" style="text-decoration:none;">
+                        <div class="stat-icon-wrapper" style="background:rgba(245,158,11,0.1);color:var(--warning);">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h4 style="margin-top:12px;color:var(--text-main);">Reports</h4>
+                        <p style="color:var(--text-muted);font-size:13px;">Analytics, trends, and insights.</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Recent Transactions</h3>
+                    <a href="/finance/transactions" class="btn btn-sm btn-muted">View All</a>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Club</th>
+                                <th>Amount</th>
+                                <th>Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (recentTransactions && recentTransactions.length > 0) { %>
+                                <% recentTransactions.forEach(tx => { %>
+                                    <tr>
+                                        <td><%= tx.date %></td>
+                                        <td>
+                                            <% if (tx.type === 'Income') { %>
+                                                <span class="badge badge-success"><%= tx.type %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-danger"><%= tx.type %></span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= tx.category || '—' %></td>
+                                        <td><%= tx.club_name || '—' %></td>
+                                        <td><strong>KES <%= Number(tx.amount).toLocaleString() %></strong></td>
+                                        <td><%= tx.reference || '—' %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="table-empty-state">
+                                        <i class="fas fa-receipt"></i>
+                                        <p>No transactions found.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

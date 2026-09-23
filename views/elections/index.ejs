@@ -1,0 +1,187 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-vote-yea"></i> Elections & Voting</h2>
+                    <p>Manage club leadership elections, candidates, and secure student voting.</p>
+                </div>
+                <% if (user && user.role === 'Admin') { %>
+                    <a href="/elections/create" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Election
+                    </a>
+                <% } %>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Elections</span>
+                            <h2><%= stats.totalElections || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-vote-yea"></i> All elections</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-vote-yea"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Active</span>
+                            <h2><%= stats.activeCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-bullhorn"></i> Open for voting</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-bullhorn"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Upcoming</span>
+                            <h2><%= stats.upcomingCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-clock"></i> Scheduled</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-clock"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Closed</span>
+                            <h2><%= stats.closedCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-lock"></i> Completed</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-lock"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Candidates</span>
+                            <h2><%= stats.totalCandidates || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-user-check"></i> Registered</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-user-check"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Votes</span>
+                            <h2><%= stats.totalVotes || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-check-circle"></i> Ballots cast</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-table-card">
+                <div class="table-search-header">
+                    <h3 class="table-card-title">Election Management</h3>
+                    <div class="table-filter-controls">
+                        <label for="statusFilter" class="sr-only">Filter by status</label>
+                        <select id="statusFilter" class="form-select-sm">
+                            <option value="">All Statuses</option>
+                            <option value="Upcoming">Upcoming</option>
+                            <option value="Open">Open</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table" id="electionsTable">
+                        <thead>
+                            <tr>
+                                <th>Election</th>
+                                <th>Club</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Candidates</th>
+                                <th>Votes</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (elections && elections.length > 0) { %>
+                                <% elections.forEach(election => { %>
+                                    <tr data-status="<%= election.status %>">
+                                        <td>
+                                            <div class="activity-name-block">
+                                                <strong><%= election.title %></strong>
+                                                <span><%= election.description || 'No description provided.' %></span>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge badge-info"><%= election.club_name %></span></td>
+                                        <td><strong><%= election.election_date %></strong></td>
+                                        <td>
+                                            <span class="election-status-pill <%= (election.status || '').toLowerCase() %>">
+                                                <%= election.status %>
+                                            </span>
+                                        </td>
+                                        <td><span class="badge badge-primary"><%= election.candidate_count || 0 %></span></td>
+                                        <td><span class="badge badge-purple"><%= election.vote_count || 0 %></span></td>
+                                        <td class="text-center">
+                                            <div class="activity-action-group">
+                                                <a href="/elections/<%= election.election_id %>" class="btn btn-sm btn-muted"><i class="fas fa-eye"></i> View</a>
+                                                <a href="/elections/<%= election.election_id %>/results" class="btn btn-sm btn-success"><i class="fas fa-chart-pie"></i> Results</a>
+                                                <% if (user && user.role === 'Admin') { %>
+                                                    <a href="/elections/edit/<%= election.election_id %>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                                                <% } %>
+                                                <a href="/elections/<%= election.election_id %>#candidates" class="btn btn-sm btn-info"><i class="fas fa-user-check"></i> Candidates</a>
+                                                <% if (user && user.role === 'Admin') { %>
+                                                    <% if (election.status === 'Upcoming') { %>
+                                                        <form method="POST" action="/elections/<%= election.election_id %>/activate" style="display:inline;">
+                                                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-play"></i> Open</button>
+                                                        </form>
+                                                    <% } %>
+                                                <% } %>
+                                                    <% if (election.status === 'Open') { %>
+                                                        <form method="POST" action="/elections/<%= election.election_id %>/close" onsubmit="return confirm('Close this election? Voting will no longer be available.');" style="display:inline;">
+                                                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-stop"></i> Close</button>
+                                                        </form>
+                                                    <% } %>
+                                                    <% if (election.status === 'Upcoming' && election.vote_count === 0) { %>
+                                                        <form method="POST" action="/elections/delete/<%= election.election_id %>" onsubmit="return confirm('Delete this election? This action cannot be undone.');" style="display:inline;">
+                                                            <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                                                        </form>
+                                                    <% } %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="table-empty-state">
+                                        <i class="fas fa-vote-yea"></i>
+                                        <p>No elections have been created yet.</p>
+                                        <% if (user && user.role === 'Admin') { %>
+                                            <a href="/elections/create" class="btn btn-primary"><i class="fas fa-plus"></i> Create Your First Election</a>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>
+
+<script src="/js/elections.js"></script>

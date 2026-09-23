@@ -1,0 +1,179 @@
+/* ==========================================================================
+   Victory School Smart Club Membership System V2 - Table Component Styles
+   ========================================================================== */
+
+/* --- 1. TABLE WRAPPER & CONTAINER --- */
+.table-container {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    margin-bottom: 1.5rem;
+    overflow-x: auto; /* Ensures responsiveness on smaller screens */
+}
+
+/* --- 2. MASTER DATA TABLE STYLES --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.925rem;
+}
+
+/* Header Cells styling */
+.data-table th {
+    background-color: #f1f5f9; /* Slate 100 */
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+/* Body Cells styling */
+.data-table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Row Hover Interaction */
+.data-table tbody tr {
+    transition: var(--transition-smooth);
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(241, 245, 249, 0.5); /* Soft highlight on hover */
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* --- 3. CONTEXTUAL UTILITY MODULES WITHIN TABLES --- */
+
+/* Student/User Identity cells */
+.table-cell-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-cell-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+}
+
+/* Multi-line textual cells */
+.table-cell-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-cell-title {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.table-cell-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* --- 4. ACTION CONTROLS & COMPONENT BUTTONS --- */
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-action:hover {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+.btn-action.edit:hover {
+    color: var(--info);
+    border-color: rgba(59, 130, 246, 0.3);
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.btn-action.delete:hover {
+    color: var(--danger);
+    border-color: rgba(239, 68, 68, 0.3);
+    background-color: rgba(239, 68, 68, 0.05);
+}
+
+/* --- 5. TABLE CONTROLS HEADER (Search, Filter, Export Actions) --- */
+.table-controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-box-wrapper {
+    position: relative;
+    max-width: 320px;
+    width: 100%;
+}
+
+.search-box-wrapper i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.table-search-input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-main);
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.table-search-input:focus {
+    border-color: var(--primary-color);
+    background-color: var(--bg-card);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.filter-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link rel="icon" type="image/svg+xml" href="<%= schoolSettings && schoolSettings.school_logo ? schoolSettings.school_logo : '/images/favicon.svg' %>">
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        My Attendance |
+        <%= schoolSettings
+            ? (schoolSettings.school_name || 'Smart Club System')
+            : 'Smart Club System' %>
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/css/student.css"
+    >
+
+</head>
+
+<body>
+
+<div class="student-layout">
+
+    <!-- =====================================================
+         STUDENT SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h4>
+                <%= schoolSettings
+                    ? (schoolSettings.school_name || 'Smart Club System')
+                    : 'Smart Club System' %>
+            </h4>
+
+            <small>Student Portal</small>
+
+        </div>
+
+
+        <ul>
+
+            <li>
+                <a href="/student/dashboard">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/student/clubs">
+                    <i class="bi bi-people"></i>
+                    <span>My Clubs</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/student/payments">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>My Payments</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/student/events">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Events</span>
+                </a>
+            </li>
+
+
+            <li class="active">
+                <a href="/student/attendance">
+                    <i class="bi bi-check2-square"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/student/notifications">
+                    <i class="bi bi-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/elections/available">
+                    <i class="bi bi-check2-square"></i>
+                    <span>Elections</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/student/profile">
+                    <i class="bi bi-person-circle"></i>
+                    <span>My Profile</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/auth/logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="content">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h3>My Attendance</h3>
+
+                <small>
+                    Track your attendance in club activities.
+                </small>
+
+            </div>
+
+
+            <div class="profile">
+
+                <img
+                    src="<%= (typeof student !== 'undefined' && student && student.profile_image) || (typeof user !== 'undefined' && user && user.profile_image) || '/images/default-avatar.png' %>"
+                    alt="Student Profile"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STUDENT INFORMATION
+        ================================================== -->
+
+        <div class="welcome-card">
+
+            <h2>
+                <i class="bi bi-calendar-check"></i>
+                Attendance Records
+            </h2>
+
+            <p>
+                Here you can view your attendance history
+                for club activities and meetings.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             ATTENDANCE TABLE
+        ================================================== -->
+
+        <div class="section">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h4 class="mb-1">
+                        <i class="bi bi-clipboard-check"></i>
+                        Attendance History
+                    </h4>
+
+                    <small class="text-muted">
+
+                        <%= student.first_name %>
+                        <%= student.last_name %>
+
+                    </small>
+
+                </div>
+
+
+                <div>
+
+                    <span class="badge bg-primary">
+
+                        <%= attendance.length %>
+
+                        Record<%= attendance.length === 1 ? '' : 's' %>
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <% if (attendance && attendance.length > 0) { %>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>Activity</th>
+
+                                <th>Date</th>
+
+                                <th>Venue</th>
+
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% attendance.forEach((record, index) => { %>
+
+                                <tr>
+
+                                    <td>
+                                        <%= index + 1 %>
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+
+                                            <%= record.activity_name || 'Club Activity' %>
+
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <%= record.attendance_date
+                                            ? new Date(record.attendance_date).toLocaleDateString()
+                                            : '-' %>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <%= record.venue || '-' %>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <% if (record.status === 'Present') { %>
+
+                                            <span class="badge bg-success">
+
+                                                <i class="bi bi-check-circle"></i>
+
+                                                Present
+
+                                            </span>
+
+                                        <% } else if (record.status === 'Absent') { %>
+
+                                            <span class="badge bg-danger">
+
+                                                <i class="bi bi-x-circle"></i>
+
+                                                Absent
+
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-warning text-dark">
+
+                                                <%= record.status || 'Pending' %>
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } else { %>
+
+
+                <!-- EMPTY STATE -->
+
+                <div class="text-center py-5">
+
+                    <i
+                        class="bi bi-calendar-x"
+                        style="font-size:70px;color:#94a3b8;"
+                    ></i>
+
+
+                    <h4 class="mt-3">
+
+                        No Attendance Records
+
+                    </h4>
+
+
+                    <p class="text-muted">
+
+                        You don't have any attendance records yet.
+
+                    </p>
+
+
+                    <a
+                        href="/student/dashboard"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Back to Dashboard
+
+                    </a>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<script src="/js/theme.js"></script>
+</body>
+
+</html>

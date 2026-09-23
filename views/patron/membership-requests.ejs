@@ -1,0 +1,94 @@
+<%- include('../partials/header') %>
+
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+            <div class="header-text-block">
+                <h2>
+                    <i class="fas fa-users" style="color:var(--primary-color);margin-right:8px;"></i>
+                    Club Membership Requests
+                </h2>
+                <p>Review membership requests for your assigned clubs.</p>
+            </div>
+            <a href="/patron/dashboard" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+
+        <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> <%= success_msg %>
+            <button type="button" class="alert-close-btn" aria-label="Close">&times;</button>
+        </div>
+        <% } %>
+
+        <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> <%= error_msg %>
+            <button type="button" class="alert-close-btn" aria-label="Close">&times;</button>
+        </div>
+        <% } %>
+
+        <div class="table-card-container" style="margin-top:1rem;">
+
+            <% if (!requests || requests.length === 0) { %>
+
+                <div style="text-align:center;padding:3.5rem 1rem;color:var(--text-muted);">
+                    <i class="fas fa-check-circle" style="font-size:3.5rem;opacity:.35;display:block;margin-bottom:1rem;color:var(--success);"></i>
+                    <h4 style="color:var(--text-secondary);margin-bottom:.5rem;">No Pending Requests</h4>
+                    <p style="font-size:.9rem;">There are no membership requests at this time.</p>
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Admission No.</th>
+                                <th>Student</th>
+                                <th>Club</th>
+                                <th>Requested</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% requests.forEach(request => { %>
+                                <tr>
+                                    <td><strong><%= request.admission_no %></strong></td>
+                                    <td><%= request.student_name %></td>
+                                    <td><%= request.club_name %></td>
+                                    <td><%= new Date(request.join_date).toLocaleDateString('en-GB') %></td>
+                                    <td>
+                                        <form method="POST" action="/patron/membership-requests/approve/<%= request.membership_id %>" style="display:inline;">
+                                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve this membership request?')">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="/patron/membership-requests/reject/<%= request.membership_id %>" style="display:inline;margin-left:6px;">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject this membership request?')">
+                                                <i class="fas fa-times"></i> Reject
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</div>

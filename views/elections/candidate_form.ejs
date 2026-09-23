@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/elections/<%= election.election_id %>" class="back-link"><i class="fas fa-arrow-left"></i> Return to Election Details</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3><i class="fas fa-user-check"></i> <%= pageTitle || 'Add Candidate' %></h3>
+                    <p>
+                        Election: <strong><%= election.title %></strong>
+                        (<%= election.club_name %>) — Candidate management is only available while the election is upcoming.
+                    </p>
+                </div>
+
+                <form action="<%= action %>" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="student_id">Student <span class="required">*</span></label>
+                            <select id="student_id" name="student_id" required>
+                                <option value="" disabled <%= !formData.student_id ? 'selected' : '' %>>Select a student...</option>
+                                <% if (eligibleStudents && eligibleStudents.length > 0) { %>
+                                    <% eligibleStudents.forEach(student => { %>
+                                        <option value="<%= student.student_id %>" <%= String(formData.student_id) === String(student.student_id) ? 'selected' : '' %>>
+                                            <%= student.first_name %> <%= student.last_name %> — <%= student.admission_no %>
+                                            <% if (student.class) { %>(<%= student.class %>)<% } %>
+                                        </option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                            <% if (eligibleStudents && eligibleStudents.length === 0) { %>
+                                <small class="form-help"><i class="fas fa-info-circle"></i> No active club members are available to add as candidates. Add students as members of this club first.</small>
+                            <% } %>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="position">Position <span class="required">*</span></label>
+                            <input type="text" id="position" name="position" value="<%= formData.position || '' %>" placeholder="e.g. President, Vice President, Secretary..." required maxlength="50">
+                            <small class="form-help">Enter the leadership position this student is contesting.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-action-footer-row">
+                        <a href="/elections/<%= election.election_id %>" class="btn btn-muted">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <%= submitLabel || 'Add Candidate' %></button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

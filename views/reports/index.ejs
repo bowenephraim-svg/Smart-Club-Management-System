@@ -1,0 +1,319 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <!-- Page Header -->
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Reports Dashboard</h2>
+                <p>Monitor school statistics, finances, memberships and analytics.</p>
+            </div>
+
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="dashboard-stats-grid reports-summary-grid">
+
+    <div class="stat-card info">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Total Students</span>
+                <h2><%= totalStudents %></h2>
+                <small class="stat-change"><i class="fas fa-user-graduate"></i> Registered Students</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card warning">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Total Clubs</span>
+                <h2><%= totalClubs %></h2>
+                <small class="stat-change"><i class="fas fa-users"></i> Registered Clubs</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card success">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Memberships</span>
+                <h2><%= totalMemberships %></h2>
+                <small class="stat-change"><i class="fas fa-id-card"></i> Active Members</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-id-card"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card info">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Total Patrons</span>
+                <h2><%= totalPatrons || 0 %></h2>
+                <small class="stat-change"><i class="fas fa-user-tie"></i> Registered Patrons</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-user-tie"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card danger">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Activities</span>
+                <h2><%= totalActivities %></h2>
+                <small class="stat-change"><i class="fas fa-calendar-check"></i> Planned Activities</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card info">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Total Income</span>
+                <h2>KES <%= totalIncome.toLocaleString() %></h2>
+                <small class="stat-change"><i class="fas fa-arrow-up"></i> Collected Revenue</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card warning">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Total Expenses</span>
+                <h2>KES <%= totalExpenses.toLocaleString() %></h2>
+                <small class="stat-change"><i class="fas fa-arrow-down"></i> Total Spend</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-arrow-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card success">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Available Balance</span>
+                <h2>KES <%= balance.toLocaleString() %></h2>
+                <small class="stat-change"><i class="fas fa-wallet"></i> Remaining Funds</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-wallet"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+        <!-- Active Clubs Summary -->
+        <div class="table-card" style="margin-top:24px;">
+            <div class="table-header">
+                <h3>Active Clubs & Memberships</h3>
+            </div>
+            <div class="responsive-table-wrapper">
+                <table class="system-data-table">
+                    <thead>
+                        <tr>
+                            <th>Club Name</th>
+                            <th>Venue</th>
+                            <th>Meeting Day</th>
+                            <th>Active Members</th>
+                            <th>Pending Members</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (activeClubs && activeClubs.length > 0) { %>
+                            <% activeClubs.forEach(function(club) { %>
+                            <tr>
+                                <td><strong><%= club.club_name %></strong></td>
+                                <td><%= club.venue || '—' %></td>
+                                <td><%= club.meeting_day || '—' %></td>
+                                <td><span class="badge badge-success"><%= club.active_members || 0 %></span></td>
+                                <td><span class="badge badge-warning"><%= club.pending_members || 0 %></span></td>
+                            </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="table-empty-state">No clubs found.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Club Financial Summary -->
+        <div class="table-card" style="margin-top:24px;">
+            <div class="table-header">
+                <h3>Club Financial Summary</h3>
+            </div>
+            <div class="responsive-table-wrapper">
+                <table class="system-data-table">
+                    <thead>
+                        <tr>
+                            <th>Club</th>
+                            <th>Income</th>
+                            <th>Expenses</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (clubFinances && clubFinances.length > 0) { %>
+                            <% clubFinances.forEach(function(club) { %>
+                            <tr>
+                                <td><strong><%= club.club_name %></strong></td>
+                                <td><span class="badge badge-success">KES <%= Number(club.income || 0).toLocaleString() %></span></td>
+                                <td><span class="badge badge-danger">KES <%= Number(club.expenses || 0).toLocaleString() %></span></td>
+                                <td>
+                                    <span class="badge <%= (club.balance || 0) >= 0 ? 'badge-success' : 'badge-danger' %>">
+                                        KES <%= Number(club.balance || 0).toLocaleString() %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4" class="table-empty-state">No financial data available.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Monthly Finance -->
+        <div class="table-card" style="margin-top:24px;">
+            <div class="table-header">
+                <h3>Monthly Financial Trend</h3>
+            </div>
+            <div class="responsive-table-wrapper">
+                <table class="system-data-table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Income</th>
+                            <th>Expenses</th>
+                            <th>Net</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (monthlyFinance && monthlyFinance.length > 0) { %>
+                            <% monthlyFinance.forEach(function(row) { %>
+                            <tr>
+                                <td><strong><%= row.month %></strong></td>
+                                <td><span class="badge badge-success">KES <%= Number(row.income || 0).toLocaleString() %></span></td>
+                                <td><span class="badge badge-danger">KES <%= Number(row.expenses || 0).toLocaleString() %></span></td>
+                                <td>
+                                    <span class="badge <%= (row.net || 0) >= 0 ? 'badge-success' : 'badge-danger' %>">
+                                        KES <%= Number(row.net || 0).toLocaleString() %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="4" class="table-empty-state">No monthly data available.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Report Navigation -->
+        <div class="table-card">
+
+    <div class="table-header">
+
+        <h3>Quick Reports</h3>
+
+    </div>
+
+    <div class="feature-grid">
+
+        <a href="/reports/students" class="btn btn-primary">
+            <i class="fas fa-user-graduate"></i>
+            Student Report
+        </a>
+
+        <a href="/reports/clubs" class="btn btn-success">
+            <i class="fas fa-users"></i>
+            Club Report
+        </a>
+
+        <a href="/reports/attendance" class="btn btn-warning">
+            <i class="fas fa-calendar-check"></i>
+            Attendance
+        </a>
+
+        <a href="/reports/finance" class="btn btn-info">
+            <i class="fas fa-coins"></i>
+            Finance
+        </a>
+
+        <a href="/reports/analytics" class="btn btn-danger">
+            <i class="fas fa-chart-line"></i>
+            Analytics
+        </a>
+
+    </div>
+
+</div>
+
+<div class="table-card">
+
+    <div class="table-header">
+
+        <h3>Export Reports</h3>
+
+    </div>
+
+    <div style="display:flex;gap:15px;">
+
+        <button class="btn btn-primary">
+            <i class="fas fa-file-pdf"></i>
+            Export PDF
+        </button>
+
+        <button class="btn btn-success">
+            <i class="fas fa-file-excel"></i>
+            Export Excel
+        </button>
+
+        <button onclick="window.print()" class="btn btn-secondary">
+            <i class="fas fa-print"></i>
+            Print
+        </button>
+
+    </div>
+
+</div>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</div>

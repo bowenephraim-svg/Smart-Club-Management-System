@@ -1,0 +1,12 @@
+<%- include('partials/header', { pageTitle: 'Access Denied' }) %>
+
+<div style="display:flex;align-items:center;justify-content:center;min-height:75vh;padding:24px;text-align:center;">
+    <div class="card" style="max-width:560px;padding:40px;">
+        <i class="fas fa-lock" style="font-size:3rem;color:var(--warning);margin-bottom:16px;"></i>
+        <h1>Access Denied</h1>
+        <p><%= message || 'You do not have permission to view this page.' %></p>
+        <a href="<%= user ? '/dashboard' : '/' %>" class="btn btn-primary">Return to Dashboard</a>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,116 @@
+<%- include('../partials/student-header') %>
+<div class="student-layout">
+    <%- include('../partials/student-sidebar') %>
+    <main class="content">
+        <%- include('../partials/student-navbar') %>
+
+        <div class="back-navigation-row">
+            <a href="/elections/available" class="back-link"><i class="fas fa-arrow-left"></i> Return to Elections</a>
+        </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Ballot Header -->
+            <div class="ballot-header">
+                <div class="ballot-header-icon">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <div class="ballot-header-content">
+                    <h2><%= election.title %></h2>
+                    <p><%= election.description || 'No description provided for this election.' %></p>
+                    <div class="ballot-header-meta">
+                        <span class="badge badge-info"><i class="fas fa-users"></i> <%= election.club_name %></span>
+                        <span class="badge badge-warning"><i class="fas fa-calendar-alt"></i> <%= election.election_date %></span>
+                        <span class="election-status-pill <%= (election.status || '').toLowerCase() %>"><%= election.status %></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voting is open -->
+            <% if (election.status === 'Open') { %>
+                <% if (candidates && candidates.length > 0) { %>
+                    <form id="voteForm" method="POST" action="/elections/vote/<%= election.election_id %>">
+                        <input type="hidden" name="candidate_id" id="selectedCandidateId">
+
+                        <% const grouped = {}; %>
+                        <% candidates.forEach(candidate => {
+                            if (!grouped[candidate.position]) grouped[candidate.position] = [];
+                            grouped[candidate.position].push(candidate);
+                        }); %>
+
+                        <% Object.keys(grouped).forEach(position => { %>
+                            <div class="candidate-position-block">
+                                <div class="candidate-position-header">
+                                    <h3><i class="fas fa-user-tie"></i> <%= position %></h3>
+                                    <span class="badge badge-primary"><%= grouped[position].length %> candidate(s)</span>
+                                </div>
+
+                                <div class="candidate-card-grid">
+                                    <% grouped[position].forEach(candidate => { %>
+                                        <div class="candidate-select-card" data-candidate-id="<%= candidate.candidate_id %>" data-candidate-name="<%= candidate.candidate_name %>" data-position="<%= position %>">
+                                            <div class="candidate-select-radio">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                            <div class="candidate-select-avatar">
+                                                <%= candidate.candidate_name.split(' ').map(n => n.charAt(0)).slice(0, 2).join('') %>
+                                            </div>
+                                            <div class="candidate-select-info">
+                                                <h4><%= candidate.candidate_name %></h4>
+                                                <span>Admission No: <%= candidate.admission_no %></span>
+                                                <span>Position: <%= candidate.position %></span>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        <% }); %>
+
+                        <div class="vote-submit-bar">
+                            <div class="vote-submit-note">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Your vote is private and secure. You can only vote once in this election.</span>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg" id="submitVoteBtn" disabled>
+                                <i class="fas fa-check-circle"></i> Submit My Vote
+                            </button>
+                        </div>
+                    </form>
+                <% } else { %>
+                    <div class="empty-state-container">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <h2>No Candidates Available</h2>
+                        <p>This election has not listed any candidates yet. Please check back later.</p>
+                        <a href="/elections/available" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Elections</a>
+                    </div>
+                <% } %>
+
+            <!-- Voting not open -->
+            <% } else if (election.status === 'Upcoming') { %>
+                <div class="empty-state-container">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h2>Voting Has Not Opened Yet</h2>
+                    <p>This election is scheduled for <%= election.election_date %> and is not yet open for voting.</p>
+                    <a href="/elections/available" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Elections</a>
+                </div>
+            <% } else { %>
+                <div class="empty-state-container">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h2>Voting Is Closed</h2>
+                    <p>Voting for this election has ended. Thank you for participating.</p>
+                    <a href="/elections/available" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Elections</a>
+                </div>
+            <% } %>
+    </main>
+</div>
+<%- include('../partials/student-footer') %>

@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Election Results</h2>
+                    <p>View voting outcomes, winner declarations, and detailed election analytics.</p>
+                </div>
+                <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
+            </div>
+
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2>Results Dashboard Coming Soon</h2>
+                <p>Once elections are completed, this page will display vote tallies, percentage breakdowns, and winner announcements for each club position.</p>
+                <a href="/dashboard" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon green"><i class="fas fa-chart-bar"></i></div>
+                    <h4>Vote Tallies</h4>
+                    <p>See exactly how many votes each candidate received with visual bar charts and percentage breakdowns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon purple"><i class="fas fa-award"></i></div>
+                    <h4>Winner Declarations</h4>
+                    <p>Automatic winner determination with formal announcement cards for each position contested.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon cyan"><i class="fas fa-file-export"></i></div>
+                    <h4>Export Reports</h4>
+                    <p>Download election results as PDF or CSV for official school records and documentation.</p>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

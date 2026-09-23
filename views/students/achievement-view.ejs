@@ -1,0 +1,66 @@
+<%- include('../partials/student-header') %>
+<div class="student-layout">
+    <%- include('../partials/student-sidebar') %>
+    <main class="content">
+        <%- include('../partials/student-navbar') %>
+
+        <div class="welcome-card">
+            <h2><i class="bi bi-trophy"></i> <%= achievement.title %></h2>
+            <p>Achievement details.</p>
+        </div>
+
+        <div class="section">
+            <a href="/student/achievements" class="btn btn-outline-primary mb-3">
+                <i class="bi bi-arrow-left"></i> Back to My Achievements
+            </a>
+
+            <div class="card shadow-sm">
+                <% if (achievement.image) { %>
+                    <img src="<%= achievement.image %>" alt="<%= achievement.title %>" class="card-img-top" style="max-height: 400px; object-fit: cover;">
+                <% } %>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <% if (achievement.category) { %>
+                            <span class="badge bg-warning text-dark me-2"><i class="bi bi-tag"></i> <%= achievement.category %></span>
+                        <% } %>
+                        <% if (achievement.club_name) { %>
+                            <span class="badge bg-primary me-2"><i class="bi bi-people"></i> <%= achievement.club_name %></span>
+                        <% } %>
+                        <% if (achievement.achievement_date) { %>
+                            <span class="badge bg-light text-dark">
+                                <i class="bi bi-calendar3"></i> <%= new Date(achievement.achievement_date).toLocaleDateString() %>
+                            </span>
+                        <% } %>
+                    </div>
+
+                    <% if (achievement.position || achievement.award) { %>
+                        <div class="row g-3 mb-3">
+                            <% if (achievement.position) { %>
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 text-center bg-light">
+                                        <small class="text-muted d-block">Position</small>
+                                        <strong class="fs-5"><%= achievement.position %></strong>
+                                    </div>
+                                </div>
+                            <% } %>
+                            <% if (achievement.award) { %>
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 text-center bg-light">
+                                        <small class="text-muted d-block">Award</small>
+                                        <strong class="fs-5"><%= achievement.award %></strong>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } %>
+
+                    <% if (achievement.description) { %>
+                        <h5 class="card-title">Description</h5>
+                        <p class="card-text text-muted"><%= achievement.description %></p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<%- include('../partials/student-footer') %>

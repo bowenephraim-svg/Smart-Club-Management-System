@@ -1,0 +1,262 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+
+        <div>
+
+            <h2>Fee Payments</h2>
+            <p>Manage all student fee payments.</p>
+
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom:20px; flex-wrap:wrap;">
+
+            <a href="/finance/payments/add" class="btn btn-success">
+                <i class="fas fa-money-bill"></i>
+                Receive Payment
+            </a>
+
+            <a href="/finance/summary" class="btn btn-primary">
+                <i class="fas fa-chart-line"></i>
+                View Summary
+            </a>
+
+        </div>
+
+        <!-- Filters -->
+        <div class="table-card" style="margin-bottom:24px;">
+            <div class="table-header">
+                <h3>Filter Payments</h3>
+            </div>
+            <form method="GET" action="/finance/payments" class="activity-toolbar-form" style="padding:16px 20px;">
+                <div class="activity-toolbar-group">
+                    <select name="club_id">
+                        <option value="">All Clubs</option>
+                        <% clubs.forEach(club => { %>
+                            <option value="<%= club.club_id %>" <%= String(filters.club_id) === String(club.club_id) ? 'selected' : '' %>><%= club.club_name %></option>
+                        <% }); %>
+                    </select>
+                    <select name="status">
+                        <option value="">All Statuses</option>
+                        <option value="Paid" <%= String(filters.status) === 'Paid' ? 'selected' : '' %>>Paid</option>
+                        <option value="Pending" <%= String(filters.status) === 'Pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="Rejected" <%= String(filters.status) === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+                    </select>
+                    <input type="date" name="date_from" value="<%= filters.date_from || '' %>" placeholder="From">
+                    <input type="date" name="date_to" value="<%= filters.date_to || '' %>" placeholder="To">
+                    <input type="text" name="search" value="<%= filters.search || '' %>" placeholder="Search student, reference...">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                    <a href="/finance/payments" class="btn btn-muted">Reset</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Statistics -->
+        <div class="dashboard-stats-grid">
+            <div class="stat-card success">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Total Collected</span>
+                        <h2>KES <%= Number(totals?.total_collected || 0).toLocaleString() %></h2>
+                        <small class="stat-change">
+                            <i class="fas fa-money-bill-wave"></i> Collected Payments
+                        </small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card info">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Today's Payments</span>
+                        <h2>KES <%= Number(totals?.today_collected || 0).toLocaleString() %></h2>
+                        <small class="stat-change">
+                            <i class="fas fa-calendar-day"></i> Payments Today
+                        </small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Transactions</span>
+                        <h2><%= totals?.transactions || 0 %></h2>
+                        <small class="stat-change">
+                            <i class="fas fa-exchange-alt"></i> Total Transactions
+                        </small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card danger">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Payment Records</span>
+                        <h2><%= payments.length %></h2>
+                        <small class="stat-change">
+                            <i class="fas fa-file-invoice-dollar"></i> Recorded Payments
+                        </small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+
+        <div class="table-header" style="margin-top:24px;">
+
+            <h3>Payment Records</h3>
+
+        </div>
+
+        <table class="table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Student</th>
+                    <th>Club</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Reference</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th class="text-center">Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <% if(payments.length === 0){ %>
+
+                    <tr>
+
+                        <td colspan="9" style="text-align:center;">
+
+                            No payment records found.
+
+                        </td>
+
+                    </tr>
+
+                <% } %>
+
+                <% payments.forEach(payment => { %>
+
+                <tr>
+
+                    <td>
+
+                        <%= payment.student_name || 'N/A' %>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.club_name || '-' %>
+
+                    </td>
+
+                    <td>
+
+                        KES <%= Number(payment.amount).toLocaleString() %>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.payment_method || '-' %>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.transaction_code || '-' %>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.category || '-' %>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.payment_date %>
+
+                    </td>
+
+                    <td>
+
+                        <% if(payment.status === 'Pending'){ %>
+
+                            <span class="badge badge-warning">Pending</span>
+
+                        <% } else if(payment.status === 'Paid'){ %>
+
+                            <span class="badge badge-success">Paid</span>
+
+                        <% } else { %>
+
+                            <span class="badge badge-danger">Rejected</span>
+
+                        <% } %>
+
+                    </td>
+
+                    <td class="text-center">
+
+                        <% if(payment.status === 'Pending'){ %>
+                            <span class="badge badge-muted">Read only</span>
+                        <% } else { %>
+
+                            <a href="/finance/payments/edit/<%= payment.payment_id %>"
+                               class="btn btn-sm btn-muted"
+                               style="padding:4px 8px;">
+
+                                View
+
+                            </a>
+
+                        <% } %>
+
+                    </td>
+
+                </tr>
+
+                <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    </div>
+</div>

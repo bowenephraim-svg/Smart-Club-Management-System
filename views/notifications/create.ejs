@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Send Notification</h2>
+                <p>Create and send a notification to a system user.</p>
+            </div>
+
+            <a href="/notifications" class="btn btn-muted">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+
+        </div>
+
+        <form action="/notifications/create" method="POST" class="form-card">
+
+            <div class="form-grid">
+
+                <!-- User -->
+                <div class="form-group">
+
+                    <label>Select User</label>
+
+                    <select name="user_id" class="form-control" required>
+
+                        <option value="">Choose User...</option>
+
+                        <% users.forEach(user => { %>
+
+                            <option value="<%= user.user_id %>">
+
+                                <%= user.full_name %> (<%= user.role %>)
+
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+                <!-- Type -->
+
+                <div class="form-group">
+
+                    <label>Notification Type</label>
+
+                    <select name="type" class="form-control">
+
+                        <option value="General">General</option>
+                        <option value="Payment">Payment</option>
+                        <option value="Membership">Membership</option>
+                        <option value="Event">Event</option>
+                        <option value="Attendance">Attendance</option>
+                        <option value="Announcement">Announcement</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- Message -->
+
+            <div class="form-group">
+
+                <label>Message</label>
+
+                <textarea
+                    name="message"
+                    rows="6"
+                    class="form-control"
+                    placeholder="Write your notification here..."
+                    required
+                ></textarea>
+
+            </div>
+
+            <div style="margin-top:25px;">
+
+                <button class="btn btn-success">
+
+                    <i class="fas fa-paper-plane"></i>
+
+                    Send Notification
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    </div>
+</div>

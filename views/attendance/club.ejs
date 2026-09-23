@@ -1,0 +1,149 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/attendance" class="back-link"><i class="fas fa-arrow-left"></i> Return to Attendance</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-users"></i> <%= club.club_name %></h2>
+                    <p>Attendance statistics and student-level breakdown for this club.</p>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Records</span>
+                            <h2><%= stats.totalRecords || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-clipboard-list"></i> All sessions</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-clipboard-list"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Present</span>
+                            <h2><%= stats.presentCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-check-circle"></i> <%= stats.attendanceRate || 0 %>% rate</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Late</span>
+                            <h2><%= stats.lateCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-clock"></i> Arrived late</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-clock"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Absent</span>
+                            <h2><%= stats.absentCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-times-circle"></i> Did not attend</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-times-circle"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Excused</span>
+                            <h2><%= stats.excusedCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-file-alt"></i> Approved absence</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-file-alt"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Activities</span>
+                            <h2><%= stats.totalActivities || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-alt"></i> Tracked events</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Summary Table -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Student Attendance Summary</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Admission No</th>
+                                <th>Class</th>
+                                <th>Sessions</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Late</th>
+                                <th>Excused</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (studentSummaries && studentSummaries.length > 0) { %>
+                                <% studentSummaries.forEach(summary => { %>
+                                    <tr>
+                                        <td><strong><%= summary.first_name %> <%= summary.last_name %></strong></td>
+                                        <td><span class="badge badge-primary"><%= summary.admission_no %></span></td>
+                                        <td><%= summary.class || '—' %></td>
+                                        <td><%= summary.totalSessions %></td>
+                                        <td><span class="badge badge-success"><%= summary.present %></span></td>
+                                        <td><span class="badge badge-danger"><%= summary.absent %></span></td>
+                                        <td><span class="badge badge-warning"><%= summary.late %></span></td>
+                                        <td><span class="badge badge-muted"><%= summary.excused %></span></td>
+                                        <td>
+                                            <div style="display:flex;align-items:center;gap:8px;">
+                                                <div style="flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;">
+                                                    <div style="width:<%= summary.attendanceRate %>%;height:100%;background:<%= summary.attendanceRate >= 80 ? '#10b981' : summary.attendanceRate >= 60 ? '#f59e0b' : '#ef4444' %>;border-radius:4px;"></div>
+                                                </div>
+                                                <span style="font-size:0.85rem;font-weight:600;"><%= summary.attendanceRate %>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="9" class="table-empty-state">
+                                        <i class="fas fa-users"></i>
+                                        <p>No attendance records found for this club.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

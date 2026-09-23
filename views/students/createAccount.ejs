@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/svg+xml" href="<%= schoolSettings && schoolSettings.school_logo ? schoolSettings.school_logo : '/images/favicon.svg' %>">
+    <title>Create Student Account</title>
+</head>
+<body>
+
+<h2>Create Your Account</h2>
+
+<p>
+    Welcome
+    <strong>
+        <%= student.first_name %> <%= student.last_name %>
+    </strong>
+</p>
+
+<form action="/student/register" method="POST">
+
+    <!-- Hidden student id -->
+    <input
+        type="hidden"
+        name="student_id"
+        value="<%= student.student_id %>"
+    >
+
+    <label>Full Name</label><br>
+
+    <input
+        type="text"
+        value="<%= student.first_name %> <%= student.last_name %>"
+        readonly
+    >
+
+    <br><br>
+
+    <label>Email</label><br>
+
+    <input
+        type="email"
+        name="email"
+        required
+    >
+
+    <br><br>
+
+    <label>Password</label><br>
+
+    <input
+        type="password"
+        name="password"
+        required
+    >
+
+    <br><br>
+
+    <label>Confirm Password</label><br>
+
+    <input
+        type="password"
+        name="confirm_password"
+        required
+    >
+
+    <br><br>
+
+    <button type="submit">
+        Create Account
+    </button>
+
+</form>
+
+<script src="/js/theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Gallery Management</h2>
+                    <p>Browse, upload and manage club gallery images.</p>
+                </div>
+                <% if (user && user.role === 'Admin') { %>
+                    <a href="/gallery/add" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Gallery Item
+                    </a>
+                <% } %>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success" style="margin-top: 20px;"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger" style="margin-top: 20px;"><i class="fas fa-exclamation-circle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Grid Display Layout -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-top: 30px;">
+                <% if (images && images.length > 0) { %>
+                    <% images.forEach(img => { %>
+                        <div class="gallery-card">
+                            <a href="/gallery/view/<%= img.image_id %>" style="text-decoration: none; color: inherit;">
+                                <div class="gallery-image-wrapper">
+                                    <% if (img.file_path) { %>
+                                        <img src="<%= img.file_path %>" alt="<%= img.title %>">
+                                    <% } else { %>
+                                        <div class="gallery-no-image">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="gallery-card-body">
+                                    <span class="gallery-club-tag"><%= img.club_name || 'General' %></span>
+                                    <h4 class="gallery-card-title"><%= img.title %></h4>
+                                    <% if (img.caption) { %>
+                                        <p class="gallery-card-caption"><%= img.caption %></p>
+                                    <% } %>
+                                    <div class="gallery-card-footer">
+                                        <small class="gallery-card-meta"><i class="far fa-calendar-alt"></i> <%= new Date(img.uploaded_at).toISOString().split('T')[0] %></small>
+                                        <span class="<%= img.status === 'Published' ? 'status-pill-published' : 'status-pill-unpublished' %>"><%= img.status %></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <% if (user && user.role === 'Admin') { %>
+                                <div class="gallery-actions-bar">
+                                    <a href="/gallery/edit/<%= img.image_id %>">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="/gallery/delete/<%= img.image_id %>" class="delete-link" onclick="return confirm('Delete this gallery item permanently?')">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="gallery-empty-block">
+                        <i class="fas fa-images"></i>
+                        <h4>No Gallery Items Yet</h4>
+                        <p>There are currently no images in the gallery. Click "Add Gallery Item" to get started.</p>
+                        <% if (user && user.role === 'Admin') { %>
+                            <div style="margin-top: 20px;">
+                                <a href="/gallery/add" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add Gallery Item
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

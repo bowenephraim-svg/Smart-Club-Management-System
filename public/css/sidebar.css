@@ -1,0 +1,35 @@
+/* Sidebar finishing touches */
+
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #475569 transparent;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #475569;
+}
+
+.sidebar-menu span,
+.logo-text,
+.user-info {
+    min-width: 0;
+}
+
+.sidebar-menu span,
+.logo-text h2,
+.logo-text span,
+.user-info h4,
+.user-info span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar-menu a[href="/settings"] {
+    margin-top: 8px;
+}

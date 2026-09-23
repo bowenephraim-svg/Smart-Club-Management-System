@@ -1,0 +1,70 @@
+/* Module polish for analytics, activities, and attendance */
+
+.analytics-card,
+.metric-panel,
+.attendance-hero,
+.module-panel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, rgba(17, 28, 46, .98), rgba(12, 22, 38, .98));
+    box-shadow: var(--shadow-sm);
+}
+
+.attendance-hero,
+.module-panel {
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.attendance-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.attendance-hero h2,
+.module-panel h2,
+.module-panel h3 {
+    margin: 0;
+    color: #f8fafc;
+}
+
+.attendance-hero p,
+.module-panel p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+}
+
+.sync-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 13px;
+    border: 1px solid rgba(16, 185, 129, .35);
+    border-radius: 999px;
+    background: rgba(16, 185, 129, .13);
+    color: #86efac;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.attendance-state-selector {
+    min-width: 150px;
+    border-color: var(--border) !important;
+    background: #0b1424 !important;
+    color: #f8fafc !important;
+}
+
+.table-empty-state {
+    color: var(--text-muted) !important;
+    text-align: center;
+}
+
+.table-empty-state .empty-icon,
+.table-empty-state i {
+    display: block;
+    margin-bottom: 12px;
+    color: #64748b !important;
+    font-size: 38px;
+}

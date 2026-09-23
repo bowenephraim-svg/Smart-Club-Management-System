@@ -1,0 +1,195 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/attendance" class="back-link"><i class="fas fa-arrow-left"></i> Return to Attendance</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3><i class="fas fa-clipboard-check"></i> Mark Attendance</h3>
+                    <p>Select an activity and mark attendance for all eligible club members.</p>
+                </div>
+
+                <form id="markAttendanceForm" method="POST" action="/attendance/mark" class="standard-system-form">
+                    <div class="form-grid-two-columns" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                        <div class="input-field-wrapper">
+                            <label for="club_id" style="display:block;font-size:.85rem;font-weight:600;color:var(--text-main);margin-bottom:6px;">Club <span class="required" style="color:var(--danger);">*</span></label>
+                            <select id="club_id" name="club_id" required style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-primary);font-size:.95rem;transition:border-color .2s;">
+                                <option value="" disabled <%= !formData.club_id ? 'selected' : ''>>Select a club...</option>
+                                <% if (clubs && clubs.length > 0) { %>
+                                    <% clubs.forEach(club => { %>
+                                        <option value="<%= club.club_id %>" <%= String(formData.club_id) === String(club.club_id) ? 'selected' : '' %>><%= club.club_name %></option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="activity_id" style="display:block;font-size:.85rem;font-weight:600;color:var(--text-main);margin-bottom:6px;">Activity <span class="required" style="color:var(--danger);">*</span></label>
+                            <select id="activity_id" name="activity_id" required style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-primary);font-size:.95rem;transition:border-color .2s;">
+                                <option value="" disabled <%= !formData.activity_id ? 'selected' : ''>>Select an activity...</option>
+                                <% if (activities && activities.length > 0) { %>
+                                    <% activities.forEach(activity => { %>
+                                        <option value="<%= activity.activity_id %>" data-club-id="<%= activity.club_id %>" <%= String(formData.activity_id) === String(activity.activity_id) ? 'selected' : '' %>>
+                                            <%= activity.activity_name %> (<%= activity.club_name %>) — <%= activity.activity_date %>
+                                        </option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="attendanceRosterContainer" style="display:none; margin-top:24px;">
+                        <div class="table-card">
+                            <div class="table-header">
+                                <h3>Student Roster</h3>
+                                <div class="activity-action-group">
+                                    <button type="button" class="btn btn-sm btn-success" onclick="markAll('Present')">
+                                        <i class="fas fa-check"></i> Mark All Present
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="markAll('Absent')">
+                                        <i class="fas fa-times"></i> Mark All Absent
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="responsive-table-wrapper">
+                                <table class="system-data-table" id="attendanceRosterTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Admission No</th>
+                                            <th>Student Name</th>
+                                            <th>Class</th>
+                                            <th>Status <span class="required">*</span></th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rosterBody">
+                                        <tr>
+                                            <td colspan="5" style="text-align:center;padding:30px;">
+                                                Select a club and activity to load the roster.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="form-action-footer-row" style="margin-top:20px;">
+                            <a href="/attendance" class="btn btn-muted">Cancel</a>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Attendance</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const clubSelect = document.getElementById('club_id');
+    const activitySelect = document.getElementById('activity_id');
+    const container = document.getElementById('attendanceRosterContainer');
+    const rosterBody = document.getElementById('rosterBody');
+    const activityOptions = Array.from(activitySelect.querySelectorAll('option[data-club-id]'));
+
+    function filterActivities() {
+        const selectedClubId = clubSelect.value;
+        let selectedStillValid = false;
+
+        activityOptions.forEach(opt => {
+            if (!selectedClubId || opt.dataset.clubId === selectedClubId) {
+                opt.style.display = '';
+                opt.disabled = false;
+                if (opt.value === activitySelect.value) {
+                    selectedStillValid = true;
+                }
+            } else {
+                opt.style.display = 'none';
+                opt.disabled = true;
+            }
+        });
+
+        if (!selectedStillValid && activitySelect.value) {
+            activitySelect.value = '';
+        }
+
+        loadRoster();
+    }
+
+    function loadRoster() {
+        const clubId = clubSelect.value;
+        const activityId = activitySelect.value;
+
+        if (!clubId || !activityId) {
+            container.style.display = 'none';
+            rosterBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Select a club and activity to load the roster.</td></tr>';
+            return;
+        }
+
+        container.style.display = 'block';
+        rosterBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;"><i class="fas fa-spinner fa-spin"></i> Loading roster...</td></tr>';
+
+        fetch(`/attendance/mark/roster?club_id=${clubId}&activity_id=${activityId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success || !data.students || data.students.length === 0) {
+                    rosterBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">No active members found for this club.</td></tr>';
+                    return;
+                }
+
+                rosterBody.innerHTML = data.students.map(s => `
+                    <tr>
+                        <td><code>${s.admission_no}</code></td>
+                        <td><strong>${s.first_name} ${s.last_name}</strong></td>
+                        <td>${s.class || '—'}</td>
+                        <td>
+                            <select name="records[${s.student_id}][status]" style="padding:6px 10px;font-size:0.85rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text-primary);" required>
+                                <option value="Absent" selected>Absent</option>
+                                <option value="Present">Present</option>
+                                <option value="Late">Late</option>
+                                <option value="Excused">Excused</option>
+                            </select>
+                            <input type="hidden" name="records[${s.student_id}][student_id]" value="${s.student_id}">
+                        </td>
+                        <td>
+                            <input type="text" name="records[${s.student_id}][notes]" style="padding:6px 10px;font-size:0.85rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text-primary);width:100%;" placeholder="Optional note...">
+                        </td>
+                    </tr>
+                `).join('');
+            })
+            .catch(err => {
+                console.error('Roster load error:', err);
+                rosterBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--danger);">Failed to load roster. Please try again.</td></tr>';
+            });
+    }
+
+    clubSelect.addEventListener('change', filterActivities);
+    activitySelect.addEventListener('change', loadRoster);
+
+    if (clubSelect.value) {
+        filterActivities();
+    }
+});
+
+function markAll(status) {
+    document.querySelectorAll('#rosterBody select').forEach(select => {
+        select.value = status;
+    });
+}
+</script>

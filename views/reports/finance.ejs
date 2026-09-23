@@ -1,0 +1,266 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <!-- Header -->
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Finance Report</h2>
+                <p>Income, expenses and financial summary.</p>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+
+    <a href="/reports" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to Reports
+    </a>
+
+    <button onclick="window.print()" class="btn btn-primary">
+        <i class="fas fa-print"></i>
+        Print
+    </button>
+
+    <a href="/reports/finance/pdf" class="btn btn-danger">
+        <i class="fas fa-file-pdf"></i>
+        PDF
+    </a>
+
+    <a href="/reports/finance/excel" class="btn btn-success">
+        <i class="fas fa-file-excel"></i>
+        Excel
+    </a>
+
+</div>
+
+        </div>
+
+        <!-- Statistics -->
+        <div class="dashboard-stats-grid reports-summary-grid">
+
+            <div class="stat-card info">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Total Income</span>
+                        <h2>KES <%= Number(totalIncome).toLocaleString() %></h2>
+                        <small class="stat-change"><i class="fas fa-money-bill-wave"></i> Revenue</small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Total Expenses</span>
+                        <h2>KES <%= Number(totalExpenses).toLocaleString() %></h2>
+                        <small class="stat-change"><i class="fas fa-wallet"></i> Spend</small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card success">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Current Balance</span>
+                        <h2>KES <%= Number(balance).toLocaleString() %></h2>
+                        <small class="stat-change"><i class="fas fa-chart-line"></i> Remaining Balance</small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Monthly Trend -->
+        <% if (monthlyFinance && monthlyFinance.length > 0) { %>
+        <div class="table-card" style="margin-top:30px;">
+            <div class="table-header">
+                <h3>Monthly Income vs Expenses</h3>
+            </div>
+            <div class="chart-canvas-container" style="height:350px; padding:20px;">
+                <canvas id="financeReportChart"></canvas>
+            </div>
+        </div>
+        <% } %>
+
+        <!-- Club Financial Summary -->
+        <% if (clubFinances && clubFinances.length > 0) { %>
+        <div class="table-card" style="margin-top:30px;">
+
+            <div class="table-header">
+                <h3>Club Financial Summary</h3>
+            </div>
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Club</th>
+
+                        <th>Income</th>
+
+                        <th>Expenses</th>
+
+                        <th>Balance</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <% clubFinances.forEach(club => { %>
+
+                        <tr>
+
+                            <td><%= club.club_name %></td>
+
+                            <td>KES <%= Number(club.income || 0).toLocaleString() %></td>
+
+                            <td>KES <%= Number(club.expenses || 0).toLocaleString() %></td>
+
+                            <td>
+                                <strong>
+                                    KES <%= Number((club.income || 0) - (club.expenses || 0)).toLocaleString() %>
+                                </strong>
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+        <% } %>
+
+        <!-- Financial Summary Table -->
+        <div class="table-card" style="margin-top:30px;">
+
+            <div class="table-header">
+                <h3>Financial Summary</h3>
+            </div>
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Description</th>
+                        <th>Amount (KES)</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Total Income</td>
+
+                        <td>
+                            <strong>
+                                <%= Number(totalIncome).toLocaleString() %>
+                            </strong>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Total Expenses</td>
+
+                        <td>
+                            <strong>
+                                <%= Number(totalExpenses).toLocaleString() %>
+                            </strong>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><strong>Current Balance</strong></td>
+
+                        <td>
+
+                            <strong>
+
+                                KES <%= Number(balance).toLocaleString() %>
+
+                            </strong>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+    </div>
+
+</div>
+
+<% if (monthlyFinance && monthlyFinance.length > 0) { %>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('financeReportChart');
+    if (!ctx || typeof Chart === 'undefined') return;
+
+    const labels = <%- JSON.stringify(monthlyFinance.map(m => m.month_label || m.month)) %>;
+    const income = <%- JSON.stringify(monthlyFinance.map(m => Number(m.income || 0))) %>;
+    const expenses = <%- JSON.stringify(monthlyFinance.map(m => Number(m.expenses || 0))) %>;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Income', data: income, backgroundColor: '#10b981' },
+                { label: 'Expenses', data: expenses, backgroundColor: '#ef4444' }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { stacked: false },
+                y: { beginAtZero: true, ticks: { callback: function(v) { return 'KES ' + v.toLocaleString(); } } }
+            },
+            plugins: {
+                legend: { position: 'top' }
+            }
+        }
+    });
+});
+</script>
+<% } %>
+
+<%- include('../partials/footer') %>

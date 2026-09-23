@@ -1,0 +1,196 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+<%- include('../partials/navbar') %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const title = document.querySelector('.navbar-page-title');
+        if(title){
+            title.textContent = "Student Directory Management";
+        }
+    });
+</script>
+
+<!-- ========================= -->
+<!-- PAGE HEADER -->
+<!-- ========================= -->
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;flex-wrap:wrap;gap:15px;">
+
+    <div>
+        <h2 style="margin:0;">Students</h2>
+        <p style="color:#777;margin-top:5px;">
+            Total Students: <strong><%= students.length %></strong>
+        </p>
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- SEARCH -->
+<!-- ========================= -->
+
+<div class="table-controls-bar" style="margin-bottom:20px;">
+
+    <div class="search-input-wrapper" style="position:relative;max-width:420px;">
+
+        <i class="fas fa-search"
+           style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#777;"></i>
+
+        <input
+            type="text"
+            id="tableSearch"
+            class="form-input"
+            placeholder="Search student..."
+            style="padding-left:40px;">
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- STUDENT TABLE -->
+<!-- ========================= -->
+
+<div class="table-card-container">
+
+<div class="table-responsive-wrapper">
+
+<table class="data-table" id="searchableTable">
+
+<thead>
+
+<tr>
+    <th>Admission No</th>
+    <th>Student Name</th>
+    <th>Gender</th>
+    <th>Class</th>
+    <th>Email</th>
+    <th>Phone</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<% if(students && students.length > 0){ %>
+
+<% students.forEach(student=>{ %>
+
+<tr>
+
+<td>
+    <strong><%= student.admission_no %></strong>
+</td>
+
+<td>
+
+<div style="display:flex;align-items:center;gap:10px;">
+
+<div style="
+width:40px;
+height:40px;
+border-radius:50%;
+background:#2563eb;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;">
+
+<%= student.first_name.charAt(0).toUpperCase() %><%= student.last_name.charAt(0).toUpperCase() %>
+
+</div>
+
+<div>
+
+<strong>
+<%= student.first_name %> <%= student.last_name %>
+</strong>
+
+</div>
+
+</div>
+
+</td>
+
+<td>
+
+<%= student.gender %>
+
+</td>
+<td>
+    <%= student.class %>
+    <% if (student.stream) { %>
+        <%= student.stream %>
+    <% } %>
+</td>
+
+          <td>
+
+              <%= student.email || "N/A" %>
+
+          </td>
+
+          <td>
+
+              <%= student.phone || "N/A" %>
+
+          </td>
+
+</tr>
+
+<% }) %>
+
+<% } else { %>
+
+<tr>
+
+<td colspan="6" style="text-align:center;padding:40px;">
+
+<i class="fas fa-user-graduate"
+style="font-size:40px;color:#aaa;"></i>
+
+<br><br>
+
+No students found.
+
+</td>
+
+</tr>
+
+<% } %>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- SEARCH SCRIPT -->
+<!-- ========================= -->
+
+<script>
+
+const search=document.getElementById("tableSearch");
+
+search.addEventListener("keyup",function(){
+
+const value=this.value.toLowerCase();
+
+const rows=document.querySelectorAll("#searchableTable tbody tr");
+
+rows.forEach(row=>{
+
+row.style.display=row.innerText.toLowerCase().includes(value)?"":"none";
+
+});
+
+});
+
+</script>
+
+<%- include('../partials/footer') %>

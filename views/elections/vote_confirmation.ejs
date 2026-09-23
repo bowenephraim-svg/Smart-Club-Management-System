@@ -1,0 +1,55 @@
+<%- include('../partials/student-header') %>
+<div class="student-layout">
+    <%- include('../partials/student-sidebar') %>
+    <main class="content">
+        <%- include('../partials/student-navbar') %>
+
+        <div class="back-navigation-row">
+            <a href="/elections/available" class="back-link"><i class="fas fa-arrow-left"></i> Return to Elections</a>
+        </div>
+
+            <div class="empty-state-container" style="margin-top: 40px;">
+                <div class="empty-state-icon" style="background: var(--success); color: #fff;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Vote Cast Successfully!</h2>
+                <p>
+                    Your vote in <strong><%= election.title %></strong> has been recorded securely.
+                    Thank you for participating in the democratic process.
+                </p>
+                <div class="vote-confirmation-details" style="margin: 24px auto; max-width: 480px; text-align: left;">
+                    <div class="info-card" style="border-left: 3px solid var(--success);">
+                        <div class="stat-content">
+                            <div class="stat-left">
+                                <strong style="color:var(--text-main);"><i class="fas fa-vote-yea"></i> Election</strong>
+                                <span style="color:var(--text-muted); font-size:13px;"><%= election.title %> — <%= election.club_name %></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-card" style="border-left: 3px solid var(--primary);">
+                        <div class="stat-content">
+                            <div class="stat-left">
+                                <strong style="color:var(--text-main);"><i class="fas fa-user-check"></i> Candidate</strong>
+                                <span style="color:var(--text-muted); font-size:13px;"><%= candidate.candidate_name %> — <%= candidate.position %></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-card" style="border-left: 3px solid var(--warning);">
+                        <div class="stat-content">
+                            <div class="stat-left">
+                                <strong style="color:var(--text-main);"><i class="fas fa-shield-alt"></i> Security</strong>
+                                <span style="color:var(--text-muted); font-size:13px;">Your vote is private and cannot be changed. You can only vote once per election.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-action-group" style="justify-content: center;">
+                    <a href="/elections/available" class="btn btn-primary"><i class="fas fa-vote-yea"></i> Back to Elections</a>
+                    <% if (election.status === 'Closed') { %>
+                        <a href="/elections/<%= election.election_id %>/results" class="btn btn-success"><i class="fas fa-chart-pie"></i> View Results</a>
+                    <% } %>
+                </div>
+            </div>
+    </main>
+</div>
+<%- include('../partials/student-footer') %>

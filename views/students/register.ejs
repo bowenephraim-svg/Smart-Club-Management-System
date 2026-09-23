@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link rel="icon" type="image/svg+xml" href="<%= schoolSettings && schoolSettings.school_logo ? schoolSettings.school_logo : '/images/favicon.svg' %>">
+
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body class="student-registration-page">
+
+<div class="registration-shell">
+    <section class="registration-card">
+        <div class="registration-intro">
+            <span class="registration-eyebrow">Student Portal</span>
+            <h1><%= schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System' %> Registration</h1>
+            <p>Create your student account to access clubs, activities, payments, and school updates.</p>
+            <div class="registration-note">
+                <i class="fas fa-shield-alt"></i>
+                <span>Your details are used to create and secure your student account.</span>
+            </div>
+        </div>
+
+        <div class="registration-form-area">
+            <h2>Enter your details</h2>
+
+            <% if(typeof error_msg !== 'undefined' && error_msg){ %>
+                <div class="alert alert-danger">
+                    <%= error_msg %>
+                </div>
+            <% } %>
+
+            <form action="/student/register" method="POST" class="registration-form">
+
+                <div class="registration-field">
+                    <label for="first_name">First Name</label>
+                    <input id="first_name" type="text" name="first_name" required>
+                </div>
+
+                <div class="registration-field">
+                    <label for="last_name">Last Name</label>
+                    <input id="last_name" type="text" name="last_name" required>
+                </div>
+
+                <div class="registration-field">
+                    <label for="admission_no">Admission Number</label>
+                    <input id="admission_no" type="text" name="admission_no" required>
+                </div>
+
+                <div class="registration-field">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+
+                <div class="registration-field">
+                    <label for="class">Class</label>
+                    <select id="class" name="class" required>
+                        <option value="">Select Class</option>
+                        <option>Form 1</option>
+                        <option>Form 2</option>
+                        <option>Form 3</option>
+                        <option>Form 4</option>
+                    </select>
+                </div>
+
+                <div class="registration-field">
+                    <label for="stream">Stream</label>
+                    <input id="stream" type="text" name="stream" placeholder="East" required>
+                </div>
+
+                <div class="registration-field">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" name="email" required>
+                </div>
+
+                <div class="registration-field">
+                    <label for="phone">Phone Number</label>
+                    <input id="phone" type="text" name="phone" required>
+                </div>
+
+                <div class="registration-field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" required>
+                </div>
+
+                <div class="registration-field">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input id="confirm_password" type="password" name="confirm_password" required>
+                </div>
+
+                <button type="submit" class="registration-submit">
+                    Create Account <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <p class="registration-login-link">Already have an account? <a href="/auth/login">Log in</a></p>
+        </div>
+    </section>
+</div>
+
+<script src="/js/theme.js"></script>
+</body>
+
+</html>

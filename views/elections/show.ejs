@@ -1,0 +1,181 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/elections" class="back-link"><i class="fas fa-arrow-left"></i> Return to Elections</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Election Hero -->
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-vote-yea"></i> <%= election.title %></h2>
+                    <p><%= election.description || 'No description provided for this election.' %></p>
+                </div>
+                <div class="activity-action-group">
+                    <a href="/elections/<%= election.election_id %>/results" class="btn btn-success"><i class="fas fa-chart-pie"></i> Results</a>
+                    <% if (typeof isAdminView !== 'undefined' && isAdminView) { %>
+                        <a href="/elections/edit/<%= election.election_id %>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                        <% if (election.status === 'Upcoming') { %>
+                            <form method="POST" action="/elections/<%= election.election_id %>/activate" style="display:inline;">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-play"></i> Open Election</button>
+                            </form>
+                        <% } %>
+                        <% if (election.status === 'Open') { %>
+                            <form method="POST" action="/elections/<%= election.election_id %>/close" onsubmit="return confirm('Close this election? Voting will no longer be available.');" style="display:inline;">
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-stop"></i> Close Election</button>
+                            </form>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Election Overview Stats -->
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Club</span>
+                            <h2 style="font-size:20px;"><%= election.club_name %></h2>
+                            <small class="stat-change"><i class="fas fa-users"></i> Host club</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-users"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Election Date</span>
+                            <h2 style="font-size:20px;"><%= election.election_date %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-alt"></i> Scheduled date</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Status</span>
+                            <h2 style="font-size:20px;"><span class="election-status-pill <%= (election.status || '').toLowerCase() %>"><%= election.status %></span></h2>
+                            <small class="stat-change"><i class="fas fa-info-circle"></i> Voting state</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-info-circle"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Candidates / Votes</span>
+                            <h2 style="font-size:20px;"><%= election.candidate_count || 0 %> / <%= election.vote_count || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-user-check"></i> <%= turnout.turnoutPercentage || 0 %>% turnout</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-user-check"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidate Management Card -->
+            <div class="data-table-card" id="candidates">
+                <div class="table-search-header">
+                    <h3 class="table-card-title"><i class="fas fa-user-check"></i> Candidates</h3>
+                    <% if (typeof isAdminView !== 'undefined' && isAdminView && election.status === 'Upcoming') { %>
+                        <a href="/elections/<%= election.election_id %>/candidates/add" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Add Candidate
+                        </a>
+                    <% } else { %>
+                        <span class="coming-soon-badge"><i class="fas fa-lock"></i> Candidates locked while <%= election.status.toLowerCase() %></span>
+                    <% } %>
+                </div>
+
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table" id="electionCandidatesTable">
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Admission No</th>
+                                <th>Position</th>
+                                <th>Votes</th>
+                                <% if (typeof isAdminView !== 'undefined' && isAdminView && election.status === 'Upcoming') { %>
+                                    <th class="text-center">Actions</th>
+                                <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (candidates && candidates.length > 0) { %>
+                                <% candidates.forEach(candidate => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="activity-name-block">
+                                                <strong><%= candidate.candidate_name %></strong>
+                                                <span><%= candidate.class || 'Class not set' %></span>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge badge-primary"><%= candidate.admission_no %></span></td>
+                                        <td><span class="badge badge-info"><%= candidate.position %></span></td>
+                                        <td><span class="badge badge-purple"><%= candidate.vote_count || 0 %></span></td>
+                                        <% if (typeof isAdminView !== 'undefined' && isAdminView && election.status === 'Upcoming') { %>
+                                            <td class="text-center">
+                                                <div class="activity-action-group">
+                                                    <a href="/elections/<%= election.election_id %>/candidates/<%= candidate.candidate_id %>/edit" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                                                    <form method="POST" action="/elections/<%= election.election_id %>/candidates/<%= candidate.candidate_id %>/remove" onsubmit="return confirm('Remove this candidate from the election?');" style="display:inline;">
+                                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Remove</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        <% } %>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="<%= (typeof isAdminView !== 'undefined' && isAdminView && election.status === 'Upcoming') ? 5 : 4 %>" class="table-empty-state">
+                                        <i class="fas fa-user-check"></i>
+                                        <p>No candidates have been added to this election yet.</p>
+                                        <% if (typeof isAdminView !== 'undefined' && isAdminView && election.status === 'Upcoming') { %>
+                                            <a href="/elections/<%= election.election_id %>/candidates/add" class="btn btn-primary"><i class="fas fa-plus"></i> Add First Candidate</a>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Voting Guidance Card -->
+            <div class="info-card" style="margin-top:24px; border-left:3px solid var(--primary);">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <strong style="color:var(--text-main);">Voting Status</strong>
+                        <span style="color:var(--text-muted); font-size:13px; line-height:1.6;">
+                            <% if (election.status === 'Upcoming') { %>
+                                This election has not opened yet. Add candidates, then click "Open Election" to enable student voting.
+                            <% } else if (election.status === 'Open') { %>
+                                Voting is currently open. Eligible club members can cast their vote once. Close the election to stop voting and finalize results.
+                            <% } else { %>
+                                This election is closed. Voting has ended and results are available for review.
+                            <% } %>
+                        </span>
+                    </div>
+                    <% if (election.vote_count > 0) { %>
+                        <a href="/elections/<%= election.election_id %>/results" class="btn btn-success"><i class="fas fa-trophy"></i> View Winners</a>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>
+
+<script src="/js/elections.js"></script>

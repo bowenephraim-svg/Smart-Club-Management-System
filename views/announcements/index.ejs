@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Announcements</h2>
+                    <p>Broadcast important notices and updates to clubs and students.</p>
+                </div>
+                <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
+            </div>
+
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h2>Announcements Coming Soon</h2>
+                <p>This module will allow administrators to create, schedule, and broadcast announcements to clubs and students across the system.</p>
+                <a href="/dashboard" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon blue"><i class="fas fa-paper-plane"></i></div>
+                    <h4>Broadcast Messages</h4>
+                    <p>Send important notices to all students or target specific clubs with custom messages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green"><i class="fas fa-calendar-check"></i></div>
+                    <h4>Scheduled Notices</h4>
+                    <p>Queue announcements to be published at a specific date and time in the future.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon amber"><i class="fas fa-bell"></i></div>
+                    <h4>Priority Alerts</h4>
+                    <p>Mark urgent announcements with priority flags to ensure immediate visibility.</p>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

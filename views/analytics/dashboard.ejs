@@ -1,0 +1,165 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar') %>
+<%- include('partials/navbar') %>
+
+<!-- Script configuration updating the dynamic Navbar Title block contextually -->
+<script>
+    document.querySelector('.navbar-page-title').textContent = "Dashboard Overview";
+</script>
+
+<!-- Flash Messages Container Layer -->
+<% if (success_msg && success_msg.length > 0) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <%= success_msg %>
+        <button type="button" class="alert-close-btn" aria-label="Close">&times;</button>
+    </div>
+<% } %>
+
+<% if (error_msg && error_msg.length > 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i> <%= error_msg %>
+        <button type="button" class="alert-close-btn" aria-label="Close">&times;</button>
+    </div>
+<% } %>
+
+<!-- 📊 Summary Stats Grid Counter Components -->
+<div class="dashboard-stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon-wrapper" style="background-color: rgba(30, 58, 138, 0.1); color: var(--primary-color);">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="stat-data-block">
+            <h3><%= stats.totalStudents || 0 %></h3>
+            <p>Total Students</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon-wrapper" style="background-color: rgba(217, 119, 6, 0.1); color: var(--secondary-color);">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-data-block">
+            <h3><%= stats.totalClubs || 0 %></h3>
+            <p>Active Clubs</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon-wrapper" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success);">
+            <i class="fas fa-id-card"></i>
+        </div>
+        <div class="stat-data-block">
+            <h3><%= stats.totalMemberships || 0 %></h3>
+            <p>Club Memberships</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon-wrapper" style="background-color: rgba(59, 130, 246, 0.1); color: var(--info-blue, #3b82f6);">
+            <i class="fas fa-wallet"></i>
+        </div>
+        <div class="stat-data-block">
+            <h3>KES <%= (stats.totalRevenue || 0).toLocaleString() %></h3>
+            <p>Revenue Collected</p>
+        </div>
+    </div>
+</div>
+
+<!-- 📈 Analytical Charts Section -->
+<div class="dashboard-charts-layout">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <h4><i class="fas fa-chart-line" style="color: var(--primary-color); margin-right: 8px;"></i> Membership Growth Trend</h4>
+        </div>
+        <div class="chart-canvas-container">
+            <canvas id="membershipTrendChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <h4><i class="fas fa-chart-bar" style="color: var(--secondary-color); margin-right: 8px;"></i> Distribution Across Clubs</h4>
+        </div>
+        <div class="chart-canvas-container">
+            <canvas id="clubDistributionChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- 📋 Split Data Row Layout: Recent Students vs. Active Patrons -->
+<div class="dashboard-split-layout" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+    
+    <!-- Left Column: Recent Registrations -->
+    <div class="table-card-container">
+        <div class="table-controls-bar">
+            <h3 class="table-title-heading"><i class="fas fa-user-plus" style="margin-right: 8px; color: var(--primary-color);"></i> Recent Student Registrations</h3>
+            <a href="/students" class="btn btn-primary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">View All</a>
+        </div>
+        
+        <div class="table-responsive-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Admission No</th>
+                        <th>Student Name</th>
+                        <th>Class/Form</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (recentStudents && recentStudents.length > 0) { %>
+                        <% recentStudents.forEach(student => { %>
+                            <tr>
+                                <td><strong><%= student.admission_no %></strong></td>
+                                <td><%= student.first_name %> <%= student.last_name %></td>
+                                <td><%= student.form %>-<%= student.stream %></td>
+                                <td>
+                                    <span class="status-badge <%= student.status === 'Active' ? 'status-active' : 'status-inactive' %>">
+                                        <%= student.status %>
+                                    </span>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                <i class="fas fa-folder-open" style="display:block; font-size: 1.5rem; margin-bottom: 0.5rem;"></i> No recent registrations found.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Right Column: Assigned Patrons Overview -->
+    <div class="table-card-container">
+        <div class="table-controls-bar">
+            <h3 class="table-title-heading"><i class="fas fa-user-tie" style="margin-right: 8px; color: var(--secondary-color);"></i> Active Patrons</h3>
+            <a href="/patrons" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Manage</a>
+        </div>
+
+        <div class="patrons-list-block" style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+            <% if (activePatrons && activePatrons.length > 0) { %>
+                <% activePatrons.slice(0, 4).forEach(patron => { %>
+                    <div class="patron-mini-card" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background-color: #f8fafc; border-radius: var(--radius-sm); border-left: 3px solid var(--secondary-color);">
+                        <div class="patron-avatar-stub" style="width: 36px; height: 36px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--bg-sidebar);">
+                            <%= patron.first_name.charAt(0) %><%= patron.last_name.charAt(0) %>
+                        </div>
+                        <div class="patron-mini-meta">
+                            <h5 style="margin: 0; font-size: 0.9rem; color: var(--text-main); font-weight: 600;"><%= patron.first_name %> <%= patron.last_name %></h5>
+                            <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);"><%= patron.email %></p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 1rem;">No active patrons allocated.</p>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- Load Charting Visual Assets right before bringing down structural shell parameters -->
+<script src="/js/charts.js"></script>
+
+<%- include('partials/footer') %>

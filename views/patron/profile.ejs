@@ -1,0 +1,138 @@
+<%- include('../partials/header', { pageTitle: pageTitle || 'My Profile' }) %>
+
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+            <div class="header-text-block">
+                <h2><i class="fas fa-user-circle" style="color:var(--primary-color);margin-right:8px;"></i> My Profile</h2>
+                <p>Your patron profile information.</p>
+            </div>
+            <a href="/patron/dashboard" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="dashboard-content">
+
+            <div style="display:grid;grid-template-columns:1fr 2fr;gap:1.5rem;margin-top:1rem;">
+
+                <!-- Profile Card -->
+                <div class="table-card-container" style="text-align:center;padding:2rem 1.5rem;">
+                    <div class="profile-avatar profile-avatar-lg" data-profile-preview-container>
+                        <% if (patron && patron.profile_image) { %>
+                            <img src="<%= patron.profile_image %>" alt="Profile image" data-profile-preview>
+                        <% } else { %>
+                            <%= patron && patron.full_name ? patron.full_name.charAt(0).toUpperCase() : 'P' %>
+                        <% } %>
+                    </div>
+
+                    <form action="/patron/profile/image" method="POST" enctype="multipart/form-data" style="margin-top:1rem;">
+                        <label for="patronProfileImage" class="btn btn-primary btn-sm profile-upload-control">
+                            <i class="fas fa-camera"></i> Choose Profile Image
+                        </label>
+                        <input id="patronProfileImage" type="file" name="profile_image" accept="image/jpeg,image/png,image/webp" required style="display:none;" onchange="this.form.submit()">
+                    </form>
+                    <h3 style="margin:0 0 .25rem 0;font-size:1.2rem;color:var(--text-main);">
+                        <%= patron && patron.full_name ? patron.full_name : 'Patron' %>
+                    </h3>
+                    <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 .5rem 0;">
+                        <i class="fas fa-user-tie"></i> Club Patron
+                    </p>
+                    <% if (patron && patron.department) { %>
+                    <p style="color:var(--text-secondary);font-size:.85rem;margin:0;">
+                        <i class="fas fa-building"></i> <%= patron.department %>
+                    </p>
+                    <% } %>
+
+                    <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+                        <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;color:var(--text-secondary);font-size:.85rem;">
+                            <i class="fas fa-users" style="color:var(--primary);"></i>
+                            <strong style="font-size:1.2rem;color:var(--primary);"><%= clubs ? clubs.length : 0 %></strong>
+                            Club<%= clubs && clubs.length !== 1 ? 's' : '' %> Assigned
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Details -->
+                <div class="table-card-container" style="padding:1.5rem;">
+                    <h4 style="margin:0 0 1.25rem 0;font-size:1rem;color:var(--text-main);border-bottom:1px solid var(--border);padding-bottom:.75rem;">
+                        <i class="fas fa-info-circle" style="color:var(--primary);margin-right:.5rem;"></i>
+                        Profile Information
+                    </h4>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div>
+                            <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">Full Name</label>
+                            <p style="margin:.25rem 0 0 0;color:var(--text-main);font-weight:500;">
+                                <%= patron && patron.full_name ? patron.full_name : '—' %>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">Email</label>
+                            <p style="margin:.25rem 0 0 0;color:var(--text-main);font-weight:500;">
+                                <%= patron && patron.email ? patron.email : '—' %>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">Department</label>
+                            <p style="margin:.25rem 0 0 0;color:var(--text-main);font-weight:500;">
+                                <%= patron && patron.department ? patron.department : '—' %>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">Phone</label>
+                            <p style="margin:.25rem 0 0 0;color:var(--text-main);font-weight:500;">
+                                <%= patron && patron.phone ? patron.phone : '—' %>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label style="font-size:.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;">Role</label>
+                            <p style="margin:.25rem 0 0 0;">
+                                <span class="status-badge status-active">Patron</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Assigned Clubs -->
+                    <% if (clubs && clubs.length > 0) { %>
+                    <h4 style="margin:1.5rem 0 .75rem 0;font-size:1rem;color:var(--text-main);border-bottom:1px solid var(--border);padding-bottom:.75rem;">
+                        <i class="fas fa-users" style="color:var(--secondary);margin-right:.5rem;"></i>
+                        Assigned Clubs
+                    </h4>
+                    <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+                        <% clubs.forEach(function(c) { %>
+                        <span style="background:var(--primary-soft);color:var(--primary);border-radius:999px;padding:.35rem .85rem;font-size:.85rem;font-weight:600;">
+                            <i class="fas fa-users"></i> <%= c.club_name %>
+                            <span style="opacity:.7;">&bull; <%= c.active_member_count || 0 %> members</span>
+                        </span>
+                        <% }); %>
+                    </div>
+                    <% } %>
+
+                    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
+                        <p style="color:var(--text-muted);font-size:.82rem;margin:0;">
+                            <i class="fas fa-info-circle"></i>
+                            To update your profile information, please contact the System Administrator.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include('../partials/footer') %>

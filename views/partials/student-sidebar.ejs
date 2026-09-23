@@ -1,0 +1,167 @@
+<!-- =====================================================
+     STUDENT SIDEBAR
+====================================================== -->
+
+<aside class="sidebar">
+
+    <!-- Logo -->
+
+    <div class="logo">
+
+        <h4>
+            <%= schoolSettings
+                ? (schoolSettings.school_name || 'Smart Club System')
+                : 'Smart Club System'
+            %>
+        </h4>
+
+        <small>
+            Student Portal
+        </small>
+
+    </div>
+
+
+    <!-- Student Information -->
+
+    <div class="sidebar-user">
+
+        <div class="user-avatar">
+
+            <% if (student && student.profile_image) { %>
+
+                <img src="<%= student.profile_image %>" alt="Student profile image">
+
+            <% } else if (student && student.first_name) { %>
+
+                <%= student.first_name.charAt(0).toUpperCase() %>
+
+            <% } else { %>
+
+                S
+
+            <% } %>
+
+        </div>
+
+        <div class="user-info">
+
+            <h4>
+                <%= student
+                    ? student.first_name + ' ' + student.last_name
+                    : 'Student' %>
+            </h4>
+
+            <span>Student</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Navigation -->
+
+    <ul class="sidebar-menu">
+
+        <li class="<%= typeof currentPath !== 'undefined' && (currentPath === '/student/dashboard' || currentPath === '/dashboard' || currentPath === '/') ? 'active' : '' %>">
+            <a href="/student/dashboard">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/student/clubs') && !currentPath.includes('/available') && !currentPath.includes('/payment') ? 'active' : '' %>">
+            <a href="/student/clubs">
+                <i class="bi bi-people"></i>
+                <span>My Clubs</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && (currentPath.startsWith('/student/clubs/available') || currentPath.startsWith('/student/clubs/') && currentPath.includes('payment')) ? 'active' : '' %>">
+            <a href="/student/clubs/available">
+                <i class="bi bi-plus-circle"></i>
+                <span>Join a Club</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && (currentPath.startsWith('/student/payments') || currentPath.startsWith('/student/payment')) ? 'active' : '' %>">
+            <a href="/student/payments">
+                <i class="bi bi-cash-stack"></i>
+                <span>My Payments</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/student/events') ? 'active' : '' %>">
+            <a href="/student/events">
+                <i class="bi bi-calendar-event"></i>
+                <span>Events</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/student/attendance') ? 'active' : '' %>">
+            <a href="/student/attendance">
+                <i class="bi bi-check2-square"></i>
+                <span>Attendance</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/student/gallery') ? 'active' : '' %>">
+            <a href="/student/gallery">
+                <i class="bi bi-images"></i>
+                <span>Gallery</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/student/achievements') ? 'active' : '' %>">
+            <a href="/student/achievements">
+                <i class="bi bi-trophy"></i>
+                <span>My Achievements</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/student/notifications') ? 'active' : '' %>">
+            <a href="/student/notifications">
+                <i class="bi bi-bell-fill"></i>
+                <span>Notifications</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && (currentPath.startsWith('/elections') || currentPath.startsWith('/student/elections')) ? 'active' : '' %>">
+            <a href="/elections/available">
+                <i class="bi bi-check2-square"></i>
+                <span>Elections</span>
+            </a>
+        </li>
+
+
+        <li class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/student/profile') ? 'active' : '' %>">
+            <a href="/student/profile">
+                <i class="bi bi-person-circle"></i>
+                <span>My Profile</span>
+            </a>
+        </li>
+
+    </ul>
+
+
+    <!-- Footer -->
+
+    <div class="sidebar-footer">
+
+        <a href="/auth/logout" class="logout-btn">
+            <i class="bi bi-box-arrow-right"></i>
+            Logout
+        </a>
+
+    </div>
+
+</aside>

@@ -1,0 +1,153 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/activities" class="back-link"><i class="fas fa-arrow-left"></i> Back to Activities</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Activity</span>
+                            <h2><%= activity.activity_name %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-alt"></i> <%= activity.activity_date %></small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Club</span>
+                            <h2><%= activity.club_name %></h2>
+                            <small class="stat-change"><i class="fas fa-users"></i> Organizing club</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-users"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Registrations</span>
+                            <h2><%= registrations.length %></h2>
+                            <small class="stat-change"><i class="fas fa-user-check"></i> Registered students</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-user-check"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Attendance</span>
+                            <h2><%= attendanceSummary.presentCount || 0 %>/<%= attendanceSummary.totalStudents || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-list-check"></i> Present / total</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-list-check"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-card" style="margin-bottom: 24px;">
+                <div class="table-header">
+                    <h3>Activity Details</h3>
+                    <div class="activity-action-group">
+                        <% if (user && user.role === 'Admin') { %>
+                            <a href="/activities/edit/<%= activity.activity_id %>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                            <a href="/attendance/track/<%= activity.activity_id %>" class="btn btn-primary"><i class="fas fa-user-check"></i> Manage Attendance</a>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Description</h4>
+                        <p><%= activity.description || 'No description provided.' %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Venue</h4>
+                        <p><%= activity.venue || 'No venue provided.' %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Registration Count</h4>
+                        <p><%= registrations.length %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Attendance Summary</h4>
+                        <p><%= attendanceSummary.presentCount || 0 %> present, <%= attendanceSummary.absentCount || 0 %> absent</p>
+                    </div>
+                </div>
+            </div>
+
+            <% if (user && user.role === 'Admin') { %>
+                <div class="table-card" style="margin-bottom: 24px;">
+                    <div class="table-header">
+                        <h3>Register Student</h3>
+                    </div>
+                    <form method="POST" action="/activities/<%= activity.activity_id %>/register" class="activity-toolbar-form">
+                        <div class="activity-toolbar-group">
+                            <select name="student_id" required>
+                                <option value="">Choose a student...</option>
+                                <% eligibleStudents.forEach(student => { %>
+                                    <option value="<%= student.student_id %>"><%= student.first_name %> <%= student.last_name %> (<%= student.admission_no %>)</option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Register</button>
+                    </form>
+                </div>
+            <% } %>
+
+            <div class="table-card">
+                <div class="table-header">
+                    <h3>Registered Students</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Admission No</th>
+                                <th>Registered On</th>
+                                <% if (user && user.role === 'Admin') { %><th>Actions</th><% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (registrations && registrations.length > 0) { %>
+                                <% registrations.forEach(reg => { %>
+                                    <tr>
+                                        <td><strong><%= reg.first_name %> <%= reg.last_name %></strong></td>
+                                        <td><%= reg.admission_no %></td>
+                                        <td><%= reg.registration_date %></td>
+                                        <% if (user && user.role === 'Admin') { %>
+                                            <td>
+                                                <form method="POST" action="/activities/<%= activity.activity_id %>/registrations/<%= reg.registration_id %>/remove" onsubmit="return confirm('Remove this registration?');">
+                                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Remove</button>
+                                                </form>
+                                            </td>
+                                        <% } %>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr><td colspan="4" class="table-empty-state">No registrations yet.</td></tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

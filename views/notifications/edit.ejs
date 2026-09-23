@@ -1,0 +1,162 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Edit Notification</h2>
+                <p>Update an existing notification.</p>
+            </div>
+
+            <a href="/notifications" class="btn btn-muted">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+
+        </div>
+
+        <form action="/notifications/edit/<%= notification.notification_id %>" method="POST" class="form-card">
+
+            <div class="form-grid">
+
+                <!-- User -->
+                <div class="form-group">
+
+                    <label>User</label>
+
+                    <select name="user_id" class="form-control" disabled>
+
+                        <% users.forEach(user => { %>
+
+                            <option
+                                value="<%= user.user_id %>"
+                                <%= user.user_id == notification.user_id ? 'selected' : '' %>>
+
+                                <%= user.full_name %> (<%= user.role %>)
+
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                    <!-- Keep user_id submitted -->
+                    <input
+                        type="hidden"
+                        name="user_id"
+                        value="<%= notification.user_id %>">
+
+                </div>
+
+                <!-- Type -->
+
+                <div class="form-group">
+
+                    <label>Notification Type</label>
+
+                    <select name="type" class="form-control">
+
+                        <option value="General" <%= notification.type==="General"?"selected":"" %>>
+                            General
+                        </option>
+
+                        <option value="Payment" <%= notification.type==="Payment"?"selected":"" %>>
+                            Payment
+                        </option>
+
+                        <option value="Membership" <%= notification.type==="Membership"?"selected":"" %>>
+                            Membership
+                        </option>
+
+                        <option value="Event" <%= notification.type==="Event"?"selected":"" %>>
+                            Event
+                        </option>
+
+                        <option value="Attendance" <%= notification.type==="Attendance"?"selected":"" %>>
+                            Attendance
+                        </option>
+
+                        <option value="Announcement" <%= notification.type==="Announcement"?"selected":"" %>>
+                            Announcement
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- Status -->
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select name="status" class="form-control">
+
+                    <option
+                        value="Unread"
+                        <%= notification.status==="Unread"?"selected":"" %>>
+                        Unread
+                    </option>
+
+                    <option
+                        value="Read"
+                        <%= notification.status==="Read"?"selected":"" %>>
+                        Read
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Message -->
+
+            <div class="form-group">
+
+                <label>Message</label>
+
+                <textarea
+                    name="message"
+                    rows="6"
+                    class="form-control"
+                    required><%= notification.message %></textarea>
+
+            </div>
+
+            <div style="margin-top:25px; display:flex; gap:10px;">
+
+                <button class="btn btn-success">
+
+                    <i class="fas fa-save"></i>
+
+                    Save Changes
+
+                </button>
+
+                <a
+                    href="/notifications"
+                    class="btn btn-muted">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    </div>
+</div>

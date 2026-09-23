@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/svg+xml" href="<%= schoolSettings && schoolSettings.school_logo ? schoolSettings.school_logo : '/images/favicon.svg' %>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Payment | Victory School</title>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <style>
+        .payment-page-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--background);
+            padding: 24px;
+        }
+
+        .payment-page-card {
+            width: 100%;
+            max-width: 960px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        .payment-page-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+        }
+
+        .payment-page-header h1 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .payment-page-header p {
+            margin: 6px 0 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .payment-page-body {
+            padding: 28px;
+        }
+
+        .payment-form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .payment-form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .payment-form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .payment-summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .payment-summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .payment-summary-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .payment-summary-value {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .payment-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .payment-step {
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface-alt);
+            text-align: center;
+        }
+
+        .payment-step h4 {
+            margin: 10px 0 6px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .payment-step p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .payment-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-page-shell">
+        <div class="payment-page-card">
+            <div class="payment-page-header">
+                <h1><i class="fas fa-money-check-alt"></i> Club Registration Payment</h1>
+                <p>Complete your registration payment to activate your club membership.</p>
+            </div>
+
+            <div class="payment-page-body">
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
+                    <!-- Payment Form -->
+                    <div>
+                        <div style="border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;">
+                            <div style="padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface-alt);">
+                                <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-main);">
+                                    <i class="fas fa-credit-card" style="color:var(--primary);margin-right:8px;"></i>Payment Details
+                                </h3>
+                            </div>
+                            <div style="padding:20px;">
+                                <form action="/student/payment" method="POST">
+                                    <input type="hidden" name="student_id" value="<%= student.student_id %>">
+                                    <input type="hidden" name="amount" value="500">
+
+                                    <div style="margin-bottom:16px;">
+                                        <label class="payment-form-label">Payment Method <span style="color:var(--danger);">*</span></label>
+                                        <select name="payment_method" class="payment-form-control" required>
+                                            <option value="">Select Payment Method</option>
+                                            <option value="M-Pesa">M-Pesa</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Bank">Bank Deposit</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="margin-bottom:20px;">
+                                        <label class="payment-form-label">Transaction Code <span style="color:var(--danger);">*</span></label>
+                                        <input type="text" class="payment-form-control" name="transaction_code" placeholder="Example: SHG78KLMN" required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary" style="width:100%;border-radius:10px;padding:12px;">
+                                        <i class="fas fa-check-circle"></i> Submit Payment
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Payment Process -->
+                        <div style="border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+                            <div style="padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface-alt);">
+                                <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-main);">
+                                    <i class="fas fa-info-circle" style="color:var(--primary);margin-right:8px;"></i>Payment Process
+                                </h3>
+                            </div>
+                            <div style="padding:20px;">
+                                <div class="payment-steps">
+                                    <div class="payment-step">
+                                        <h4>1. Submit Payment</h4>
+                                        <p>Pay the registration fee and submit the transaction code.</p>
+                                    </div>
+                                    <div class="payment-step">
+                                        <h4>2. Finance Review</h4>
+                                        <p>The Finance Office reviews and verifies your payment.</p>
+                                    </div>
+                                    <div class="payment-step">
+                                        <h4>3. Approval</h4>
+                                        <p>Your account becomes active and you receive a notification.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Summary -->
+                    <div>
+                        <div style="border:1px solid var(--border);border-radius:14px;overflow:hidden;position:sticky;top:24px;">
+                            <div style="padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface-alt);">
+                                <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-main);">
+                                    <i class="fas fa-user-graduate" style="color:var(--primary);margin-right:8px;"></i>Student Details
+                                </h3>
+                            </div>
+                            <div style="padding:20px;">
+                                <div class="payment-summary-row">
+                                    <span class="payment-summary-label">Name</span>
+                                    <span class="payment-summary-value"><%= student.first_name %> <%= student.last_name %></span>
+                                </div>
+                                <div class="payment-summary-row">
+                                    <span class="payment-summary-label">Admission Number</span>
+                                    <span class="payment-summary-value"><%= student.admission_no %></span>
+                                </div>
+                                <div class="payment-summary-row">
+                                    <span class="payment-summary-label">Registration Fee</span>
+                                    <span class="payment-summary-value" style="color:var(--success);font-size:1.1rem;">KES 500</span>
+                                </div>
+
+                                <div style="margin-top:16px;padding:14px;border-radius:10px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);">
+                                    <strong style="color:var(--warning);display:block;margin-bottom:6px;">Payment Approval Required</strong>
+                                    <p style="margin:0;color:var(--text-secondary);font-size:.9rem;line-height:1.5;">
+                                        After submitting your payment, the Finance Office will verify the transaction before activating your club membership.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="/js/theme.js"></script>
+</body>
+</html>

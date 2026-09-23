@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/patrons" class="back-link"><i class="fas fa-arrow-left"></i> Return to Patrons</a>
+            </div>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3>Assign New Patron</h3>
+                    <p>Enter the patron details and assign the patron to an available club.</p>
+                </div>
+
+                <% if (error) { %>
+                    <div class="alert alert-danger" role="alert"><%= error %></div>
+                <% } %>
+
+                <form action="/patrons/add" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="first_name">First Name <span class="required">*</span></label>
+                            <input type="text" id="first_name" name="first_name" value="<%= formData && formData.first_name ? formData.first_name : '' %>" required>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="last_name">Last Name <span class="required">*</span></label>
+                            <input type="text" id="last_name" name="last_name" value="<%= formData && formData.last_name ? formData.last_name : '' %>" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="department">Department <span class="required">*</span></label>
+                            <input type="text" id="department" name="department" value="<%= formData && formData.department ? formData.department : '' %>" placeholder="e.g. Languages" required>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" value="<%= formData && formData.phone ? formData.phone : '' %>">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" value="<%= formData && formData.email ? formData.email : '' %>">
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="club_id">Assigned Club</label>
+                            <select id="club_id" name="club_id">
+                                <option value="">Leave unassigned</option>
+                                <% (clubs || []).forEach(function(club) { %>
+                                    <option value="<%= club.club_id %>" <%= formData && String(formData.club_id) === String(club.club_id) ? 'selected' : '' %> <%= club.patron_id ? 'disabled' : '' %>>
+                                        <%= club.club_name %><%= club.patron_id ? ' (Already assigned)' : '' %>
+                                    </option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-action-footer-row">
+                        <a href="/patrons" class="btn btn-muted">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Assign New Patron</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

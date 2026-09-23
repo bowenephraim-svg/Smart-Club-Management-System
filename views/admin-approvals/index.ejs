@@ -1,0 +1,112 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+
+            <div>
+
+                <h2>Admin Approval Center</h2>
+
+                <p>Approve or reject students after Finance has verified their payment.</p>
+
+            </div>
+
+        </div>
+
+        <table class="table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Admission No</th>
+                    <th>Student</th>
+                    <th>Class</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <% if(students.length===0){ %>
+
+                    <tr>
+
+                        <td colspan="6" style="text-align:center">
+
+                            No students waiting for approval.
+
+                        </td>
+
+                    </tr>
+
+                <% } %>
+
+                <% students.forEach(student=>{ %>
+
+                    <tr>
+
+                        <td>
+
+                            <%= student.admission_no %>
+
+                        </td>
+
+                        <td>
+
+                            <%= student.first_name %> <%= student.last_name %>
+
+                        </td>
+
+                        <td>
+
+                            <%= student.class %>
+
+                        </td>
+
+                        <td>
+
+                            <%= student.email %>
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-warning">
+
+                                Pending Approval
+
+                            </span>
+
+                        </td>
+
+                        <td>
+                            <span class="badge bg-secondary">Read only</span>
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</div>

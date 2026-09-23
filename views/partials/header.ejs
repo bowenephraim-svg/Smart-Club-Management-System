@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- ========================================================= -->
+    <!-- META SETTINGS -->
+    <!-- ========================================================= -->
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <title>
+        <%= typeof pageTitle !== "undefined"
+        ? pageTitle + " | " + (schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System')
+        : (schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System') %>
+    </title>
+
+    <meta name="description"
+        content="<%= schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System' %> Smart Club Membership Management System">
+
+    <meta name="author"
+        content="<%= schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System' %>">
+
+    <meta name="theme-color"
+        content="#2563eb">
+
+    <!-- ========================================================= -->
+    <!-- FAVICON -->
+    <!-- ========================================================= -->
+
+    <link rel="icon"
+          type="image/svg+xml"
+          href="<%= schoolSettings && schoolSettings.school_logo ? schoolSettings.school_logo : '/images/favicon.svg' %>">
+
+    <!-- ========================================================= -->
+    <!-- GOOGLE FONT -->
+    <!-- ========================================================= -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- ========================================================= -->
+    <!-- FONT AWESOME -->
+    <!-- ========================================================= -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- ========================================================= -->
+    <!-- ANIMATE.CSS -->
+    <!-- ========================================================= -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- ========================================================= -->
+    <!-- DATATABLES -->
+    <!-- ========================================================= -->
+
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+
+    <!-- ========================================================= -->
+    <!-- CHART.JS -->
+    <!-- ========================================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- ========================================================= -->
+    <!-- JQUERY -->
+    <!-- ========================================================= -->
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- ========================================================= -->
+    <!-- DATATABLES JS -->
+    <!-- ========================================================= -->
+
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+
+    <!-- ========================================================= -->
+    <!-- CUSTOM CSS -->
+    <!-- ========================================================= -->
+
+    <link rel="stylesheet"
+          href="/css/style.css">
+
+    <link rel="stylesheet"
+          href="/css/dashboard.css">
+
+    <link rel="stylesheet"
+          href="/css/forms.css">
+
+    <link rel="stylesheet"
+          href="/css/tables.css">
+
+    <link rel="stylesheet"
+          href="/css/cards.css">
+
+    <link rel="stylesheet"
+          href="/css/analytics.css">
+
+    <link rel="stylesheet"
+          href="/css/reports.css">
+
+    <link rel="stylesheet"
+          href="/css/navbar.css">
+
+    <link rel="stylesheet"
+          href="/css/sidebar.css">
+
+    <link rel="stylesheet"
+          href="/css/footer.css">
+
+    <link rel="stylesheet"
+          href="/css/login.css">
+
+    <link rel="stylesheet"
+          href="/css/profile.css">
+
+    <link rel="stylesheet"
+          href="/css/responsive.css">
+
+    <link rel="stylesheet"
+          href="/css/design-system.css">
+
+</head>
+
+<body>
+<script>
+    // Apply the saved preference before the page is painted to avoid a flash
+    // of the wrong theme when switching between portals.
+    try {
+        if (localStorage.getItem('victory-theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    } catch (_) {}
+</script>
+
+<!-- ========================================================= -->
+<!-- GLOBAL LOADER -->
+<!-- ========================================================= -->
+
+<div id="pageLoader">
+
+    <div class="loader-circle"></div>
+
+    <h2><%= schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System' %></h2>
+
+    <p>Loading Smart Club Management System...</p>
+
+</div>
+
+<!-- ========================================================= -->
+<!-- APP WRAPPER -->
+<!-- ========================================================= -->
+
+<div class="app-container">

@@ -1,0 +1,139 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Attendance Report</h2>
+                <p>Activity participation and registration statistics.</p>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+
+    <a href="/reports" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to Reports
+    </a>
+
+    <button onclick="window.print()" class="btn btn-primary">
+        <i class="fas fa-print"></i>
+        Print
+    </button>
+
+    <a href="/reports/attendance/pdf" class="btn btn-danger">
+        <i class="fas fa-file-pdf"></i>
+        PDF
+    </a>
+
+    <a href="/reports/attendance/excel" class="btn btn-success">
+        <i class="fas fa-file-excel"></i>
+        Excel
+    </a>
+
+</div>
+
+        </div>
+
+        <!-- Summary Card -->
+        <div class="dashboard-stats-grid reports-summary-grid">
+
+            <div class="stat-card info">
+                <div class="stat-content">
+                    <div class="stat-left">
+                        <span>Total Activities</span>
+                        <h2><%= attendance.length %></h2>
+                        <small class="stat-change"><i class="fas fa-calendar-check"></i> Recorded Sessions</small>
+                    </div>
+                    <div class="stat-icon-wrapper">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Attendance Table -->
+        <div class="table-card" style="margin-top:25px;">
+
+            <div class="table-header">
+
+                <h3>Activity Attendance</h3>
+
+            </div>
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Activity</th>
+                        <th>Club</th>
+                        <th>Registrations</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                <% if(attendance.length > 0){ %>
+
+                    <% attendance.forEach((activity,index)=>{ %>
+
+                        <tr>
+
+                            <td><%= index + 1 %></td>
+
+                            <td><%= activity.activity_name %></td>
+
+                            <td><%= activity.club_name || 'N/A' %></td>
+
+                            <td>
+
+                                <span class="badge badge-success">
+
+                                    <%= activity.registrations %>
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                <% } else { %>
+
+                    <tr>
+
+                        <td colspan="4" style="text-align:center;padding:30px;">
+                            No attendance records found.
+                        </td>
+
+                    </tr>
+
+                <% } %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+    </div>
+
+</div>
+
+<%- include('../partials/footer') %>

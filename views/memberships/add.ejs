@@ -1,0 +1,86 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/memberships" class="back-link"><i class="fas fa-arrow-left"></i> Return to Mappings Index</a>
+            </div>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3>Execute Student Club Enrolment</h3>
+                    <p>Formally provision an allocation lane link between an active scholar profile row and an approved club charter config block.</p>
+                </div>
+
+                <!-- Capacity Overflow Alert Intercept Banner -->
+                <% if (error) { %>
+                    <div class="alert alert-danger" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; border-radius: 8px; color: #fca5a5; margin-bottom: 24px; font-size: 0.9rem;">
+                        <i class="fas fa-shield-alt" style="font-size: 1.2rem;"></i>
+                        <span><%= error %></span>
+                    </div>
+                <% } %>
+
+                <form action="/memberships/add" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="student_id">Target Student Profile Scholar <span class="required">*</span></label>
+                            <select id="student_id" name="student_id" required style="width: 100%;">
+                                <option value="" disabled selected>Search & pick student instance...</option>
+                                <% if (students && students.length > 0) { %>
+                                    <% students.forEach(std => { %>
+                                        <option value="<%= std.student_id %>">[ADM: <%= std.admission_no %>] — <%= std.last_name %>, <%= std.first_name %></option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="club_id">Target Organizational Club Destination <span class="required">*</span></label>
+                            <select id="club_id" name="club_id" required style="width: 100%;">
+                                <option value="" disabled selected>Select destination charter...</option>
+                                <% if (clubs && clubs.length > 0) { %>
+                                    <% clubs.forEach(club => { %>
+                                        <!-- Keep pre-selection active if query parameter parameter matches -->
+                                        <option value="<%= club.club_id %>" <%= selectedClubId == club.club_id ? 'selected' : '' %>>
+                                            <%= club.club_name %> (Seats Occupied: <%= club.active_enrolled_count || 0 %> / <%= club.capacity %>)
+                                        </option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="role">Initial Workspace Operational Role</label>
+                            <select id="role" name="role">
+                                <option value="Member" selected>Standard Member Participant</option>
+                                <option value="President">Club Guild President</option>
+                                <option value="Vice President">Club Vice President</option>
+                                <option value="Secretary">Organizing General Secretary</option>
+                                <option value="Treasurer">Financial Accounts Treasurer</option>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="join_date">Formal Activation Date Stamp <span class="required">*</span></label>
+                            <!-- Defaults dynamically to current timezone calendar index -->
+                            <input type="date" id="join_date" name="join_date" value="<%= new Date().toISOString().split('T')[0] %>" required>
+                        </div>
+                    </div>
+
+                    <div class="form-action-footer-row">
+                        <a href="/memberships" class="btn btn-muted">Abort Enrolment</a>
+                        <button type="submit" class="btn btn-primary">Authorize Allocation Link</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

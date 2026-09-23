@@ -1,0 +1,204 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-chart-bar"></i> Attendance Reports</h2>
+                    <p>Analyze attendance trends, monthly patterns, and identify students with low attendance.</p>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="/attendance/export/csv" class="btn btn-success">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </a>
+                    <button onclick="window.print()" class="btn btn-primary">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Filters -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Report Filters</h3>
+                </div>
+                <form method="GET" action="/attendance/reports" class="activity-toolbar-form" style="padding:16px 20px;">
+                    <div class="activity-toolbar-group">
+                        <select name="club_id">
+                            <option value="">All Clubs</option>
+                            <% clubs.forEach(club => { %>
+                                <option value="<%= club.club_id %>" <%= String(filters.club_id) === String(club.club_id) ? 'selected' : '' %>><%= club.club_name %></option>
+                            <% }); %>
+                        </select>
+                        <select name="months">
+                            <% [3,6,12].forEach(m => { %>
+                                <option value="<%= m %>" <%= String(filters.months) === String(m) ? 'selected' : '' %>>Last <%= m %> Months</option>
+                            <% }); %>
+                        </select>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Apply</button>
+                        <a href="/attendance/reports" class="btn btn-muted">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Monthly Trend Chart -->
+            <% if (monthlyStats && monthlyStats.length > 0) { %>
+                <div class="table-card" style="margin-top:24px;">
+                    <div class="table-header">
+                        <h3>Monthly Attendance Trend</h3>
+                    </div>
+                    <div class="chart-canvas-container" style="height:350px; padding:20px;">
+                        <canvas id="attendanceTrendChart"></canvas>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Monthly Stats Table -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Monthly Breakdown</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Total</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Late</th>
+                                <th>Excused</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (monthlyStats && monthlyStats.length > 0) { %>
+                                <% monthlyStats.forEach(month => { %>
+                                    <% const total = Number(month.totalRecords || 0); const present = Number(month.presentCount || 0); const rate = total > 0 ? Math.round((present / total) * 100) : 0; %>
+                                    <tr>
+                                        <td><%= month.month_label || month.month %></td>
+                                        <td><%= total %></td>
+                                        <td><span class="badge badge-success"><%= present %></span></td>
+                                        <td><span class="badge badge-danger"><%= month.absentCount || 0 %></span></td>
+                                        <td><span class="badge badge-warning"><%= month.lateCount || 0 %></span></td>
+                                        <td><span class="badge badge-muted"><%= month.excusedCount || 0 %></span></td>
+                                        <td>
+                                            <div style="display:flex;align-items:center;gap:8px;">
+                                                <div style="flex:1;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;">
+                                                    <div style="width:<%= rate %>%;height:100%;background:<%= rate >= 80 ? '#10b981' : rate >= 60 ? '#f59e0b' : '#ef4444' %>;border-radius:4px;"></div>
+                                                </div>
+                                                <span style="font-size:0.85rem;font-weight:600;"><%= rate %>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="table-empty-state">No monthly data available.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Low Attendance Students -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Students with Low Attendance (< 70%)</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Admission No</th>
+                                <th>Class</th>
+                                <th>Club</th>
+                                <th>Sessions</th>
+                                <th>Present</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (lowAttendance && lowAttendance.length > 0) { %>
+                                <% lowAttendance.forEach(student => { %>
+                                    <tr>
+                                        <td><strong><%= student.first_name %> <%= student.last_name %></strong></td>
+                                        <td><span class="badge badge-primary"><%= student.admission_no %></span></td>
+                                        <td><%= student.class || '—' %></td>
+                                        <td><span class="badge badge-info"><%= student.club_name %></span></td>
+                                        <td><%= student.totalSessions %></td>
+                                        <td><span class="badge badge-success"><%= student.presentSessions %></span></td>
+                                        <td>
+                                            <span class="badge badge-danger"><%= student.attendanceRate %>%</span>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="table-empty-state">
+                                        <i class="fas fa-smile"></i>
+                                        <p>Great! No students have attendance below 70%.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>
+
+<% if (monthlyStats && monthlyStats.length > 0) { %>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('attendanceTrendChart');
+    if (!ctx || typeof Chart === 'undefined') return;
+
+    const labels = <%- JSON.stringify(monthlyStats.map(m => m.month_label || m.month)) %>;
+    const present = <%- JSON.stringify(monthlyStats.map(m => Number(m.presentCount || 0))) %>;
+    const absent = <%- JSON.stringify(monthlyStats.map(m => Number(m.absentCount || 0))) %>;
+    const late = <%- JSON.stringify(monthlyStats.map(m => Number(m.lateCount || 0))) %>;
+    const excused = <%- JSON.stringify(monthlyStats.map(m => Number(m.excusedCount || 0))) %>;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Present', data: present, backgroundColor: '#10b981' },
+                { label: 'Absent', data: absent, backgroundColor: '#ef4444' },
+                { label: 'Late', data: late, backgroundColor: '#f59e0b' },
+                { label: 'Excused', data: excused, backgroundColor: '#64748b' }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }
+            },
+            plugins: {
+                legend: { position: 'top' }
+            }
+        }
+    });
+});
+</script>
+<% } %>

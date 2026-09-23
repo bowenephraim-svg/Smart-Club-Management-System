@@ -1,0 +1,333 @@
+/* public/css/login.css */
+:root {
+    --login-bg-primary: #0f172a;
+    --login-bg-secondary: #1e293b;
+    --login-accent: #3b82f6;
+    --login-accent-hover: #2563eb;
+    --login-text-main: #f8fafc;
+    --login-text-muted: #94a3b8;
+    --login-border: #334155;
+    --login-card-bg: #111827;
+    --danger-color: #ef4444;
+}
+
+.login-body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--login-bg-primary);
+    color: var(--login-text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.login-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1000px;
+    min-height: 580px;
+    background: var(--login-card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--login-border);
+    margin: 20px;
+}
+
+.login-branding-panel {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-right: 1px solid var(--login-border);
+}
+
+@media (max-width: 768px) {
+    .login-branding-panel {
+        display: none;
+    }
+}
+
+.login-logo-img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.login-branding-panel h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.025em;
+    color: #fff;
+}
+
+.school-motto {
+    color: var(--login-text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.branding-footer {
+    position: absolute;
+    bottom: 24px;
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.login-form-panel {
+    flex: 1.2;
+    background: var(--login-bg-secondary);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 480px) {
+    .login-form-panel {
+        padding: 24px;
+    }
+}
+
+.form-container-box {
+    width: 100%;
+}
+
+.form-header-text h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #fff;
+}
+
+.form-header-text p {
+    color: var(--login-text-muted);
+    font-size: 0.9rem;
+    margin: 0 0 24px 0;
+    line-height: 1.4;
+}
+
+.input-control-wrapper {
+    margin-bottom: 20px;
+}
+
+.form-input-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #cbd5e1;
+}
+
+.label-row-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot-link-anchor {
+    font-size: 0.8rem;
+    color: var(--login-accent);
+    text-decoration: none;
+}
+
+.forgot-link-anchor:hover {
+    text-decoration: underline;
+}
+
+.input-field-group {
+    display: flex;
+    position: relative;
+    background-color: var(--login-bg-primary);
+    border: 1px solid var(--login-border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.input-field-group:focus-within {
+    border-color: var(--login-accent);
+}
+
+.input-addon-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    color: var(--login-text-muted);
+    border-right: 1px solid var(--login-border);
+}
+
+.form-input-element {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    width: 100%;
+}
+
+.password-toggle-visibility {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    cursor: pointer;
+    color: var(--login-text-muted);
+    background: transparent;
+    border: 0;
+    font: inherit;
+}
+
+.password-toggle-visibility:hover {
+    color: #fff;
+}
+
+.password-toggle-visibility:focus-visible {
+    outline: 2px solid var(--login-accent);
+    outline-offset: -2px;
+}
+
+.form-auxiliary-actions {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.checkbox-label-wrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+}
+
+.custom-checkbox-node {
+    display: none;
+}
+
+.checkbox-mock-display {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--login-border);
+    border-radius: 4px;
+    margin-right: 8px;
+    display: inline-block;
+    background-color: var(--login-bg-primary);
+    position: relative;
+}
+
+.custom-checkbox-node:checked + .checkbox-mock-display::after {
+    content: "\f00c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 10px;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.custom-checkbox-node:checked + .checkbox-mock-display {
+    background-color: var(--login-accent);
+    border-color: var(--login-accent);
+}
+
+.security-submit-trigger {
+    width: 100%;
+    background-color: var(--login-accent);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.security-submit-trigger:hover {
+    background-color: var(--login-accent-hover);
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    background-color: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+.form-footer-notes {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.form-footer-notes p {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.field-validation-message {
+    font-size: 0.75rem;
+    color: var(--danger-color);
+    display: block;
+    margin-top: 4px;
+}
+.student-register-link {
+
+    text-align: center;
+
+    margin-top: 20px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid #e2e8f0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+.student-register-link a {
+
+    color: #2563eb;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+
+.student-register-link a:hover {
+
+    text-decoration: underline;
+
+}

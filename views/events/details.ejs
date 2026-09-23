@@ -1,0 +1,103 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/events" class="back-link"><i class="fas fa-arrow-left"></i> Back to Events</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Event</span>
+                            <h2><%= event.title %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-alt"></i> <%= event.event_date %></small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Club</span>
+                            <h2><%= event.club_name || '—' %></h2>
+                            <small class="stat-change"><i class="fas fa-users"></i> Organizing club</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-users"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Attendance</span>
+                            <h2><%= attendanceCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-list-check"></i> Records</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-list-check"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Status</span>
+                            <h2><%= event.status || 'Upcoming' %></h2>
+                            <small class="stat-change"><i class="fas fa-info-circle"></i> Current state</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-info-circle"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-card" style="margin-bottom: 24px;">
+                <div class="table-header">
+                    <h3>Event Details</h3>
+                    <% if (user && user.role === 'Admin') { %>
+                        <div class="activity-action-group">
+                            <a href="/events/edit/<%= event.activity_id %>" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Description</h4>
+                        <p><%= event.description || 'No description provided.' %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Venue</h4>
+                        <p><%= event.venue || 'No venue provided.' %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Event Date</h4>
+                        <p><%= event.event_date %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Time</h4>
+                        <p><%= event.start_time || '08:00' %> - <%= event.end_time || '10:00' %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Created By</h4>
+                        <p><%= event.created_by_name || 'System' %></p>
+                    </div>
+                    <div class="info-card">
+                        <h4>Created At</h4>
+                        <p><%= event.created_at %></p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

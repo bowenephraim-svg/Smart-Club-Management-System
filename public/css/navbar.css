@@ -1,0 +1,278 @@
+/* Navbar finishing touches */
+
+.navbar * {
+    min-width: 0;
+}
+
+.breadcrumb,
+.nav-actions,
+.profile-btn {
+    white-space: nowrap;
+}
+
+.dropdown-menu {
+    color: var(--text-primary);
+}
+
+.dropdown-menu a,
+.dropdown-menu p,
+.notification {
+    color: var(--text-secondary) !important;
+}
+
+.quick-btn i,
+.icon-btn i {
+    line-height: 1;
+}
+
+/* ==========================================
+   NOTIFICATION DROPDOWN
+   ========================================== */
+
+.notification-menu {
+    width: 340px;
+    max-width: calc(100vw - 24px);
+    padding: 0;
+    overflow: hidden;
+}
+
+.notification-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.notification-menu-header h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.notification-mark-all {
+    background: none;
+    border: none;
+    color: var(--secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition), color var(--transition);
+}
+
+.notification-mark-all:hover {
+    background: rgba(37, 99, 235, .06);
+    color: var(--secondary-dark);
+}
+
+.notification-list {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background var(--transition);
+    position: relative;
+}
+
+/* An inbox entry is a link, but shares the notification layout. */
+.inbox-menu .notification-item {
+    color: inherit !important;
+    text-decoration: none;
+}
+.inbox-menu .notification-item:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .35);
+    outline-offset: -3px;
+}
+
+.notification-item:hover {
+    background: var(--surface-alt);
+}
+
+.notification-item.unread {
+    background: rgba(37, 99, 235, .05);
+}
+
+.notification-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background: rgba(37, 99, 235, .10);
+    color: var(--secondary);
+}
+
+.notification-icon.student_registration,
+.notification-icon.membership_approved,
+.notification-icon.payment_received,
+.notification-icon.vote_cast {
+    background: rgba(22, 163, 74, .10);
+    color: var(--success-dark);
+}
+
+.notification-icon.membership_pending,
+.notification-icon.membership_rejected {
+    background: rgba(245, 158, 11, .12);
+    color: var(--warning-dark);
+}
+
+.notification-icon.activity_created,
+.notification-icon.candidate_added {
+    background: rgba(124, 58, 237, .10);
+    color: #7C3AED;
+}
+
+.notification-icon.feedback_received,
+.notification-icon.election_created,
+.notification-icon.election_opened {
+    background: rgba(6, 182, 212, .10);
+    color: #0891B2;
+}
+
+.notification-icon.announcement_created,
+.notification-icon.election_closed {
+    background: rgba(220, 38, 38, .10);
+    color: var(--danger-dark);
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-message {
+    margin: 0 0 4px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.notification-time {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.notification-dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--secondary);
+    margin-top: 6px;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+}
+
+.notification-empty {
+    padding: 40px 16px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.notification-empty i {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.notification-empty p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.notification-view-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    color: var(--secondary) !important;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background var(--transition);
+}
+
+.notification-view-all:hover {
+    background: rgba(37, 99, 235, .05);
+}
+
+/* Light theme overrides */
+body.light-theme .notification-menu {
+    background: var(--surface) !important;
+}
+
+body.light-theme .notification-message {
+    color: var(--text-primary) !important;
+}
+
+body.light-theme .notification-time {
+    color: var(--text-muted) !important;
+}
+
+body.light-theme .notification-item {
+    border-bottom-color: var(--border);
+}
+
+body.light-theme .notification-item.unread {
+    background: rgba(37, 99, 235, .05);
+}
+
+body.light-theme .notification-item:hover {
+    background: var(--surface-alt);
+}
+
+body.light-theme .notification-empty {
+    color: var(--text-muted);
+}
+
+body.light-theme .notification-view-all {
+    border-top-color: var(--border);
+}
+
+/* Dropdown animation */
+.dropdown.active .notification-menu {
+    animation: notificationFadeIn .2s ease;
+}
+
+@keyframes notificationFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 760px) {
+    .profile-btn {
+        width: 40px;
+        padding: 4px;
+    }
+
+    .profile-btn i,
+    .profile-btn span {
+        display: none;
+    }
+
+    .notification-menu {
+        width: calc(100vw - 24px);
+        right: -60px;
+    }
+}

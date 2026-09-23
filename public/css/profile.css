@@ -1,0 +1,71 @@
+/* People/profile cells and profile screens */
+
+.user-profile-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-mock,
+.table-avatar,
+.patron-avatar-stub {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #06111f !important;
+    font-weight: 900;
+}
+
+.profile-name-meta {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.profile-name-meta strong,
+.student-details h4 {
+    color: #f8fafc !important;
+}
+
+.profile-name-meta span,
+.student-details span {
+    color: var(--text-muted) !important;
+    font-size: 12px;
+}
+
+.table-link-email {
+    color: #7dd3fc !important;
+    font-weight: 700;
+}
+
+.count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, .12);
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.count-pill.active {
+    background: rgba(16, 185, 129, .13);
+    color: #86efac;
+}
+
+.count-pill.idle {
+    background: rgba(239, 68, 68, .13);
+    color: #fca5a5;
+}
+
+.row-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}

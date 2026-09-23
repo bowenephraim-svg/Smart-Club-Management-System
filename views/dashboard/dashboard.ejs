@@ -1,0 +1,309 @@
+<%- include('../partials/header') %>
+
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <!-- Page Header -->
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Dashboard Overview</h2>
+                <p>Monitor school statistics, finances, memberships and analytics.</p>
+            </div>
+
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+
+            <!-- Welcome Banner -->
+            <div class="welcome-card">
+                <div class="welcome-content">
+                    <div>
+                        <h2>
+                            Welcome back, <%= (typeof user !== 'undefined' && user && user.email) ? user.full_name : "Administrator" %> 👋🎉
+                        </h2>
+                        <p>Smart Club Management System</p>
+                        <span class="welcome-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            <%= new Date().toLocaleDateString('en-GB', {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                            }) %>
+                        </span>
+                    </div>
+
+                    <div class="welcome-buttons">
+                        <a href="/students" class="btn btn-primary">
+                          <i class="fas fa-user-graduate"></i> Student Summary
+                        </a>
+                        <a href="/reports" class="btn btn-warning">
+                          <i class="fas fa-chart-pie"></i> System Summary
+                        </a>
+                        <a href="/reports" class="btn btn-success">
+                            <i class="fas fa-chart-line"></i> Reports
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+  <!-- Navbar Title Configuration -->
+  <script>
+    document.querySelector('.navbar-page-title').textContent = "Dashboard Overview";
+  </script>
+
+  <!-- Flash Messages Layer -->
+  <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="fas fa-check-circle me-2"></i> <%= success_msg %>
+      <button type="button" class="alert-close-btn" aria-label="Close">&times;</button>
+    </div>
+  <% } %>
+
+  <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-circle me-2"></i> <%= error_msg %>
+      <button type="button" class="alert-close-btn" aria-label="Close">&times;</button>
+    </div>
+  <% } %>
+
+
+  <!-- Dashboard Statistics Grid -->
+  <div class="dashboard-stats-grid">
+    <!-- Total Students -->
+    <div class="stat-card info">
+      <div class="stat-content">
+        <div class="stat-left">
+          <span>Total Students</span>
+          <h2><%= (typeof stats !== 'undefined' && stats.totalStudents) ? stats.totalStudents : 0 %></h2>
+          <small class="stat-change">
+            <i class="fas fa-arrow-up"></i> Registered Students
+          </small>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Clubs -->
+    <div class="stat-card warning">
+      <div class="stat-content">
+        <div class="stat-left">
+          <span>Active Clubs</span>
+          <h2><%= (typeof stats !== 'undefined' && stats.totalClubs) ? stats.totalClubs : 0 %></h2>
+          <small class="stat-change">
+            <i class="fas fa-users"></i> Registered Clubs
+          </small>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-users"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memberships -->
+    <div class="stat-card success">
+      <div class="stat-content">
+        <div class="stat-left">
+          <span>Memberships</span>
+          <h2><%= (typeof stats !== 'undefined' && stats.totalMemberships) ? stats.totalMemberships : 0 %></h2>
+          <small class="stat-change">
+            <i class="fas fa-id-card"></i> Active Members
+          </small>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-id-card"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue -->
+    <div class="stat-card danger">
+      <div class="stat-content">
+        <div class="stat-left">
+          <span>Total Revenue</span>
+          <h2>KES <%= Number((typeof stats !== 'undefined' && stats.totalRevenue) ? stats.totalRevenue : 0).toLocaleString() %></h2>
+          <small class="stat-change">
+            <i class="fas fa-wallet"></i> Collected Payments
+          </small>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions Grid -->
+  <div class="quick-actions">
+    <div class="dashboard-grid">
+      <a href="/students" class="quick-card">
+        <i class="fas fa-user-plus"></i>
+        <h4>Student Directory</h4>
+        <p>View registered student records.</p>
+      </a>
+      <a href="/reports/clubs" class="quick-card">
+        <i class="fas fa-users"></i>
+        <h4>Club Summary</h4>
+        <p>View club and membership activity.</p>
+      </a>
+      <a href="/reports/attendance" class="quick-card">
+        <i class="fas fa-calendar-alt"></i>
+        <h4>Activity Summary</h4>
+        <p>View scheduled club activities.</p>
+      </a>
+      <a href="/reports" class="quick-card">
+        <i class="fas fa-chart-line"></i>
+        <h4>Reports</h4>
+        <p>View system reports and analytics.</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- Analytical Charts Section -->
+  <div class="dashboard-charts-layout">
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <h4><i class="fas fa-chart-line" style="color: var(--primary-color); margin-right: 8px;"></i> Membership Growth Trend</h4>
+      </div>
+      <div class="chart-canvas-container">
+        <canvas id="membershipTrendChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <h4><i class="fas fa-chart-bar" style="color: var(--secondary-color); margin-right: 8px;"></i> Distribution Across Clubs</h4>
+      </div>
+      <div class="chart-canvas-container">
+        <canvas id="clubDistributionChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Split Data Layout: Recent Registrations & Active Patrons -->
+  <div class="dashboard-split-layout" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+    <!-- Recent Students Table -->
+    <div class="table-card-container">
+      <div class="table-controls-bar">
+        <h3 class="table-title-heading">
+          <i class="fas fa-user-plus"></i> Recent Student Registrations
+        </h3>
+        <a href="/students" class="btn btn-primary">View All</a>
+      </div>
+      <div class="table-responsive-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Admission</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (typeof recentStudents !== 'undefined' && recentStudents && recentStudents.length) { %>
+              <% recentStudents.forEach(student => { %>
+                <tr>
+                  <td><strong><%= student.admission_no %></strong></td>
+                  <td><%= student.first_name %> <%= student.last_name %></td>
+                  <td><%= student.class %> - <%= student.stream %></td>
+                  <td>
+                    <span class="status-badge status-active">Registered</span>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="4">No recent students found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Active Patrons Summary Card -->
+    <div class="table-card-container">
+      <div class="table-controls-bar">
+        <h3 class="table-title-heading">
+          <i class="fas fa-user-tie" style="margin-right: 8px; color: var(--secondary-color);"></i> Active Patrons
+        </h3>
+        <a href="/patrons" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">View All</a>
+      </div>
+
+      <div class="patrons-list-block" style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+        <% if (typeof activePatrons !== 'undefined' && activePatrons && activePatrons.length > 0) { %>
+          <% activePatrons.slice(0, 4).forEach(patron => { %>
+            <div class="patron-mini-card" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background-color: #f8fafc; border-radius: var(--radius-sm); border-left: 3px solid var(--secondary-color);">
+              <div class="patron-avatar-stub" style="width: 36px; height: 36px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--bg-sidebar);">
+                <%= (patron.first_name || patron.full_name || 'P').charAt(0).toUpperCase() %><%= (patron.last_name || '').charAt(0).toUpperCase() %>
+              </div>
+              <div class="patron-mini-meta">
+                <h5 style="margin: 0; font-size: 0.9rem; color: var(--text-main); font-weight: 600;">
+                  <%= patron.first_name || patron.full_name || 'Patron' %>
+                  <% if (patron.first_name && patron.last_name) { %>
+                  <%= patron.last_name %>
+                  <% } %>
+                </h5>
+                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);"><%= patron.email %></p>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 1rem;">No active patrons allocated.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Approvals Table -->
+  <div class="table-card-container" style="margin-top: 30px;">
+    <div class="table-controls-bar">
+      <h3>Pending Student Approvals</h3>
+      <a href="/admin-approvals" class="btn btn-warning">View Summary</a>
+    </div>
+    <div class="table-responsive-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Admission</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (typeof pendingStudents !== 'undefined' && pendingStudents && pendingStudents.length) { %>
+            <% pendingStudents.forEach(student => { %>
+              <tr>
+                <td><%= student.admission_no %></td>
+                <td><%= student.first_name %> <%= student.last_name %></td>
+                <td><%= student.email %></td>
+                <td><span class="status-badge status-pending">Awaiting Patron Review</span></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4">No pending approvals.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- External Dashboard Visual Assets -->
+<script src="/js/charts.js"></script>
+
+<%- include('../partials/footer') %>

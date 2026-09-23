@@ -1,0 +1,57 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/attendance" class="back-link"><i class="fas fa-arrow-left"></i> Return to Attendance</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3><i class="fas fa-edit"></i> Edit Attendance Record</h3>
+                    <p>
+                        Student: <strong><%= record.first_name %> <%= record.last_name %></strong>
+                        (<%= record.admission_no %>) — <%= record.activity_name %> (<%= record.club_name %>)
+                    </p>
+                </div>
+
+                <form action="/attendance/edit/<%= record.attendance_id %>" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="status">Status <span class="required">*</span></label>
+                            <select id="status" name="status" required>
+                                <option value="Present" <%= record.status === 'Present' ? 'selected' : '' %>>Present</option>
+                                <option value="Absent" <%= record.status === 'Absent' ? 'selected' : '' %>>Absent</option>
+                                <option value="Late" <%= record.status === 'Late' ? 'selected' : '' %>>Late</option>
+                                <option value="Excused" <%= record.status === 'Excused' ? 'selected' : '' %>>Excused</option>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="notes">Notes</label>
+                            <input type="text" id="notes" name="notes" value="<%= record.notes || '' %>" placeholder="Optional reason or note...">
+                        </div>
+                    </div>
+
+                    <div class="form-action-footer-row">
+                        <a href="/attendance" class="btn btn-muted">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update Record</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

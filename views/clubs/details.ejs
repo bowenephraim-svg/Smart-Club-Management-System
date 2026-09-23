@@ -1,0 +1,108 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/clubs" class="back-link"><i class="fas fa-chevron-left"></i> Return to Organization Matrices</a>
+            </div>
+
+            <!-- Upper Profiler Panel Metadata Block -->
+            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 28px; margin-bottom: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
+                <div>
+                    <span class="badge" style="background: #1e3a8a; color: #93c5fd; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;"><%= club.category %></span>
+                    <h2 style="margin: 8px 0; color: #fff; font-size: 1.75rem;"><%= club.club_name %></h2>
+                    <p style="color: #cbd5e1; margin: 0; max-width: 650px; font-size: 0.95rem; line-height: 1.5;"><%= club.description || 'No formal roadmap parameters configured for this profile node.' %></p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <!-- 📊 Integrated Reporting Action Link -->
+                    <a href="/clubs/export-csv/<%= club.club_id %>" class="btn btn-muted" style="display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-file-csv" style="color: #10b981;"></i> Export Roster Sheet
+                    </a>
+                    <% if (user && user.role === 'Admin') { %>
+                        <a href="/memberships/add?club_id=<%= club.club_id %>" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-plus"></i> Enroll Member Student
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Lower Double Grid Panels -->
+            <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 24px; align-items: start;">
+                
+                <!-- Left Hand Side Metadata Block Column -->
+                <div style="background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                    <h4 style="margin: 0 0 16px 0; color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Management Hub Overview</h4>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 0.75rem; color: #64748b; margin-bottom: 4px;">Faculty Supervisor Link</label>
+                        <span style="color: #fff; font-weight: 500; display: block;"><%= club.patron_first ? `${club.patron_first} ${club.patron_last}` : 'Vacant Node' %></span>
+                        <% if (club.patron_email) { %>
+                            <a href="mailto:<%= club.patron_email %>" style="font-size: 0.8rem; color: #3b82f6; text-decoration: none;"><%= club.patron_email %></a>
+                        <% } %>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 0.75rem; color: #64748b; margin-bottom: 4px;">Roster Constraints</label>
+                        <span style="color: #fff; font-weight: 500;"><%= roster.length %> Seats Occupied</span>
+                        <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 2px;">Total Hard Capacity Bound: <%= club.capacity %></div>
+                    </div>
+                </div>
+
+                <!-- Right Hand Side Student Roster Data Table Column -->
+                <div class="data-table-card" style="margin: 0;">
+                    <div style="padding: 16px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="margin: 0; color: #fff; font-size: 1rem; font-weight: 600;">Active Enrolled Members Registry</h4>
+                        <span style="background: #1e293b; color: #cbd5e1; padding: 2px 8px; border-radius: 20px; font-size: 0.8rem;"><%= roster.length %> Records Bound</span>
+                    </div>
+
+                    <div class="responsive-table-wrapper">
+                        <table class="system-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Admission No</th>
+                                    <th>Student Scholar</th>
+                                    <th>Class Form</th>
+                                    <th>Stream Layer</th>
+                                    <th>Assigned Role Responsibility</th>
+                                    <th>Join Date Token</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (roster && roster.length > 0) { %>
+                                    <% roster.forEach(student => { %>
+                                        <tr>
+                                            <td><code><%= student.admission_no %></code></td>
+                                            <td><strong><%= student.first_name %> <%= student.last_name %></strong></td>
+                                            <td>Form <%= student.form %></td>
+                                            <td><span class="badge badge-muted"><%= student.stream %></span></td>
+                                            <td>
+                                                <span class="role-marker <%= student.role !== 'Member' ? 'role-special' : 'role-standard' %>">
+                                                    <%= student.role %>
+                                                </span>
+                                            </td>
+                                            <td><%= new Date(student.join_date).toISOString().split('T')[0] %></td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 40px; color: #64748b;">
+                                            <i class="fas fa-users-slash" style="font-size: 2rem; margin-bottom: 12px; display: block;"></i>
+                                            No active student member allocations logged to this charter ledger yet.
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="page-header-actions" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px;">
+                <div class="header-text-block">
+                    <h2 style="color: #fff; margin: 0; font-size: 1.75rem;">Achievements Management</h2>
+                    <p style="color: #94a3b8; margin: 5px 0 0 0;">Manage student and club achievements.</p>
+                </div>
+                <% if (user && (user.role === 'Admin' || user.role === 'Patron')) { %>
+                    <a href="/achievements/add" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Achievement
+                    </a>
+                <% } %>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success" style="margin-top: 20px;"><%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger" style="margin-top: 20px;"><%= error_msg %></div>
+            <% } %>
+
+            <div style="margin-top: 30px; background: #1e293b; border: 1px solid #334155; border-radius: 16px; overflow: hidden;">
+                <% if (achievements && achievements.length > 0) { %>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #0f172a; text-align: left;">
+                                <th style="padding: 14px 16px; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase;">Title</th>
+                                <th style="padding: 14px 16px; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase;">Student</th>
+                                <th style="padding: 14px 16px; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase;">Club</th>
+                                <th style="padding: 14px 16px; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase;">Category</th>
+                                <th style="padding: 14px 16px; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase;">Date</th>
+                                <th style="padding: 14px 16px; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase;">Status</th>
+                                <th style="padding: 14px 16px; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% achievements.forEach(ach => { %>
+                                <tr style="border-top: 1px solid #334155;">
+                                    <td style="padding: 14px 16px; color: #f8fafc;">
+                                        <a href="/achievements/view/<%= ach.achievement_id %>" style="color: #f8fafc; text-decoration: none; font-weight: 600;"><%= ach.title %></a>
+                                    </td>
+                                    <td style="padding: 14px 16px; color: #94a3b8;"><%= ach.student_name || '—' %></td>
+                                    <td style="padding: 14px 16px; color: #94a3b8;"><%= ach.club_name || '—' %></td>
+                                    <td style="padding: 14px 16px; color: #94a3b8;"><%= ach.category || '—' %></td>
+                                    <td style="padding: 14px 16px; color: #94a3b8;"><%= ach.achievement_date ? new Date(ach.achievement_date).toISOString().split('T')[0] : '—' %></td>
+                                    <td style="padding: 14px 16px;">
+                                        <span style="color: <%= ach.status === 'Published' ? '#34d399' : '#f87171' %>; font-size: 0.8rem;"><%= ach.status %></span>
+                                    </td>
+                                    <td style="padding: 14px 16px;">
+                                        <div style="display: flex; gap: 12px;">
+                                            <a href="/achievements/view/<%= ach.achievement_id %>" style="color: #60a5fa; font-size: 0.85rem; text-decoration: none;">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="/achievements/edit/<%= ach.achievement_id %>" style="color: #fbbf24; font-size: 0.85rem; text-decoration: none;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="/achievements/delete/<%= ach.achievement_id %>" style="color: #f87171; font-size: 0.85rem; text-decoration: none;" onclick="return confirm('Delete this achievement permanently?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <i class="fas fa-trophy" style="font-size: 3.5rem; color: #475569; margin-bottom: 16px;"></i>
+                        <p style="color: #94a3b8; margin: 0; font-size: 1.1rem;">No achievements yet. Click "Add Achievement" to get started.</p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

@@ -1,0 +1,139 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Notification Details</h2>
+                <p>View complete notification information.</p>
+            </div>
+
+            <a href="/notifications" class="btn btn-muted">
+                <i class="fas fa-arrow-left"></i>
+                Back
+            </a>
+
+        </div>
+
+        <div class="form-card">
+
+            <div class="form-group">
+
+                <label>Recipient</label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    value="<%= notification.full_name || 'System User' %>"
+                    readonly>
+
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Role</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="<%= notification.role || '-' %>"
+                        readonly>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Notification Type</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="<%= notification.type %>"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Status</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="<%= notification.status %>"
+                        readonly>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Date Sent</label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="<%= new Date(notification.created_at).toLocaleString() %>"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Message</label>
+
+                <textarea
+                    class="form-control"
+                    rows="8"
+                    readonly><%= notification.message %></textarea>
+
+            </div>
+
+            <div style="margin-top:25px;display:flex;gap:10px;">
+
+                <a
+                    href="/notifications/edit/<%= notification.notification_id %>"
+                    class="btn btn-primary">
+
+                    <i class="fas fa-edit"></i>
+
+                    Edit
+
+                </a>
+
+                <a
+                    href="/notifications/delete/<%= notification.notification_id %>"
+                    class="btn btn-danger"
+                    onclick="return confirm('Delete this notification?')">
+
+                    <i class="fas fa-trash"></i>
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    </div>
+</div>

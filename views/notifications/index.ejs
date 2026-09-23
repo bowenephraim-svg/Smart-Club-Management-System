@@ -1,0 +1,275 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Notification Center</h2>
+                <p>
+                    View alerts, announcements and system activities.
+                </p>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+
+                <a href="/notifications/read-all" class="btn btn-primary">
+                    <i class="fas fa-check-double"></i>
+                    Mark All Read
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <div class="dashboard-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon-wrapper"
+                    style="background:rgba(59,130,246,.15);color:#3b82f6">
+
+                    <i class="fas fa-bell"></i>
+
+                </div>
+
+                <div class="stat-data-block">
+
+                    <h3><%= notifications.length %></h3>
+
+                    <p>Total Notifications</p>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon-wrapper"
+                    style="background:rgba(239,68,68,.15);color:#ef4444">
+
+                    <i class="fas fa-envelope"></i>
+
+                </div>
+
+                <div class="stat-data-block">
+
+                    <h3>
+
+                        <%= notifications.filter(n=>n.status==='Unread').length %>
+
+                    </h3>
+
+                    <p>Unread</p>
+
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon-wrapper"
+                    style="background:rgba(16,185,129,.15);color:#10b981">
+
+                    <i class="fas fa-check-circle"></i>
+
+                </div>
+
+                <div class="stat-data-block">
+
+                    <h3>
+
+                        <%= notifications.filter(n=>n.status==='Read').length %>
+
+                    </h3>
+
+                    <p>Read</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-header">
+
+            <h3>Recent Notifications</h3>
+
+            <input
+                type="text"
+                placeholder="Search notifications...">
+
+        </div>
+
+
+        <table class="table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Type</th>
+
+                    <th>Message</th>
+
+                    <th>Status</th>
+
+                    <th>Date</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            <% if(notifications.length===0){ %>
+
+                <tr>
+
+                    <td colspan="5" style="text-align:center;padding:40px;">
+
+                        <i class="fas fa-bell-slash fa-2x"></i>
+
+                        <br><br>
+
+                        No notifications found.
+
+                    </td>
+
+                </tr>
+
+            <% } %>
+
+
+            <% notifications.forEach(notification=>{ %>
+
+                <tr>
+
+                    <td>
+
+                        <% if(notification.type==="Payment"){ %>
+
+                            <span class="badge bg-success">
+
+                                Payment
+
+                            </span>
+
+                        <% }else if(notification.type==="Membership"){ %>
+
+                            <span class="badge bg-primary">
+
+                                Membership
+
+                            </span>
+
+                        <% }else if(notification.type==="Event"){ %>
+
+                            <span class="badge bg-warning">
+
+                                Event
+
+                            </span>
+
+                        <% }else{ %>
+
+                            <span class="badge bg-secondary">
+
+                                General
+
+                            </span>
+
+                        <% } %>
+
+                    </td>
+
+                    <td>
+
+                        <%= notification.message %>
+
+                    </td>
+
+                    <td>
+
+                        <% if(notification.status==="Unread"){ %>
+
+                            <span class="badge bg-danger">
+
+                                Unread
+
+                            </span>
+
+                        <% }else{ %>
+
+                            <span class="badge bg-success">
+
+                                Read
+
+                            </span>
+
+                        <% } %>
+
+                    </td>
+
+                    <td>
+
+                        <%= notification.created_at %>
+
+                    </td>
+
+                    <td>
+
+                        <% if(notification.status==="Unread"){ %>
+
+                            <a
+                                href="/notifications/read/<%= notification.notification_id %>"
+                                class="btn btn-success btn-sm">
+
+                                Read
+
+                            </a>
+
+                        <% } %>
+
+                        <a
+                            href="/notifications/delete/<%= notification.notification_id %>"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Delete notification?')">
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    </div>
+</div>

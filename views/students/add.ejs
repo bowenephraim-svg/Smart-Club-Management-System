@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/students" class="back-link"><i class="fas fa-arrow-left"></i> Back to Students</a>
+            </div>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3><i class="fas fa-user-plus"></i> Add New Student</h3>
+                    <p>Register a new student into the school system. Fill in the required details below.</p>
+                </div>
+
+                <form action="/students/add" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="admission_no">Admission Number <span class="required">*</span></label>
+                            <input type="text" id="admission_no" name="admission_no" required placeholder="e.g. VMS-1024">
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required placeholder="name@victory.ac.ke">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="first_name">First Name <span class="required">*</span></label>
+                            <input type="text" id="first_name" name="first_name" required placeholder="Enter first name">
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="last_name">Last Name <span class="required">*</span></label>
+                            <input type="text" id="last_name" name="last_name" required placeholder="Enter last name">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="form">Class Level <span class="required">*</span></label>
+                            <select id="form" name="form" required>
+                                <option value="" disabled selected>Select class level...</option>
+                                <option value="1">Form 1</option>
+                                <option value="2">Form 2</option>
+                                <option value="3">Form 3</option>
+                                <option value="4">Form 4</option>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="stream">Stream <span class="required">*</span></label>
+                            <input type="text" id="stream" name="stream" required placeholder="e.g. East">
+                        </div>
+                    </div>
+
+                    <div class="form-action-footer-row">
+                        <a href="/students" class="btn btn-muted">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Student</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

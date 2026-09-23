@@ -1,0 +1,72 @@
+<%- include('../partials/header', { pageTitle: pageTitle || 'My Notifications' }) %>
+
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+            <div class="header-text-block">
+                <h2><i class="fas fa-bell" style="color:var(--primary-color);margin-right:8px;"></i> My Notifications</h2>
+                <p>All notifications sent to your account.</p>
+            </div>
+            <a href="/patron/dashboard" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="dashboard-content">
+
+            <div class="table-card-container" style="margin-top:1rem;">
+                <div class="table-controls-bar">
+                    <h3 class="table-title-heading">
+                        <i class="fas fa-bell"></i> All Notifications
+                        <% if (notifications && notifications.filter(n => n.status === 'Unread').length > 0) { %>
+                        <span style="background:var(--danger);color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.75rem;margin-left:.5rem;font-weight:600;">
+                            <%= notifications.filter(n => n.status === 'Unread').length %> Unread
+                        </span>
+                        <% } %>
+                    </h3>
+                </div>
+
+                <% if (notifications && notifications.length > 0) { %>
+                <div style="display:flex;flex-direction:column;gap:0;">
+                    <% notifications.forEach(function(n, i) { %>
+                    <div style="display:flex;gap:.85rem;align-items:flex-start;padding:1rem 1.25rem;background:<%= n.status === 'Unread' ? 'rgba(37,99,235,.04)' : 'transparent' %>;border-bottom:1px solid var(--border);">
+                        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-bell" style="color:#fff;font-size:.85rem;"></i>
+                        </div>
+                        <div style="flex:1;min-width:0;">
+                            <p style="margin:0 0 .2rem 0;color:var(--text-main);font-size:.9rem;font-weight:<%= n.status === 'Unread' ? '600' : '400' %>;">
+                                <%= n.message %>
+                            </p>
+                            <small style="color:var(--text-muted);">
+                                <i class="fas fa-clock"></i>
+                                <%= new Date(n.created_at).toLocaleString('en-GB', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' }) %>
+                            </small>
+                        </div>
+                        <span class="status-badge <%= n.status === 'Unread' ? 'status-warning' : 'status-inactive' %>" style="flex-shrink:0;">
+                            <%= n.status %>
+                        </span>
+                    </div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <div style="text-align:center;padding:4rem 1rem;color:var(--text-muted);">
+                    <i class="fas fa-bell-slash" style="font-size:3rem;opacity:.2;display:block;margin-bottom:1rem;"></i>
+                    <h4 style="color:var(--text-secondary);margin-bottom:.5rem;">No Notifications</h4>
+                    <p style="font-size:.9rem;">You have no notifications at this time.</p>
+                </div>
+                <% } %>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include('../partials/footer') %>

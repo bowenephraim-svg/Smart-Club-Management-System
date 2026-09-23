@@ -1,0 +1,116 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Global Membership Allocations</h2>
+                    <p>Audit system cross-links, elevate leadership statuses, and manage institutional quotas.</p>
+                </div>
+                <% if (user && user.role === 'Admin') { %>
+                    <a href="/memberships/add" class="btn btn-primary">
+                        <i class="fas fa-link"></i> Execute New Enrolment
+                    </a>
+                <% } %>
+            </div>
+
+            <div class="data-table-card">
+                <div class="table-search-header">
+                    <div class="search-input-group">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="membershipSearchInput" placeholder="Filter allocations by name, adm number, or club designation...">
+                    </div>
+                </div>
+
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table" id="membershipsTable">
+                        <thead>
+                            <tr>
+                                <th>Admission No</th>
+                                <th>Student Scholar</th>
+                                <th>Academic Class</th>
+                                <th>Assigned Club Charter</th>
+                                <th>Leadership Designation</th>
+                                <th>Enrolment Date Token</th>
+                                <% if (user && user.role === 'Admin') { %>
+                                    <th class="text-center">Administrative Adjustments</th>
+                                <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (memberships && memberships.length > 0) { %>
+                                <% memberships.forEach(member => { %>
+                                    <tr>
+                                        <td><code><%= member.admission_no %></code></td>
+                                        <td><strong><%= member.student_first %> <%= member.student_last %></strong></td>
+                                        <td>Form <%= member.class %> — <span style="color: #64748b;"><%= member.stream %></span></td>
+                                        <td>
+                                            <div style="display: flex; flex-direction: column;">
+                                                <span style="color: #fff; font-weight: 500;"><%= member.club_name %></span>
+                                                <span style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;"><%= member.category %></span>
+                                            </div>
+
+                                        </td> 
+                                        <td>
+                                            <% if (user && user.role === 'Admin') { %>
+                                                <!-- Dynamic Inline Role Update Switcher Form -->
+                                                <form action="/memberships/update-role/<%= member.membership_id %>" method="POST" style="margin: 0;">
+                                                    <select name="role" onchange="this.form.submit()" style="background: #0f172a; border: 1px solid #334155; color: #cbd5e1; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; width: 130px; cursor: pointer;">
+                                                        <option value="Member" <%= member.role === 'Member' ? 'selected' : '' %>>Member</option>
+                                                        <option value="President" <%= member.role === 'President' ? 'selected' : '' %>>President</option>
+                                                        <option value="Vice President" <%= member.role === 'Vice President' ? 'selected' : '' %>>Vice President</option>
+                                                        <option value="Secretary" <%= member.role === 'Secretary' ? 'selected' : '' %>>Secretary</option>
+                                                        <option value="Treasurer" <%= member.role === 'Treasurer' ? 'selected' : '' %>>Treasurer</option>
+                                                    </select>
+                                                </form>
+                                            <% } else { %>
+                                                <span style="padding: 4px 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; border-radius: 4px; font-size: 0.85rem; font-weight: 500;"><%= member.role %></span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= new Date(member.join_date).toISOString().split('T')[0] %></td>
+                                        <% if (user && user.role === 'Admin') { %>
+                                            <td class="text-center">
+                                                <a href="/memberships/delete/<%= member.membership_id %>" class="btn-action delete" title="Revoke Enrolment" onclick="return confirm('Are you sure you want to completely sever this student membership mapping? No records will be left behind.')">
+                                                    <i class="fas fa-unlink"></i> Revoke
+                                                </a>
+                                            </td>
+                                        <% } %>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="table-empty-state" style="text-align: center; padding: 48px;">
+                                        <i class="fas fa-link-slash" style="font-size: 3rem; color: #475569; margin-bottom: 16px; display: block;"></i>
+                                        <p style="color: #94a3b8; margin: 0;">No membership mappings discovered within the system ledger bounds.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>
+
+<script>
+    // Live Search Filter Matrix Linkage
+    const searchNode = document.getElementById('membershipSearchInput');
+    if (searchNode) {
+        searchNode.addEventListener('keyup', function() {
+            const filterValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#membershipsTable tbody tr');
+            rows.forEach(row => {
+                const innerTxt = row.textContent.toLowerCase();
+                row.style.display = innerTxt.includes(filterValue) ? '' : 'none';
+            });
+        });
+    }
+</script>

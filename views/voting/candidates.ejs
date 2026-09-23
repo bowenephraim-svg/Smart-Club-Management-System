@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Election Candidates</h2>
+                    <p>View and manage candidates registered for club leadership elections.</p>
+                </div>
+                <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
+            </div>
+
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <h2>Candidates Board Coming Soon</h2>
+                <p>This page will display all registered candidates for active elections, their positions, and campaign details.</p>
+                <a href="/dashboard" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon blue"><i class="fas fa-user-plus"></i></div>
+                    <h4>Candidate Registration</h4>
+                    <p>Students can nominate themselves or be nominated for leadership positions in their clubs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green"><i class="fas fa-id-badge"></i></div>
+                    <h4>Candidate Profiles</h4>
+                    <p>View detailed profiles including club history, membership role, and election manifesto.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon amber"><i class="fas fa-check-double"></i></div>
+                    <h4>Eligibility Check</h4>
+                    <p>Automatic verification that candidates meet the minimum membership requirements.</p>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

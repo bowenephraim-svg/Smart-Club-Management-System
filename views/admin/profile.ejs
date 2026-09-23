@@ -1,0 +1,38 @@
+<%- include('../partials/header', { pageTitle: 'My Profile' }) %>
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+        <div class="page-header-actions">
+            <div class="header-text-block">
+                <h2><i class="fas fa-user-circle" style="color:var(--primary-color);margin-right:8px;"></i> My Profile</h2>
+                <p>Manage your administrator profile image.</p>
+            </div>
+        </div>
+
+        <div class="table-card-container" style="max-width:620px;margin:1.5rem auto;padding:2rem;text-align:center;">
+            <div class="profile-avatar profile-avatar-xl" data-profile-preview-container>
+                <% if (userProfile && userProfile.profile_image) { %>
+                    <img src="<%= userProfile.profile_image %>" alt="Profile image" data-profile-preview>
+                <% } else { %>
+                    <%= (userProfile && userProfile.full_name ? userProfile.full_name : 'Admin').charAt(0).toUpperCase() %>
+                <% } %>
+            </div>
+
+            <h3 style="margin:0 0 .25rem;"><%= userProfile && userProfile.full_name ? userProfile.full_name : 'Administrator' %></h3>
+            <p style="color:var(--text-muted);margin:0 0 1.5rem;"><%= userProfile && userProfile.email ? userProfile.email : '' %></p>
+
+            <form action="/admin/profile/image" method="POST" enctype="multipart/form-data">
+                <label for="adminProfileImage" class="btn btn-primary profile-upload-control">
+                    <i class="fas fa-camera"></i> Choose Profile Image
+                </label>
+                <input id="adminProfileImage" type="file" name="profile_image" accept="image/jpeg,image/png,image/webp" required style="display:none;" onchange="this.form.submit()">
+            </form>
+            <small style="display:block;margin-top:1rem;color:var(--text-muted);">JPG, PNG, or WebP up to 2 MB.</small>
+        </div>
+    </main>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/clubs/details/<%= membership.club_id %>" class="back-link"><i class="fas fa-arrow-left"></i> Back to Club</a>
+            </div>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3><i class="fas fa-user-cog"></i> Edit Membership</h3>
+                    <p>Update the role and enrollment date for this club membership record.</p>
+                </div>
+
+                <!-- Student & Club Info Banner -->
+                <div class="context-info-banner">
+                    <div>
+                        <span class="context-label">Student</span>
+                        <span class="context-value"><%= membership.first_name %> <%= membership.last_name %></span>
+                        <span class="context-sub">Adm: <%= membership.admission_no %> · Form <%= membership.form %> - <%= membership.stream %></span>
+                    </div>
+                    <div>
+                        <span class="context-label">Club</span>
+                        <span class="context-value" style="color: var(--secondary);"><%= membership.club_name %></span>
+                        <span class="context-sub" style="color: var(--text-muted);"><%= membership.category %></span>
+                    </div>
+                </div>
+
+                <form action="/memberships/edit/<%= membership.membership_id %>" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="role">Role <span class="required">*</span></label>
+                            <select id="role" name="role" required>
+                                <option value="Member" <%= membership.role === 'Member' ? 'selected' : '' %>>General Member</option>
+                                <option value="Chairman/President" <%= membership.role === 'Chairman/President' ? 'selected' : '' %>>Chairman / President</option>
+                                <option value="Vice President" <%= membership.role === 'Vice President' ? 'selected' : '' %>>Vice President</option>
+                                <option value="Secretary" <%= membership.role === 'Secretary' ? 'selected' : '' %>>Secretary</option>
+                                <option value="Treasurer" <%= membership.role === 'Treasurer' ? 'selected' : '' %>>Treasurer</option>
+                                <option value="Captain" <%= membership.role === 'Captain' ? 'selected' : '' %>>Team Captain</option>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="join_date">Join Date <span class="required">*</span></label>
+                            <% let formattedDate = membership.join_date ? new Date(membership.join_date).toISOString().split('T')[0] : ''; %>
+                            <input type="date" id="join_date" name="join_date" required value="<%= formattedDate %>">
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="originating_club_id" value="<%= membership.club_id %>">
+
+                    <div class="form-action-footer-row">
+                        <a href="/clubs/details/<%= membership.club_id %>" class="btn btn-muted">Discard Changes</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

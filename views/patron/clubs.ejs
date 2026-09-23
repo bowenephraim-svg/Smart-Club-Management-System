@@ -1,0 +1,91 @@
+<%- include('../partials/header', { pageTitle: pageTitle || 'My Clubs' }) %>
+
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+            <div class="header-text-block">
+                <h2>
+                    <i class="fas fa-users" style="color:var(--primary-color);margin-right:8px;"></i>
+                    My Clubs
+                </h2>
+                <p>Clubs assigned to you as a patron.</p>
+            </div>
+        </div>
+
+        <% if (clubs && clubs.length > 0) { %>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;margin-top:1rem;">
+
+                <% clubs.forEach(club => { %>
+
+                    <div class="table-card-container" style="padding:1.5rem;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow-sm)'">
+
+                        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;">
+                            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i class="fas fa-users" style="color:#fff;font-size:1.1rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-main);"><%= club.club_name %></h4>
+                                <% if (club.venue) { %>
+                                <small style="color:var(--text-muted);"><i class="fas fa-map-marker-alt"></i> <%= club.venue %></small>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <% if (club.description) { %>
+                        <p style="font-size:.85rem;color:var(--text-secondary);margin:0 0 .75rem 0;line-height:1.5;"><%= club.description.length > 100 ? club.description.substring(0, 100) + '...' : club.description %></p>
+                        <% } %>
+
+                        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                            <span style="font-size:.8rem;background:var(--primary-soft);color:var(--primary);padding:.25rem .6rem;border-radius:999px;font-weight:600;">
+                                <i class="fas fa-user-check"></i> <%= club.active_member_count || 0 %> Active
+                            </span>
+                            <% if (Number(club.pending_member_count) > 0) { %>
+                            <span style="font-size:.8rem;background:rgba(245,158,11,.12);color:var(--warning);padding:.25rem .6rem;border-radius:999px;font-weight:600;">
+                                <i class="fas fa-hourglass-half"></i> <%= club.pending_member_count %> Pending
+                            </span>
+                            <% } %>
+                            <% if (club.meeting_day) { %>
+                            <span style="font-size:.8rem;background:var(--secondary-soft);color:var(--secondary);padding:.25rem .6rem;border-radius:999px;font-weight:600;">
+                                <i class="fas fa-calendar-day"></i> <%= club.meeting_day %>
+                            </span>
+                            <% } %>
+                        </div>
+
+                        <div style="margin-top:.85rem;display:flex;gap:.5rem;">
+                            <a href="/patron/members" class="btn btn-primary btn-sm" style="font-size:.78rem;padding:.3rem .65rem;">
+                                <i class="fas fa-id-card"></i> Members
+                            </a>
+                            <a href="/activities" class="btn btn-secondary btn-sm" style="font-size:.78rem;padding:.3rem .65rem;">
+                                <i class="fas fa-calendar-alt"></i> Activities
+                            </a>
+                        </div>
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="table-card-container" style="margin-top:1rem;">
+                <div style="text-align:center;padding:3rem 1rem;color:var(--text-muted);">
+                    <i class="fas fa-users" style="font-size:3rem;opacity:.3;display:block;margin-bottom:1rem;"></i>
+                    <h4 style="color:var(--text-secondary);margin-bottom:.5rem;">No Club Assigned Yet</h4>
+                    <p style="font-size:.9rem;">No club has been assigned to you yet. Please contact the Administrator.</p>
+                </div>
+            </div>
+
+        <% } %>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</div>

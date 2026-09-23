@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/clubs" class="back-link"><i class="fas fa-arrow-left"></i> Discard Operations</a>
+            </div>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3>Modify Club Cluster: <%= club.club_name %></h3>
+                    <p>Adjust capacity limit markers, transition active status states, or remap faculty mentors safely.</p>
+                </div>
+
+                <form action="/clubs/edit stream/<%= club.club_id %>" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="club_name">Official Club Designation Title <span class="required">*</span></label>
+                            <input type="text" id="club_name" name="club_name" value="<%= club.club_name %>" required>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="category">Operational Framework Category <span class="required">*</span></label>
+                            <select id="category" name="category" required>
+                                <option value="Technology & STEM" <%= club.category === 'Technology & STEM' ? 'selected' : '' %>>Technology & STEM</option>
+                                <option value="Arts & Creative Design" <%= club.category === 'Arts & Creative Design' ? 'selected' : '' %>>Arts & Creative Design</option>
+                                <option value="Leadership & Debate" <%= club.category === 'Leadership & Debate' ? 'selected' : '' %>>Leadership & Debate</option>
+                                <option value="Sports & Athletics" <%= club.category === 'Sports & Athletics' ? 'selected' : '' %>>Sports & Athletics</option>
+                                <option value="Environmental Action" <%= club.category === 'Environmental Action' ? 'selected' : '' %>>Environmental Action</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="patron_id">Assigned Faculty Supervisor Oversight</label>
+                            <select id="patron_id" name="patron_id">
+                                <option value="">-- Leave Vacant / Unassigned --</option>
+                                <% if (patrons && patrons.length > 0) { %>
+                                    <% patrons.forEach(patron => { %>
+                                        <option value="<%= patron.patron_id %>" <%= club.patron_id == patron.patron_id ? 'selected' : '' %>><%= patron.first_name %> <%= patron.last_name %></option>
+                                    <% }); %>
+                                <% } %>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="capacity">Maximum User Member Volumetric Capacity <span class="required">*</span></label>
+                            <input type="number" id="capacity" name="capacity" value="<%= club.capacity %>" required>
+                        </div>
+                    </div>
+
+                    <div class="input-field-wrapper">
+                        <label for="status">Operational Status State</label>
+                        <select id="status" name="status">
+                            <option value="Active" <%= club.status === 'Active' ? 'selected' : '' %>>Active / Open for Enrollment</option>
+                            <option value="Suspended" <%= club.status === 'Suspended' ? 'selected' : '' %>>Suspended / Operational Freeze</option>
+                        </select>
+                    </div>
+
+                    <div class="input-field-wrapper">
+                        <label for="description">Charter Objectives Manifesto Summary</label>
+                        <textarea id="description" name="description" rows="4"><%= club.description || '' %></textarea>
+                    </div>
+
+                    <div class="form-action-footer-row" style="display: flex; justify-content: space-between; align-items: center;">
+                        <a href="/clubs/delete/<%= club.club_id %>" class="btn" style="background: rgba(239, 68, 68, 0.15); color: #f87171;" onclick="return confirm('CRITICAL WARNING: This completely purges this organizational charter along with all student membership references. Proceed?')">Decommission Charter</a>
+                        <div>
+                            <a href="/clubs" class="btn btn-muted">Discard Adjustments</a>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

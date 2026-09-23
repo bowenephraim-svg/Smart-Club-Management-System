@@ -1,0 +1,246 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-chart-bar"></i> Finance Reports</h2>
+                    <p>Detailed financial analytics, trends, and category breakdowns.</p>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="/finance" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Back to Finance
+                    </a>
+                    <a href="/finance/export/csv" class="btn btn-success">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </a>
+                    <button onclick="window.print()" class="btn btn-muted">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Filters -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Report Filters</h3>
+                </div>
+                <form method="GET" action="/finance/reports" class="activity-toolbar-form" style="padding:16px 20px;">
+                    <div class="activity-toolbar-group">
+                        <select name="months">
+                            <% [3,6,12,24].forEach(m => { %>
+                                <option value="<%= m %>" <%= String(filters.months) === String(m) ? 'selected' : '' %>>Last <%= m %> Months</option>
+                            <% }); %>
+                        </select>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Apply</button>
+                        <a href="/finance/reports" class="btn btn-muted">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Monthly Trend Chart -->
+            <% if (monthlySummary && monthlySummary.length > 0) { %>
+                <div class="table-card" style="margin-top:24px;">
+                    <div class="table-header">
+                        <h3>Monthly Income vs Expenses</h3>
+                    </div>
+                    <div class="chart-canvas-container" style="height:400px; padding:20px;">
+                        <canvas id="financeTrendChart"></canvas>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Monthly Stats Table -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Monthly Breakdown</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Income</th>
+                                <th>Expenses</th>
+                                <th>Net</th>
+                                <th>Transactions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (monthlySummary && monthlySummary.length > 0) { %>
+                                <% monthlySummary.forEach(month => { %>
+                                    <% const income = Number(month.income || 0); const expenses = Number(month.expenses || 0); const net = income - expenses; %>
+                                    <tr>
+                                        <td><%= month.month_label || month.month %></td>
+                                        <td><span class="badge badge-success">KES <%= income.toLocaleString() %></span></td>
+                                        <td><span class="badge badge-danger">KES <%= expenses.toLocaleString() %></span></td>
+                                        <td>
+                                            <span class="badge <%= net >= 0 ? 'badge-success' : 'badge-danger' %>">
+                                                KES <%= net.toLocaleString() %>
+                                            </span>
+                                        </td>
+                                        <td><%= month.transactions || 0 %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="table-empty-state">No monthly data available.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="dashboard-charts-layout" style="margin-top:24px;">
+                <% if (categorySummary && categorySummary.length > 0) { %>
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <h4><i class="fas fa-chart-pie" style="color: var(--primary-color); margin-right: 8px;"></i> Categories</h4>
+                        </div>
+                        <div class="chart-canvas-container" style="height:350px;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                <% } %>
+
+                <!-- Club Summary -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Club Financial Summary</h3>
+                    </div>
+                    <div class="responsive-table-wrapper">
+                        <table class="system-data-table">
+                            <thead>
+                                <tr>
+                                    <th>Club</th>
+                                    <th>Income</th>
+                                    <th>Expenses</th>
+                                    <th>Balance</th>
+                                    <th>Transactions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (clubSummary && clubSummary.length > 0) { %>
+                                    <% clubSummary.forEach(club => { %>
+                                        <tr>
+                                            <td><strong><%= club.club_name %></strong></td>
+                                            <td><span class="badge badge-success">KES <%= Number(club.total_income || 0).toLocaleString() %></span></td>
+                                            <td><span class="badge badge-danger">KES <%= Number(club.total_expenses || 0).toLocaleString() %></span></td>
+                                            <td>
+                                                <span class="badge <%= (club.balance || 0) >= 0 ? 'badge-success' : 'badge-danger' %>">
+                                                    KES <%= Number(club.balance || 0).toLocaleString() %>
+                                                </span>
+                                            </td>
+                                            <td><%= club.transaction_count || 0 %></td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="5" class="table-empty-state">No club data available.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>
+
+<% if (monthlySummary && monthlySummary.length > 0) { %>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('financeTrendChart');
+    if (!ctx || typeof Chart === 'undefined') return;
+
+    const labels = <%- JSON.stringify(monthlySummary.map(m => m.month_label || m.month)) %>;
+    const income = <%- JSON.stringify(monthlySummary.map(m => Number(m.income || 0))) %>;
+    const expenses = <%- JSON.stringify(monthlySummary.map(m => Number(m.expenses || 0))) %>;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                { label: 'Income', data: income, backgroundColor: '#10b981' },
+                { label: 'Expenses', data: expenses, backgroundColor: '#ef4444' }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { stacked: false },
+                y: { beginAtZero: true, ticks: { callback: function(v) { return 'KES ' + v.toLocaleString(); } } }
+            },
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': KES ' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+<% } %>
+
+<% if (categorySummary && categorySummary.length > 0) { %>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('categoryChart');
+    if (!ctx || typeof Chart === 'undefined') return;
+
+    const labels = <%- JSON.stringify(categorySummary.map(c => c.category)) %>;
+    const data = <%- JSON.stringify(categorySummary.map(c => Number(c.total || 0))) %>;
+    const colors = ['#2563eb', '#f59e0b', '#10b981', '#ef4444', '#7c3aed', '#0f766e', '#38bdf8', '#f97316'];
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{
+                data,
+                backgroundColor: colors.slice(0, labels.length),
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 14, padding: 12 } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': KES ' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+<% } %>

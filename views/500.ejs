@@ -1,0 +1,16 @@
+<%- include('partials/header', { pageTitle: '500 Server Error' }) %>
+
+<main class="error-page" role="main">
+    <div style="font-size: 120px; color: #dc2626; font-weight: 800; line-height: 1; text-shadow: 4px 4px 0px #fee2e2; margin-bottom: 10px;">
+        500
+    </div>
+    <h2 style="font-size: 32px; color: var(--text-primary); margin: 10px 0 20px; font-weight: 700;">Internal Server Error</h2>
+    <p style="color: var(--text-secondary); font-size: 18px; max-width: 500px; margin-bottom: 30px; line-height: 1.6;">
+        Something went wrong while processing this request. Please try again, or return to your dashboard.
+    </p>
+    <a href="<%= homeUrl || (user ? '/dashboard' : '/') %>" class="btn btn-primary" style="padding: 12px 30px; font-size: 16px; border-radius: 50px; background-color: #dc2626; border-color: #dc2626; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.39);">
+        <i class="fas fa-home"></i> Back to Dashboard
+    </a>
+</main>
+
+<%- include('partials/footer') %>

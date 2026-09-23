@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System' %> - Administrative Login Portal</title>
+    <!-- Core layout stylesheet dependencies paths -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <!-- Font Awesome System Icons Core CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Embedded background styles copied from index.html to keep visual background */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; background: #0a0a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #canvas3d { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .logo-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; pointer-events: none; perspective: 1000px; }
+        .logo-container { text-align: center; transform-style: preserve-3d; animation: logoFloat 6s ease-in-out infinite; }
+        @keyframes logoFloat { 0%,100% { transform: translateY(0px) rotateX(0deg);} 25% { transform: translateY(-10px) rotateX(2deg);} 75% { transform: translateY(10px) rotateX(-2deg);} }
+        .logo-icon{ width:90px;height:90px;margin:0 auto 20px; position:relative; animation: iconSpin 10s linear infinite; }
+        @keyframes iconSpin{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
+        .smart-text{ font-size:5.5rem; font-weight:900; letter-spacing:12px; text-transform:uppercase; background: linear-gradient(135deg,#00b4ff,#00ff88,#00b4ff,#7b61ff); background-size:400% 400%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation: gradientShift 4s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(0,180,255,0.3)); }
+        @keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+        .divider-line{ width:200px; height:2px; margin:15px auto; background: linear-gradient(90deg, transparent, #00b4ff, #7b61ff, transparent); border-radius:2px; }
+        .corner-decor{ position: fixed; width:80px; height:80px; border:1px solid rgba(0,180,255,0.2); z-index:5; }
+        .corner-decor.tl{ top:30px; left:30px; border-right:none; border-bottom:none; }
+        .corner-decor.tr{ top:30px; right:30px; border-left:none; border-bottom:none; }
+        .corner-decor.bl{ bottom:30px; left:30px; border-right:none; border-top:none; }
+        .corner-decor.br{ bottom:30px; right:30px; border-left:none; border-top:none; }
+        /* Ensure login form sits above the animated background */
+        .login-wrapper { position: relative; z-index: 20; }
+    </style>
+</head>
+<body class="login-body">
+    <canvas id="canvas3d"></canvas>
+
+    <div class="logo-overlay">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00b4ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#7b61ff;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="url(#grad)" stroke-width="2"/>
+                    <polygon points="50,20 78,35 78,65 50,80 22,65 22,35" fill="none" stroke="url(#grad)" stroke-width="1.5" opacity="0.6"/>
+                    <circle cx="50" cy="50" r="8" fill="url(#grad)" opacity="0.8"/>
+                    <circle cx="50" cy="50" r="18" fill="none" stroke="url(#grad)" stroke-width="0.5" opacity="0.3" stroke-dasharray="3,3">
+                        <animateTransform attributeName="transform" type="rotate" dur="8s" from="0 50 50" to="360 50 50" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            </div>
+            <div class="smart-text">SMART</div>
+            <div class="divider-line"></div>
+            <div class="subtitle">Club Management</div>
+            <div class="subtitle-2">System</div>
+            <div class="tagline">● Intelligent Solutions for Modern Clubs ●</div>
+        </div>
+    </div>
+
+    <div class="corner-decor tl"></div>
+    <div class="corner-decor tr"></div>
+    <div class="corner-decor bl"></div>
+    <div class="corner-decor br"></div>
+
+    <div class="login-wrapper">
+        <div class="login-branding-panel">
+            <div class="branding-overlay"></div>
+                <div class="branding-content">
+                <% if (schoolSettings && schoolSettings.school_logo) { %>
+                    <img src="<%= schoolSettings.school_logo %>" alt="<%= schoolSettings.school_name || 'School' %> Logo" class="login-logo-img">
+                <% } %>
+                <h2><%= schoolSettings ? (schoolSettings.school_name || 'Smart Club System') : 'Smart Club System' %></h2>
+                <p class="school-motto"><%= schoolSettings && schoolSettings.school_motto ? schoolSettings.school_motto : 'Knowledge, Integrity, and Excellence' %></p>
+                <div class="branding-footer">
+                    <span>Smart Club Management Core V2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-form-panel">
+            <div class="form-container-box">
+                <div class="form-header-text">
+                    <h3>Secure Login Gateway</h3>
+                    <p>Enter your systemic access credentials below to access the cluster matrices.</p>
+                </div>
+
+                <div class="form-mode-switch" style="display:flex; gap:10px; margin-bottom: 16px;">
+                    <button type="button" class="btn btn-muted" id="adminModeBtn" style="flex:1;">Login as Admin/Patron</button>
+                    <button type="button" class="btn btn-primary" id="studentModeBtn" style="flex:1;">Login as Student</button>
+                </div>
+
+                <!-- Server-Side Context Error Notification Intercept Row -->
+                <% if (error || error_msg) { %>
+                <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle alert-icon"></i>
+                <span class="alert-text">
+                <%= error || error_msg %>
+                </span>
+                </div>
+                <% } %>               
+
+                <form action="/auth/login" method="POST" id="systemicLoginForm" class="security-form-group">
+                    <input type="hidden" id="loginMode" name="loginMode" value="admin">
+                    
+                    <div class="input-control-wrapper">
+                <label for="email" class="form-input-label" id="loginLabel">Email Address</label>
+                        <div class="input-field-group">
+                            <span class="input-addon-icon"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email" name="email" class="form-input-element" placeholder="username@victory.ac.ke" required autocomplete="email">
+                        </div>
+                        <span class="field-validation-message" id="emailError"></span>
+                    </div>
+
+                    <div class="input-control-wrapper">
+                        <div class="label-row-split">
+                            <label for="password" class="form-input-label" id="passwordLabel">Secure System Cryptographic Password</label>
+                            <a href="/auth/forgot-password" class="forgot-link-anchor">Forgot Password?</a>
+                        </div>
+                        <div class="input-field-group">
+                            <span class="input-addon-icon"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password" name="password" class="form-input-element" placeholder="••••••••••••" required autocomplete="current-password">
+                            <button type="button" class="password-toggle-visibility" id="togglePasswordBtn" aria-label="Show password" title="Show password">
+                                <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                        <span class="field-validation-message" id="passwordError"></span>
+                    </div>
+
+                    <div class="form-auxiliary-actions">
+                        <label class="checkbox-label-wrapper">
+                            <input type="checkbox" name="remember_me" id="rememberMe" class="custom-checkbox-node">
+                            <span class="checkbox-mock-display"></span>
+                            <span class="checkbox-label-text">Maintain active terminal lease</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block security-submit-trigger" id="submitLoginBtn">
+                        <span class="btn-text-label">Authenticate Identity</span>
+                        <i class="fas fa-sign-in-alt btn-icon-shift"></i>
+                    </button>
+
+                    <p id="studentRegisterLink" style="display:none;text-align:center;margin:16px 0 0;">
+                        New student?
+                        <a href="/student/register">Create an account</a>
+                    </p>
+
+                </form>
+
+                <div class="form-footer-notes">
+                    <p>Authorized personnel operations only. System telemetry tracking is operational.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frontend UI Processing Layer Script Dependencies -->
+    <script src="/js/validation.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Minimal 3D background initialization copied from index.html
+        const canvas = document.getElementById('canvas3d');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x0a0a1a, 1);
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0a0a1a, 0.015);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 30);
+
+        const ambientLight = new THREE.AmbientLight(0x111122, 0.5);
+        scene.add(ambientLight);
+
+        const pointLight1 = new THREE.PointLight(0x00b4ff, 2, 50);
+        pointLight1.position.set(10, 10, 10);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0x7b61ff, 2, 50);
+        pointLight2.position.set(-10, -10, 10);
+        scene.add(pointLight2);
+
+        const icoGeo = new THREE.IcosahedronGeometry(3.5, 1);
+        const icoMat = new THREE.MeshPhongMaterial({ color: 0x00b4ff, emissive: 0x001133, shininess: 100, wireframe: true, transparent: true, opacity: 0.3 });
+        const icosahedron = new THREE.Mesh(icoGeo, icoMat);
+        scene.add(icosahedron);
+
+        // Simple particle backdrop (lightweight)
+        const particleGeo = new THREE.BufferGeometry();
+        const particleCount = 800;
+        const positions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            const r = 10 + Math.random() * 30;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = r * Math.cos(phi);
+        }
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleMat = new THREE.PointsMaterial({ size: 0.25, color: 0x00b4ff, transparent: true, opacity: 0.08 });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        scene.add(particles);
+
+        const clock = new THREE.Clock();
+
+        function animateBg() {
+            requestAnimationFrame(animateBg);
+            const t = clock.getElapsedTime();
+            icosahedron.rotation.x = t * 0.15;
+            icosahedron.rotation.y = t * 0.2;
+            particles.rotation.y = t * 0.02;
+            pointLight1.position.x = Math.sin(t * 0.5) * 15;
+            pointLight1.position.z = Math.cos(t * 0.5) * 15;
+            renderer.render(scene, camera);
+        }
+        animateBg();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+    <script>
+        const adminModeBtn = document.getElementById('adminModeBtn');
+        const studentModeBtn = document.getElementById('studentModeBtn');
+        const loginModeInput = document.getElementById('loginMode');
+        const loginLabel = document.getElementById('loginLabel');
+        const passwordLabel = document.getElementById('passwordLabel');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        const studentRegisterLink = document.getElementById('studentRegisterLink');
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const isVisible = passwordInput.type === 'text';
+            passwordInput.type = isVisible ? 'password' : 'text';
+            togglePasswordIcon.className = isVisible ? 'fas fa-eye' : 'fas fa-eye-slash';
+            togglePasswordBtn.setAttribute('aria-label', isVisible ? 'Show password' : 'Hide password');
+            togglePasswordBtn.setAttribute('title', isVisible ? 'Show password' : 'Hide password');
+        });
+
+        function setMode(mode) {
+            if (mode === 'student') {
+                loginModeInput.value = 'student';
+                loginLabel.textContent = 'Student Email Address';
+                passwordLabel.textContent = 'Password';
+                emailInput.placeholder = 'student@victory.ac.ke';
+                emailInput.type = 'email';
+                emailInput.name = 'email';
+                emailInput.autocomplete = 'email';
+                passwordInput.placeholder = 'Enter your password';
+                passwordInput.name = 'password';
+                studentModeBtn.className = 'btn btn-primary';
+                adminModeBtn.className = 'btn btn-muted';
+                studentRegisterLink.style.display = 'block';
+            } else {
+                loginModeInput.value = 'admin';
+                loginLabel.textContent = 'Email Address';
+                passwordLabel.textContent = 'Password';
+                emailInput.placeholder = 'username@victory.ac.ke';
+                emailInput.type = 'email';
+                emailInput.name = 'email';
+                emailInput.autocomplete = 'email';
+                passwordInput.placeholder = '••••••••••••';
+                passwordInput.name = 'password';
+                adminModeBtn.className = 'btn btn-primary';
+                studentModeBtn.className = 'btn btn-muted';
+                studentRegisterLink.style.display = 'none';
+            }
+        }
+
+        adminModeBtn.addEventListener('click', () => setMode('admin'));
+        studentModeBtn.addEventListener('click', () => setMode('student'));
+        setMode('admin');
+    </script>
+</body>
+</html>

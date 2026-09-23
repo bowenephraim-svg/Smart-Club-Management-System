@@ -1,0 +1,163 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+    <div class="page-header">
+
+        <div>
+            <h1>Pending Membership Requests</h1>
+
+            <p>
+                Review students requesting to join your clubs.
+            </p>
+        </div>
+
+        <a
+            href="/patron/dashboard"
+            class="btn btn-secondary"
+        >
+            Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+
+        <div class="alert alert-success">
+            <%= success_msg %>
+        </div>
+
+    <% } %>
+
+
+    <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+
+        <div class="alert alert-danger">
+            <%= error_msg %>
+        </div>
+
+    <% } %>
+
+
+    <div class="table-card-container">
+
+        <div class="table-responsive-wrapper">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Admission No.</th>
+
+                        <th>Student</th>
+
+                        <th>Email</th>
+
+                        <th>Club</th>
+
+                        <th>Request Date</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <% if (requests && requests.length > 0) { %>
+
+                        <% requests.forEach(request => { %>
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        <%= request.admission_no %>
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    <%= request.student_name %>
+                                </td>
+
+
+                                <td>
+                                    <%= request.student_email %>
+                                </td>
+
+
+                                <td>
+                                    <%= request.club_name %>
+                                </td>
+
+
+                                <td>
+                                    <%= new Date(
+                                        request.join_date
+                                    ).toLocaleDateString() %>
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        href="/patron/membership-requests"
+                                        class="btn btn-success btn-sm"
+                                        onclick="event.preventDefault(); if(confirm('Approve this membership request?')) { const form=document.createElement('form'); form.method='POST'; form.action='/patron/membership-requests/approve/<%= request.membership_id %>'; document.body.appendChild(form); form.submit(); }"
+                                    >
+                                        Approve
+                                    </a>
+
+                                    <a
+                                        href="/patron/membership-requests"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="event.preventDefault(); if(confirm('Reject this membership request?')) { const form=document.createElement('form'); form.method='POST'; form.action='/patron/membership-requests/reject/<%= request.membership_id %>'; document.body.appendChild(form); form.submit(); }"
+                                    >
+                                        Reject
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    <% } else { %>
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                style="text-align:center;"
+                            >
+                                No pending membership requests.
+                            </td>
+
+                        </tr>
+
+                    <% } %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+<%- include('../partials/footer') %>
+
+</div>

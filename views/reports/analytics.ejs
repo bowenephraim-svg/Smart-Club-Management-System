@@ -1,0 +1,824 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+<!-- Header -->
+<div class="page-header-actions">
+
+    <div class="header-text-block">
+        <h2>Analytics Dashboard</h2>
+        <p>Visual overview of students, clubs, memberships and financial performance.</p>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+
+        <a href="/reports" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Back to Reports
+        </a>
+
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="fas fa-print"></i>
+            Print
+        </button>
+
+        <a href="/reports/analytics/pdf" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i>
+            PDF
+        </a>
+
+        <a href="/reports/analytics/excel" class="btn btn-success">
+            <i class="fas fa-file-excel"></i>
+            Excel
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- Statistics -->
+<div class="dashboard-stats-grid reports-summary-grid">
+
+    <div class="stat-card info">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Students</span>
+                <h2><%= studentCount %></h2>
+                <small class="stat-change"><i class="fas fa-user-graduate"></i> Registered Students</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card warning">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Clubs</span>
+                <h2><%= clubCount %></h2>
+                <small class="stat-change"><i class="fas fa-users"></i> Active Clubs</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card success">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Memberships</span>
+                <h2><%= membershipCount %></h2>
+                <small class="stat-change"><i class="fas fa-id-card"></i> Active Members</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-id-card"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card info">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Total Income</span>
+                <h2>KES <%= Number(paymentTotal).toLocaleString() %></h2>
+                <small class="stat-change"><i class="fas fa-money-bill-wave"></i> Revenue</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card warning">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Total Expenses</span>
+                <h2>KES <%= Number(expenseTotal).toLocaleString() %></h2>
+                <small class="stat-change"><i class="fas fa-wallet"></i> Spend</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-wallet"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card success">
+        <div class="stat-content">
+            <div class="stat-left">
+                <span>Balance</span>
+                <h2>KES <%= Number(balance).toLocaleString() %></h2>
+                <small class="stat-change"><i class="fas fa-chart-line"></i> Remaining Balance</small>
+            </div>
+            <div class="stat-icon-wrapper">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<!-- Summary Table -->
+<div class="table-card" style="margin-top:30px;">
+
+    <div class="table-header">
+        <h3>System Analytics Summary</h3>
+    </div>
+
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+                <td>Total Students</td>
+                <td><%= studentCount %></td>
+            </tr>
+
+
+            <tr>
+                <td>Total Clubs</td>
+                <td><%= clubCount %></td>
+            </tr>
+
+
+            <tr>
+                <td>Total Memberships</td>
+                <td><%= membershipCount %></td>
+            </tr>
+
+
+            <tr>
+                <td>Total Income</td>
+                <td>KES <%= Number(paymentTotal).toLocaleString() %></td>
+            </tr>
+
+
+            <tr>
+                <td>Total Expenses</td>
+                <td>KES <%= Number(expenseTotal).toLocaleString() %></td>
+            </tr>
+
+
+            <tr>
+                <td><strong>Available Balance</strong></td>
+
+                <td>
+                    <strong>
+                        KES <%= Number(balance).toLocaleString() %>
+                    </strong>
+                </td>
+
+            </tr>
+
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+
+
+<!-- Existing Charts -->
+<div class="charts-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:25px;margin-top:30px;">
+
+
+    <!-- Finance Chart -->
+
+    <div class="table-card">
+
+        <div class="table-header">
+            <h3>Financial Overview</h3>
+        </div>
+
+
+        <div style="height:350px;padding:20px;">
+
+            <canvas id="financeChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- System Chart -->
+
+    <div class="table-card">
+
+        <div class="table-header">
+            <h3>System Distribution</h3>
+        </div>
+
+
+        <div style="height:350px;padding:20px;">
+
+            <canvas id="systemChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+<!-- NEW ANALYTICS SECTIONS -->
+
+
+<!-- Club Membership Distribution -->
+
+<div class="table-card" style="margin-top:30px;">
+
+    <div class="table-header">
+
+        <h3>
+            Club Membership Distribution
+        </h3>
+
+    </div>
+
+
+    <div style="height:350px;padding:20px;">
+
+        <canvas id="clubMembershipChart"></canvas>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+<!-- Monthly Finance Trend -->
+
+<div class="table-card" style="margin-top:30px;">
+
+    <div class="table-header">
+
+        <h3>
+            Monthly Finance Trend
+        </h3>
+
+    </div>
+
+
+    <div style="height:350px;padding:20px;">
+
+        <canvas id="monthlyFinanceChart"></canvas>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+<!-- Activity Attendance -->
+
+<div class="table-card" style="margin-top:30px;">
+
+    <div class="table-header">
+
+        <h3>
+            Activity Attendance Performance
+        </h3>
+
+    </div>
+
+
+    <div style="height:350px;padding:20px;">
+
+        <canvas id="attendanceChart"></canvas>
+
+    </div>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+
+// ==========================
+// Financial Chart
+// ==========================
+
+const financeCtx = document.getElementById('financeChart');
+
+
+new Chart(financeCtx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: [
+            'Income',
+            'Expenses',
+            'Balance'
+        ],
+
+        datasets: [{
+
+            label: 'Amount (KES)',
+
+            data: [
+
+                <%= Number(paymentTotal) %>,
+
+                <%= Number(expenseTotal) %>,
+
+                <%= Number(balance) %>
+
+            ],
+
+            backgroundColor: [
+
+                '#10B981',
+
+                '#EF4444',
+
+                '#3B82F6'
+
+            ],
+
+            borderRadius: 10
+
+        }]
+
+    },
+
+
+    options: {
+
+        responsive:true,
+
+        maintainAspectRatio:false,
+
+
+        plugins: {
+
+            legend: {
+
+                display:false
+
+            }
+
+        },
+
+
+        scales: {
+
+            y: {
+
+                beginAtZero:true
+
+            }
+
+        }
+
+    }
+
+});
+
+
+
+
+
+// ==========================
+// System Distribution Chart
+// ==========================
+
+
+const systemCtx = document.getElementById('systemChart');
+
+
+new Chart(systemCtx, {
+
+
+    type:'doughnut',
+
+
+    data:{
+
+
+        labels:[
+
+            'Students',
+
+            'Clubs',
+
+            'Memberships'
+
+        ],
+
+
+        datasets:[{
+
+
+            data:[
+
+                <%= Number(studentCount) %>,
+
+                <%= Number(clubCount) %>,
+
+                <%= Number(membershipCount) %>
+
+            ],
+
+
+            backgroundColor:[
+
+                '#3B82F6',
+
+                '#8B5CF6',
+
+                '#F59E0B'
+
+            ],
+
+
+            borderWidth:2
+
+
+        }]
+
+
+    },
+
+
+    options:{
+
+
+        responsive:true,
+
+
+        maintainAspectRatio:false,
+
+
+        plugins:{
+
+
+            legend:{
+
+
+                position:'bottom'
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+});
+
+
+
+
+
+
+
+
+// ==========================
+// Club Membership Distribution
+// ==========================
+
+
+const clubCtx = document.getElementById(
+    'clubMembershipChart'
+);
+
+
+
+const clubLabels = <%- JSON.stringify(
+    clubMemberships.map(c => c.club_name)
+) %>;
+
+
+
+const clubMembers = <%- JSON.stringify(
+    clubMemberships.map(c => Number(c.members))
+) %>;
+
+
+
+new Chart(clubCtx, {
+
+
+    type:'pie',
+
+
+    data:{
+
+
+        labels:clubLabels,
+
+
+        datasets:[{
+
+
+            label:'Members',
+
+
+            data:clubMembers
+
+
+        }]
+
+
+    },
+
+
+    options:{
+
+
+        responsive:true,
+
+
+        maintainAspectRatio:false,
+
+
+        plugins:{
+
+
+            legend:{
+
+
+                position:'bottom'
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+});
+
+
+
+
+
+
+
+
+// ==========================
+// Monthly Finance Trend
+// ==========================
+
+
+const monthlyFinanceCtx =
+document.getElementById(
+    'monthlyFinanceChart'
+);
+
+
+
+const paymentMonths = <%- JSON.stringify(
+    monthlyPayments.map(p => p.month)
+) %>;
+
+
+
+const paymentAmounts = <%- JSON.stringify(
+    monthlyPayments.map(p => Number(p.total))
+) %>;
+
+
+
+const expenseAmounts = <%- JSON.stringify(
+    monthlyExpenses.map(e => Number(e.total))
+) %>;
+
+
+
+new Chart(monthlyFinanceCtx, {
+
+
+    type:'line',
+
+
+    data:{
+
+
+        labels:paymentMonths,
+
+
+        datasets:[
+
+
+            {
+
+
+                label:'Income',
+
+
+                data:paymentAmounts,
+
+
+                tension:0.4
+
+
+            },
+
+
+            {
+
+
+                label:'Expenses',
+
+
+                data:expenseAmounts,
+
+
+                tension:0.4
+
+
+            }
+
+
+        ]
+
+
+    },
+
+
+    options:{
+
+
+        responsive:true,
+
+
+        maintainAspectRatio:false,
+
+
+        plugins:{
+
+
+            legend:{
+
+
+                position:'bottom'
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+});
+
+
+
+
+
+
+
+
+// ==========================
+// Activity Attendance Chart
+// ==========================
+
+
+const attendanceCtx =
+document.getElementById(
+    'attendanceChart'
+);
+
+
+
+const activityNames = <%- JSON.stringify(
+    activityAttendance.map(a => a.activity_name)
+) %>;
+
+
+
+const presentStudents = <%- JSON.stringify(
+    activityAttendance.map(a => Number(a.present))
+) %>;
+
+
+
+new Chart(attendanceCtx, {
+
+
+    type:'bar',
+
+
+    data:{
+
+
+        labels:activityNames,
+
+
+        datasets:[{
+
+
+            label:'Students Present',
+
+
+            data:presentStudents
+
+
+        }]
+
+
+    },
+
+
+    options:{
+
+
+        responsive:true,
+
+
+        maintainAspectRatio:false,
+
+
+        plugins:{
+
+
+            legend:{
+
+
+                position:'bottom'
+
+
+            }
+
+
+        },
+
+
+        scales:{
+
+
+            y:{
+
+
+                beginAtZero:true
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+});
+
+
+</script>
+
+    </div>
+
+</div>
+
+<%- include('../partials/footer') %>

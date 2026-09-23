@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="page-header-actions" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px;">
+                <div class="header-text-block">
+                    <h2 style="color: #fff; margin: 0; font-size: 1.75rem;"><%= image.title %></h2>
+                    <p style="color: #94a3b8; margin: 5px 0 0 0;">Gallery item details.</p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <a href="/gallery" class="btn btn-muted">
+                        <i class="fas fa-arrow-left"></i> Back to Gallery
+                    </a>
+                    <% if (user && user.role === 'Admin') { %>
+                        <a href="/gallery/edit/<%= image.image_id %>" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+
+            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 32px; margin-top: 30px; max-width: 900px;">
+                <% if (image.file_path) { %>
+                    <div style="margin-bottom: 24px;">
+                        <img src="<%= image.file_path %>" alt="<%= image.title %>" style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px;">
+                    </div>
+                <% } else { %>
+                    <div style="margin-bottom: 24px; padding: 60px; text-align: center; background: #0f172a; border-radius: 12px; color: #475569;">
+                        <i class="fas fa-image" style="font-size: 4rem;"></i>
+                        <p style="margin-top: 12px;">No image uploaded for this item.</p>
+                    </div>
+                <% } %>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+                    <% if (image.club_name) { %>
+                        <span style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                            <i class="fas fa-users"></i> <%= image.club_name %>
+                        </span>
+                    <% } %>
+                    <% if (image.album_title) { %>
+                        <span style="background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                            <i class="fas fa-folder"></i> <%= image.album_title %>
+                        </span>
+                    <% } %>
+                    <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                        <i class="far fa-calendar-alt"></i> <%= new Date(image.uploaded_at).toISOString().split('T')[0] %>
+                    </span>
+                    <span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; font-weight: 600;">
+                        <i class="fas fa-circle"></i> <%= image.status %>
+                    </span>
+                </div>
+
+                <% if (image.caption) { %>
+                    <div style="border-top: 1px solid #334155; padding-top: 20px;">
+                        <h4 style="color: #f8fafc; margin: 0 0 8px 0;">Description</h4>
+                        <p style="color: #94a3b8; margin: 0; line-height: 1.6;"><%= image.caption %></p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

@@ -1,0 +1,211 @@
+<%- include('../partials/header') %>
+
+<div class="main-content-window">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="workspace-viewport">
+
+        <div class="page-header-actions">
+
+            <div class="header-text-block">
+                <h2>Payment Approval Center</h2>
+                <p>Review and approve student registration payments.</p>
+            </div>
+
+        </div>
+
+        <!-- Statistics -->
+
+        <div class="dashboard-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon-wrapper" style="background:#FEF3C7;color:#D97706;">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+
+                <div class="stat-data-block">
+                    <h3><%= payments.length %></h3>
+                    <p>Pending Payments</p>
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon-wrapper" style="background:#DCFCE7;color:#16A34A;">
+                    <i class="fas fa-money-check"></i>
+                </div>
+
+                <div class="stat-data-block">
+                    <h3>KES <%= payments.reduce((sum,p)=>sum+Number(p.amount),0).toLocaleString() %></h3>
+                    <p>Total Pending Amount</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <!-- Search -->
+
+        <div class="table-header">
+
+            <h3>Pending Registration Payments</h3>
+
+            <input
+                id="paymentSearch"
+                type="text"
+                placeholder="Search student..."
+                class="form-control"
+                style="max-width:300px;"
+            >
+
+        </div>
+
+        <table class="table" id="paymentsTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>Student</th>
+
+                    <th>Admission No.</th>
+
+                    <th>Amount</th>
+
+                    <th>Method</th>
+
+                    <th>Transaction Code</th>
+
+                    <th>Date</th>
+
+                    <th>Status</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            <% if(payments.length===0){ %>
+
+                <tr>
+
+                    <td colspan="8" style="text-align:center;padding:40px;">
+
+                        <i class="fas fa-check-circle" style="font-size:40px;color:#22c55e;"></i>
+
+                        <br><br>
+
+                        No pending payments.
+
+                    </td>
+
+                </tr>
+
+            <% } %>
+
+            <% payments.forEach(payment=>{ %>
+
+                <tr>
+
+                    <td>
+
+                        <strong>
+
+                            <%= payment.first_name %>
+
+                            <%= payment.last_name %>
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.admission_no %>
+
+                    </td>
+
+                    <td>
+
+                        <strong>
+
+                            KES <%= Number(payment.amount).toLocaleString() %>
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.payment_method %>
+
+                    </td>
+
+                    <td>
+
+                        <%= payment.transaction_code %>
+
+                    </td>
+
+                    <td>
+
+                        <%= new Date(payment.payment_date).toLocaleDateString() %>
+
+                    </td>
+
+                    <td>
+
+                        <span class="badge bg-warning">
+
+                            Pending
+
+                        </span>
+
+                    </td>
+
+                    <td>
+                        <span class="badge bg-secondary">Read only</span>
+                    </td>
+
+                </tr>
+
+            <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</div>
+
+<script>
+
+const search = document.getElementById('paymentSearch');
+
+search.addEventListener('keyup', function(){
+
+    const value = this.value.toLowerCase();
+
+    document.querySelectorAll('#paymentsTable tbody tr').forEach(row=>{
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(value)
+            ? ''
+            : 'none';
+
+    });
+
+});
+
+</script>

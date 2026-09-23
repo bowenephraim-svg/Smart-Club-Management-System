@@ -1,0 +1,113 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-list"></i> Transaction History</h2>
+                    <p>Complete record of all income and expenses.</p>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="/finance/export/csv" class="btn btn-success">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </a>
+                    <button onclick="window.print()" class="btn btn-primary">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <!-- Filters -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Filter Transactions</h3>
+                </div>
+                <form method="GET" action="/finance/transactions" class="activity-toolbar-form" style="padding:16px 20px;">
+                    <div class="activity-toolbar-group">
+                        <select name="club_id">
+                            <option value="">All Clubs</option>
+                            <% clubs.forEach(club => { %>
+                                <option value="<%= club.club_id %>" <%= String(filters.club_id) === String(club.club_id) ? 'selected' : '' %>><%= club.club_name %></option>
+                            <% }); %>
+                        </select>
+                        <select name="type">
+                            <option value="">All Types</option>
+                            <option value="Income" <%= String(filters.type) === 'Income' ? 'selected' : '' %>>Income</option>
+                            <option value="Expense" <%= String(filters.type) === 'Expense' ? 'selected' : '' %>>Expense</option>
+                        </select>
+                        <input type="text" name="search" value="<%= filters.search || '' %>" placeholder="Search reference, description...">
+                        <input type="date" name="date_from" value="<%= filters.date_from || '' %>">
+                        <input type="date" name="date_to" value="<%= filters.date_to || '' %>">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+                        <a href="/finance/transactions" class="btn btn-muted">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>All Transactions</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Club</th>
+                                <th>Amount</th>
+                                <th>Reference</th>
+                                <th>Description</th>
+                                <th>Recorded By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (transactions && transactions.length > 0) { %>
+                                <% transactions.forEach(tx => { %>
+                                    <tr>
+                                        <td><%= tx.date %></td>
+                                        <td>
+                                            <% if (tx.type === 'Income') { %>
+                                                <span class="badge badge-success"><%= tx.type %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-danger"><%= tx.type %></span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= tx.category || '—' %></td>
+                                        <td><%= tx.club_name || '—' %></td>
+                                        <td><strong>KES <%= Number(tx.amount).toLocaleString() %></strong></td>
+                                        <td><code><%= tx.reference || '—' %></code></td>
+                                        <td><%= tx.description ? tx.description.substring(0, 50) + (tx.description.length > 50 ? '...' : '') : '—' %></td>
+                                        <td><%= tx.recorded_by_name || 'System' %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="8" class="table-empty-state">
+                                        <i class="fas fa-receipt"></i>
+                                        <p>No transactions found.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

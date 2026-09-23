@@ -1,0 +1,104 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="page-header-actions" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px;">
+                <div class="header-text-block">
+                    <h2 style="color: #fff; margin: 0; font-size: 1.75rem;">Add Achievement</h2>
+                    <p style="color: #94a3b8; margin: 5px 0 0 0;">Create a new achievement record.</p>
+                </div>
+                <a href="/achievements" class="btn btn-muted">
+                    <i class="fas fa-arrow-left"></i> Back to Achievements
+                </a>
+            </div>
+
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger" style="margin-top: 20px;"><%= error_msg %></div>
+            <% } %>
+
+            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 32px; margin-top: 30px; max-width: 700px;">
+                <form action="/achievements/add" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Title *</label>
+                        <input type="text" name="title" placeholder="e.g., 1st Place - Science Fair" required style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Description</label>
+                        <textarea name="description" rows="3" placeholder="Details about the achievement..." style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;"></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Assign to Student</label>
+                            <select name="student_id" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                                <option value="">-- No Student --</option>
+                                <% students.forEach(student => { %>
+                                    <option value="<%= student.student_id %>"><%= student.first_name %> <%= student.last_name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Related Club</label>
+                            <select name="club_id" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                                <option value="">-- No Club --</option>
+                                <% clubs.forEach(club => { %>
+                                    <option value="<%= club.club_id %>"><%= club.club_name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Category / Type</label>
+                            <input type="text" name="category" placeholder="e.g., Academic, Sports, Arts" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Achievement Date</label>
+                            <input type="date" name="achievement_date" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Position</label>
+                            <input type="text" name="position" placeholder="e.g., 1st, 2nd, Winner" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Award</label>
+                            <input type="text" name="award" placeholder="e.g., Gold Medal, Certificate" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Certificate / Image (JPG / PNG / GIF / WEBP, max 5MB)</label>
+                        <input type="file" name="image" accept="image/*" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="color: #cbd5e1; font-size: 0.9rem; font-weight: 500;">Status</label>
+                        <select name="status" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
+                            <option value="Published">Published</option>
+                            <option value="Unpublished">Unpublished</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; border-top: 1px solid #334155; padding-top: 20px;">
+                        <a href="/achievements" class="btn btn-muted">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Achievement</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

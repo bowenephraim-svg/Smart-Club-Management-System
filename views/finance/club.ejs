@@ -1,0 +1,122 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/finance" class="back-link"><i class="fas fa-arrow-left"></i> Return to Finance</a>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2><i class="fas fa-users"></i> <%= club.club_name %></h2>
+                    <p>Financial overview and transaction history for this club.</p>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="dashboard-stats-grid">
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Income</span>
+                            <h2>KES <%= Number(stats.totalIncome || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-arrow-trend-up"></i> All time</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-arrow-trend-up"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Expenses</span>
+                            <h2>KES <%= Number(stats.totalExpenses || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-arrow-trend-down"></i> All time</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-arrow-trend-down"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Balance</span>
+                            <h2>KES <%= Number(stats.balance || 0).toLocaleString() %></h2>
+                            <small class="stat-change"><i class="fas fa-scale-balanced"></i> Net position</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-scale-balanced"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Transactions</span>
+                            <h2><%= stats.totalTransactions || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-exchange-alt"></i> Total records</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-exchange-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Club Transactions</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Reference</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (transactions && transactions.length > 0) { %>
+                                <% transactions.forEach(tx => { %>
+                                    <tr>
+                                        <td><%= tx.date %></td>
+                                        <td>
+                                            <% if (tx.type === 'Income') { %>
+                                                <span class="badge badge-success"><%= tx.type %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-danger"><%= tx.type %></span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= tx.category || '—' %></td>
+                                        <td><strong>KES <%= Number(tx.amount).toLocaleString() %></strong></td>
+                                        <td><code><%= tx.reference || '—' %></code></td>
+                                        <td><%= tx.description ? tx.description.substring(0, 60) + (tx.description.length > 60 ? '...' : '') : '—' %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="table-empty-state">
+                                        <i class="fas fa-receipt"></i>
+                                        <p>No transactions found for this club.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Club Elections</h2>
+                    <p>Organize and manage democratic leadership elections for school clubs.</p>
+                </div>
+                <span class="coming-soon-badge"><i class="fas fa-clock"></i> Coming Soon</span>
+            </div>
+
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <h2>Elections Module Coming Soon</h2>
+                <p>This module will enable clubs to hold structured elections for leadership positions with secure, transparent voting processes.</p>
+                <a href="/dashboard" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+
+            <div class="step-cards-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Create Election</h3>
+                    <p>Set up an election period with start and end dates for a specific club.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Register Candidates</h3>
+                    <p>Add student candidates running for available leadership positions.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Open Voting</h3>
+                    <p>Allow club members to cast their votes securely during the election window.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>View Results</h3>
+                    <p>Tally votes and announce winners with detailed election analytics.</p>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

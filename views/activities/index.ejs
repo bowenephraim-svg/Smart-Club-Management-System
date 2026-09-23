@@ -1,0 +1,171 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Activities & Events</h2>
+                    <p>Track school activities, registrations, attendance, and upcoming events in one place.</p>
+                </div>
+                <% if (user && (user.role === 'Admin' || user.role === 'Patron')) { %>
+                    <a href="/activities/add" class="btn btn-primary">
+                        <i class="fas fa-calendar-plus"></i> Create Activity
+                    </a>
+                <% } %>
+            </div>
+
+            <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success_msg %></div>
+            <% } %>
+            <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <%= error_msg %></div>
+            <% } %>
+
+            <div class="dashboard-stats-grid">
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Activities</span>
+                            <h2><%= summary.totalActivities || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-alt"></i> Managed events</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Upcoming</span>
+                            <h2><%= summary.upcomingCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-clock"></i> Scheduled ahead</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-clock"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Today</span>
+                            <h2><%= summary.todayCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-calendar-check"></i> happening now</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-calendar-check"></i></div>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Completed</span>
+                            <h2><%= summary.completedCount || 0 %></h2>
+                            <small class="stat-change"><i class="fas fa-history"></i> Finished events</small>
+                        </div>
+                        <div class="stat-icon-wrapper"><i class="fas fa-history"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-toolbar">
+                <form method="GET" action="/activities" class="activity-toolbar-form">
+                    <div class="activity-toolbar-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="search" value="<%= filters.search %>" placeholder="Search by activity, club, venue...">
+                    </div>
+                    <div class="activity-toolbar-group">
+                        <select name="filter">
+                            <option value="all" <%= filters.filter === 'all' ? 'selected' : '' %>>All statuses</option>
+                            <option value="upcoming" <%= filters.filter === 'upcoming' ? 'selected' : '' %>>Upcoming</option>
+                            <option value="today" <%= filters.filter === 'today' ? 'selected' : '' %>>Today</option>
+                            <option value="completed" <%= filters.filter === 'completed' ? 'selected' : '' %>>Completed</option>
+                        </select>
+                    </div>
+                    <div class="activity-toolbar-group">
+                        <select name="sort">
+                            <option value="upcoming" <%= filters.sort === 'upcoming' ? 'selected' : '' %>>Upcoming first</option>
+                            <option value="recent" <%= filters.sort === 'recent' ? 'selected' : '' %>>Most recent</option>
+                            <option value="name" <%= filters.sort === 'name' ? 'selected' : '' %>>Name</option>
+                            <option value="venue" <%= filters.sort === 'venue' ? 'selected' : '' %>>Venue</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Apply</button>
+                </form>
+            </div>
+
+            <div class="data-table-card">
+                <div class="table-search-header">
+                    <h3 class="table-card-title">Activity Schedule</h3>
+                </div>
+
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table" id="activitiesTable">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Club</th>
+                                <th>Date</th>
+                                <th>Venue</th>
+                                <th>Registrations</th>
+                                <th>Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (activities && activities.length > 0) { %>
+                                <% activities.forEach(act => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="activity-name-block">
+                                                <strong><%= act.activity_name %></strong>
+                                                <span><%= act.description || 'No additional description provided.' %></span>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge badge-info"><%= act.club_name %></span></td>
+                                        <td><strong><%= act.activity_date %></strong></td>
+                                        <td><i class="fas fa-map-marker-alt"></i> <%= act.venue || 'Venue not set' %></td>
+                                        <td><span class="badge badge-success"><%= act.registration_count || 0 %></span></td>
+                                        <td><span class="activity-status-pill <%= act.status.toLowerCase() %>"><%= act.status %></span></td>
+                                        <td class="text-center">
+                                            <div class="activity-action-group">
+                                                <a href="/activities/<%= act.activity_id %>" class="btn btn-sm btn-muted"><i class="fas fa-eye"></i> View</a>
+                                                <% if (user && user.role === 'Admin') { %>
+                                                    <a href="/activities/edit/<%= act.activity_id %>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                                                    <form method="POST" action="/activities/delete/<%= act.activity_id %>" onsubmit="return confirm('Delete this activity?');" style="display:inline;">
+                                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</button>
+                                                    </form>
+                                                <% } %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="table-empty-state">
+                                        <i class="fas fa-calendar-times"></i>
+                                        <p>No activities were found for the current filter.</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <% if (pagination.pages > 1) { %>
+                <div class="activity-pagination">
+                    <% if (pagination.hasPrev) { %>
+                        <a href="/activities?page=<%= pagination.page - 1 %>&search=<%= encodeURIComponent(filters.search) %>&filter=<%= filters.filter %>&sort=<%= filters.sort %>" class="btn btn-muted"><i class="fas fa-chevron-left"></i> Previous</a>
+                    <% } %>
+                    <span>Page <%= pagination.page %> of <%= pagination.pages %></span>
+                    <% if (pagination.hasNext) { %>
+                        <a href="/activities?page=<%= pagination.page + 1 %>&search=<%= encodeURIComponent(filters.search) %>&filter=<%= filters.filter %>&sort=<%= filters.sort %>" class="btn btn-muted">Next <i class="fas fa-chevron-right"></i></a>
+                    <% } %>
+                </div>
+            <% } %>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

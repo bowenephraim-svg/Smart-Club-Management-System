@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Final Card, Table Card, and Grid Overrides
+   ========================================================================== */
+
+.cards,
+.card-grid,
+.dashboard-stats-grid,
+.dashboard-grid,
+.info-grid,
+.quick-actions {
+    align-items: stretch;
+}
+
+.card,
+.stat-card,
+.dashboard-card,
+.quick-card,
+.info-card,
+.table-card-container,
+.data-table-card,
+.chart-card,
+.gallery-card {
+    border-radius: var(--radius-md);
+}
+
+.stat-card {
+    min-width: 0;
+}
+
+.stat-data-block,
+.stat-info,
+.stat-left {
+    min-width: 0;
+}
+
+.stat-data-block h3,
+.stat-value,
+.stat-number {
+    overflow-wrap: anywhere;
+}
+
+.table-card-container,
+.data-table-card {
+    margin-bottom: 24px;
+}
+
+.table-card-container .table-controls-bar,
+.data-table-card .table-search-header {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.table-card-container .table-responsive-wrapper,
+.data-table-card .responsive-table-wrapper {
+    background: rgba(8, 13, 24, .55);
+}
+
+.data-table th,
+.system-data-table th {
+    background: rgba(8, 13, 24, .92) !important;
+    color: #b8c4d8 !important;
+}
+
+.data-table td,
+.system-data-table td {
+    color: #e5eefb !important;
+}
+
+.data-table tbody tr:hover,
+.system-data-table tbody tr:hover {
+    background: rgba(56, 189, 248, .08) !important;
+}
+
+.search-input-wrapper,
+.search-input-group,
+.search-box-wrapper {
+    position: relative;
+    width: min(100%, 430px);
+}
+
+.search-input-group i,
+.search-box-wrapper i,
+.search-input-wrapper i {
+    pointer-events: none;
+}
+
+.search-input-group input,
+.search-box-wrapper input,
+.search-input-wrapper input {
+    padding-left: 40px;
+}
+
+.btn-action,
+.btn-action.delete,
+.btn-view,
+.btn-edit,
+.btn-delete {
+    border: 0;
+    color: #ffffff;
+}
+
+.btn-action {
+    background: #64748b;
+}
+
+.btn-action.edit,
+.btn-edit {
+    background: #2563eb;
+}
+
+.btn-action.delete,
+.btn-delete {
+    background: #ef4444;
+}
+
+.btn-action.view,
+.btn-view {
+    background: #10b981;
+}
+
+.btn-action:hover,
+.btn-action.edit:hover,
+.btn-action.delete:hover,
+.btn-action.view:hover,
+.btn-view:hover,
+.btn-edit:hover,
+.btn-delete:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.gallery-card {
+    flex-direction: column;
+}
+
+@media (max-width: 640px) {
+    .table-card-container,
+    .data-table-card,
+    .chart-card {
+        margin-bottom: 18px;
+    }
+}

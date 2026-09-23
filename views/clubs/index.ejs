@@ -1,0 +1,113 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Active School Clubs & Charters</h2>
+                    <p>Track allocation metrics, active student seats, and structural staff supervisor metrics.</p>
+                </div>
+                <% if (user && user.role === 'Admin') { %>
+                    <a href="/clubs/add" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> Charter New Club
+                    </a>
+                <% } %>
+            </div>
+
+            <div class="clubs-matrix-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 20px;">
+                <% if (clubs && clubs.length > 0) { %>
+                    <% clubs.forEach(club => { 
+                        const capacityPct = Math.min(100, Math.round((club.active_enrolled_count / club.capacity) * 100));
+                        let progressClass = 'progress-normal';
+                        if (capacityPct >= 90) progressClass = 'progress-danger';
+                        else if (capacityPct >= 75) progressClass = 'progress-warning';
+                    %>
+                        <div class="club-profile-card" style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: transform 0.2s, box-shadow 0.2s;">
+                            <div class="card-upper-meta">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                    <span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;"><%= club.category %></span>
+                                    <span class="status-dot <%= club.status.toLowerCase() %>">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem;"></i> <%= club.status %>
+                                    </span>
+                                </div>
+                                <h3 style="margin: 0 0 8px 0; font-size: 1.25rem; color: #fff;"><%= club.club_name %></h3>
+                                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.4; margin: 0 0 16px 0; min-height: 40px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"><%= club.description || 'No system parameter description structural payload recorded.' %></p>
+                            </div>
+
+                            <div class="card-lower-metrics" style="margin-top: auto;">
+                                <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 12px; border-top: 1px solid #334155; padding-top: 12px;">
+                                    <i class="fas fa-chalkboard-teacher" style="color: #94a3b8;"></i>
+                                    <span>Patron: <strong><%= club.patron_first ? `${club.patron_first} ${club.patron_last}` : 'Unassigned/Vacant' %></strong></span>
+                                </div>
+
+                                <div class="allocation-bar-wrapper" style="margin-bottom: 20px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px; color: #94a3b8;">
+                                        <span>Seat Allocation</span>
+                                        <strong><%= club.active_enrolled_count %> / <%= club.capacity %> (<%= capacityPct %>%)</strong>
+                                    </div>
+                                    <div style="width: 100%; height: 6px; background: #0f172a; border-radius: 3px; overflow: hidden;">
+                                        <div class="progress-bar-fill <%= progressClass %>" <%- `style="width: ${capacityPct}%"` %>></div>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex;gap:8px;width:100%;">
+
+                                    <a
+                                        href="/clubs/details/<%= club.club_id %>"
+                                        class="btn btn-muted"
+                                        style="flex:1;text-align:center;justify-content:center;font-size:.85rem;padding:8px;">
+
+                                        <i class="fas fa-folder-open"></i>
+
+                                        View Roster
+
+                                    </a>
+
+                                        <% if(user && user.role === 'Student'){ %>
+
+                                        <a
+                                            href="/memberships/join/<%= club.club_id %>"
+                                            class="btn btn-success"
+                                            style="flex:1;text-align:center;justify-content:center;font-size:.85rem;padding:8px;">
+
+                                            <i class="fas fa-user-plus"></i>
+
+                                            Join Club
+
+                                        </a>
+
+                                    <% } %>
+
+                                        <% if(user && user.role === 'Admin'){ %>
+
+                                            <a
+                                                href="/clubs/edit/<%= club.club_id %>"
+                                                class="btn btn-icon-only"
+                                                style="background:#334155;color:#cbd5e1;padding:8px 12px;border-radius:6px;">
+
+                                                <i class="fas fa-cog"></i>
+
+                                            </a>
+
+                                        <% } %>
+
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: #1e293b; border-radius: 12px; border: 1px solid #334155;">
+                        <i class="fas fa-cubes" style="font-size: 3rem; color: #475569; margin-bottom: 16px;"></i>
+                        <p style="color: #94a3b8; margin: 0;">No structural club system nodes found inside the system database layer context.</p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

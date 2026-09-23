@@ -1,0 +1,255 @@
+<nav class="navbar">
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+    </div>
+
+
+    <!-- Search -->
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search students, clubs, events...">
+    </div>
+
+
+    <!-- Navbar Actions -->
+    <div class="nav-actions">
+
+
+        <% if (!user || user.role !== 'Admin') { %>
+            <a class="quick-btn" href="/patron/invite-student">
+                <i class="fas fa-paper-plane"></i>
+                Invite a Student
+            </a>
+        <% } %>
+
+
+        <!-- Dark Mode -->
+        <button class="icon-btn" id="darkModeBtn">
+            <i class="fas fa-moon"></i>
+        </button>
+
+
+
+        <!-- Notifications -->
+        <div class="dropdown" id="notificationDropdown">
+
+            <button class="icon-btn dropdown-btn" id="notificationBellBtn">
+                <i class="fas fa-bell"></i>
+                <% if (typeof navbarUnreadCount !== 'undefined' && navbarUnreadCount > 0) { %>
+                    <span class="badge" id="notificationBadge"><%= navbarUnreadCount %></span>
+                <% } %>
+            </button>
+
+
+            <div class="dropdown-menu notification-menu" id="notificationMenu">
+
+                <div class="notification-menu-header">
+                    <h4>Notifications</h4>
+                    <% if (typeof navbarUnreadCount !== 'undefined' && navbarUnreadCount > 0) { %>
+                        <button class="notification-mark-all" id="markAllReadBtn" title="Mark all as read">
+                            <i class="fas fa-check-double"></i>
+                            Mark all read
+                        </button>
+                    <% } %>
+                </div>
+
+                <div class="notification-list" id="notificationList">
+
+                    <% if (typeof navbarNotifications !== 'undefined' && navbarNotifications.length > 0) { %>
+
+                        <% navbarNotifications.forEach(notification => { %>
+
+                            <div class="notification-item <%= notification.status === 'Unread' ? 'unread' : '' %>"
+                                 data-id="<%= notification.notification_id %>">
+
+                                <div class="notification-icon <%= notification.type %>">
+                                    <% if (notification.type === 'student_registration') { %>
+                                        <i class="fas fa-user-plus"></i>
+                                    <% } else if (notification.type === 'membership_pending') { %>
+                                        <i class="fas fa-hourglass-half"></i>
+                                    <% } else if (notification.type === 'membership_approved') { %>
+                                        <i class="fas fa-check-circle"></i>
+                                    <% } else if (notification.type === 'membership_rejected') { %>
+                                        <i class="fas fa-times-circle"></i>
+                                    <% } else if (notification.type === 'payment_received') { %>
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    <% } else if (notification.type === 'activity_created') { %>
+                                        <i class="fas fa-calendar-plus"></i>
+                                    <% } else if (notification.type === 'feedback_received') { %>
+                                        <i class="fas fa-comment-dots"></i>
+                                    <% } else if (notification.type === 'announcement_created') { %>
+                                        <i class="fas fa-bullhorn"></i>
+                                    <% } else if (notification.type === 'election_created') { %>
+                                        <i class="fas fa-vote-yea"></i>
+                                    <% } else if (notification.type === 'election_opened') { %>
+                                        <i class="fas fa-bullhorn"></i>
+                                    <% } else if (notification.type === 'election_closed') { %>
+                                        <i class="fas fa-lock"></i>
+                                    <% } else if (notification.type === 'election_results') { %>
+                                        <i class="fas fa-trophy"></i>
+                                    <% } else if (notification.type === 'vote_cast') { %>
+                                        <i class="fas fa-check-circle"></i>
+                                    <% } else if (notification.type === 'candidate_added') { %>
+                                        <i class="fas fa-user-plus"></i>
+                                    <% } else { %>
+                                        <i class="fas fa-bell"></i>
+                                    <% } %>
+                                </div>
+
+                                <div class="notification-content">
+                                    <p class="notification-message"><%= notification.message %></p>
+                                    <span class="notification-time">
+                                        <%= new Date(notification.created_at).toLocaleString() %>
+                                    </span>
+                                </div>
+
+                                <% if (notification.status === 'Unread') { %>
+                                    <span class="notification-dot"></span>
+                                <% } %>
+
+                            </div>
+
+                        <% }) %>
+
+                    <% } else { %>
+
+                        <div class="notification-empty">
+                            <i class="fas fa-bell-slash"></i>
+                            <p>No notifications yet</p>
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+                <a href="<%= user && user.role === 'Patron' ? '/patron/notifications' : '/notifications/my' %>" class="notification-view-all">
+                    <i class="fas fa-list"></i>
+                    View all notifications
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+
+        <!-- Personal inbox: only messages for the authenticated account. -->
+        <div class="dropdown" id="inboxDropdown">
+
+            <button class="icon-btn dropdown-btn" type="button" aria-label="Open my inbox" title="My inbox">
+                <i class="fas fa-envelope"></i>
+                <% if (typeof navbarUnreadCount !== 'undefined' && navbarUnreadCount > 0) { %>
+                    <span class="badge"><%= navbarUnreadCount %></span>
+                <% } %>
+            </button>
+
+            <div class="dropdown-menu notification-menu inbox-menu">
+                <div class="notification-menu-header">
+                    <h4><i class="fas fa-envelope-open-text"></i> My Inbox</h4>
+                </div>
+
+                <div class="notification-list">
+                    <% if (typeof navbarNotifications !== 'undefined' && navbarNotifications.length > 0) { %>
+                        <% navbarNotifications.slice(0, 3).forEach(message => { %>
+                            <a class="notification-item <%= message.status === 'Unread' ? 'unread' : '' %>"
+                               href="<%= user && user.role === 'Student' ? '/student/notifications' : (user && user.role === 'Patron' ? '/patron/notifications' : '/notifications/my') %>">
+                                <div class="notification-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-message"><%= message.message %></p>
+                                    <span class="notification-time"><%= new Date(message.created_at).toLocaleString() %></span>
+                                </div>
+                                <% if (message.status === 'Unread') { %>
+                                    <span class="notification-dot"></span>
+                                <% } %>
+                            </a>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="notification-empty">
+                            <i class="fas fa-inbox"></i>
+                            <p>Your inbox is empty</p>
+                        </div>
+                    <% } %>
+                </div>
+
+                <a href="<%= user && user.role === 'Student' ? '/student/notifications' : (user && user.role === 'Patron' ? '/patron/notifications' : '/notifications/my') %>" class="notification-view-all">
+                    <i class="fas fa-inbox"></i> Open my inbox
+                </a>
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- User Profile -->
+
+
+        <div class="dropdown profile">
+
+
+            <button class="profile-btn dropdown-btn">
+
+
+                <% if (user && user.profile_image) { %>
+                    <img src="<%= user.profile_image %>" alt="Profile image">
+                <% } else { %>
+                    <img src="/images/profile.jpeg" alt="Profile image">
+                <% } %>
+
+
+                <span>
+                    <%= user ? user.name : 'Admin' %>
+                </span>
+
+
+                <i class="fas fa-chevron-down"></i>
+
+
+            </button>
+
+
+
+            <div class="dropdown-menu profile-menu">
+
+
+                <a href="<%= user && user.role === 'Admin' ? '/admin/profile' : (user && user.role === 'Patron' ? '/patron/profile' : '/student/profile') %>">
+                    <i class="fas fa-user"></i>
+                    My Profile
+                </a>
+
+
+                <a href="#">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+
+
+                <a href="/logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</nav>

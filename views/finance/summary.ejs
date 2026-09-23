@@ -1,0 +1,221 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>Financial Summary</h2>
+                    <p>Comprehensive overview of income, expenses, and net balance.</p>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <a href="/finance" class="btn btn-muted">
+                        <i class="fas fa-arrow-left"></i> Back to Finance
+                    </a>
+                    <a href="/finance/reports" class="btn btn-primary">
+                        <i class="fas fa-chart-bar"></i> Detailed Reports
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Stats -->
+            <div class="dashboard-stats-grid">
+                <div class="stat-card success">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Income</span>
+                            <h2>KES <%= Number(stats.totalIncome || 0).toLocaleString() %></h2>
+                            <small class="stat-change">
+                                <i class="fas fa-arrow-trend-up"></i> All time income
+                            </small>
+                        </div>
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-arrow-trend-up"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card danger">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Total Expenses</span>
+                            <h2>KES <%= Number(stats.totalExpenses || 0).toLocaleString() %></h2>
+                            <small class="stat-change">
+                                <i class="fas fa-arrow-trend-down"></i> All time expenses
+                            </small>
+                        </div>
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-arrow-trend-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>Net Balance</span>
+                            <h2>KES <%= Number(stats.balance || 0).toLocaleString() %></h2>
+                            <small class="stat-change">
+                                <i class="fas fa-scale-balanced"></i> Income - Expenses
+                            </small>
+                        </div>
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-scale-balanced"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-content">
+                        <div class="stat-left">
+                            <span>This Month Net</span>
+                            <h2>KES <%= Number(stats.monthBalance || 0).toLocaleString() %></h2>
+                            <small class="stat-change">
+                                <i class="fas fa-calendar-alt"></i> Monthly balance
+                            </small>
+                        </div>
+                        <div class="stat-icon-wrapper">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Summary -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Daily Summary (Last 30 Days)</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Income</th>
+                                <th>Expenses</th>
+                                <th>Net</th>
+                                <th>Transactions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (dailySummary && dailySummary.length > 0) { %>
+                                <% dailySummary.forEach(day => { %>
+                                    <% const income = Number(day.income || 0); const expenses = Number(day.expenses || 0); const net = income - expenses; %>
+                                    <tr>
+                                        <td><%= day.date %></td>
+                                        <td><span class="badge badge-success">KES <%= income.toLocaleString() %></span></td>
+                                        <td><span class="badge badge-danger">KES <%= expenses.toLocaleString() %></span></td>
+                                        <td>
+                                            <span class="badge <%= net >= 0 ? 'badge-success' : 'badge-danger' %>">
+                                                KES <%= net.toLocaleString() %>
+                                            </span>
+                                        </td>
+                                        <td><%= day.transactions || 0 %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="table-empty-state">No daily data available.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Yearly Summary -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Yearly Summary</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Income</th>
+                                <th>Expenses</th>
+                                <th>Net</th>
+                                <th>Transactions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (yearlySummary && yearlySummary.length > 0) { %>
+                                <% yearlySummary.forEach(year => { %>
+                                    <% const income = Number(year.income || 0); const expenses = Number(year.expenses || 0); const net = income - expenses; %>
+                                    <tr>
+                                        <td><strong><%= year.year %></strong></td>
+                                        <td><span class="badge badge-success">KES <%= income.toLocaleString() %></span></td>
+                                        <td><span class="badge badge-danger">KES <%= expenses.toLocaleString() %></span></td>
+                                        <td>
+                                            <span class="badge <%= net >= 0 ? 'badge-success' : 'badge-danger' %>">
+                                                KES <%= net.toLocaleString() %>
+                                            </span>
+                                        </td>
+                                        <td><%= year.transactions || 0 %></td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="table-empty-state">No yearly data available.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Club Summary -->
+            <div class="table-card" style="margin-top:24px;">
+                <div class="table-header">
+                    <h3>Club Financial Summary</h3>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table class="system-data-table">
+                        <thead>
+                            <tr>
+                                <th>Club</th>
+                                <th>Income</th>
+                                <th>Expenses</th>
+                                <th>Balance</th>
+                                <th>Transactions</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (clubSummary && clubSummary.length > 0) { %>
+                                <% clubSummary.forEach(club => { %>
+                                    <tr>
+                                        <td><strong><%= club.club_name %></strong></td>
+                                        <td><span class="badge badge-success">KES <%= Number(club.total_income || 0).toLocaleString() %></span></td>
+                                        <td><span class="badge badge-danger">KES <%= Number(club.total_expenses || 0).toLocaleString() %></span></td>
+                                        <td>
+                                            <span class="badge <%= (club.balance || 0) >= 0 ? 'badge-success' : 'badge-danger' %>">
+                                                KES <%= Number(club.balance || 0).toLocaleString() %>
+                                            </span>
+                                        </td>
+                                        <td><%= club.transaction_count || 0 %></td>
+                                        <td class="text-center">
+                                            <a href="/finance/club/<%= club.club_id %>" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" class="table-empty-state">No club data available.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <%- include('../partials/footer') %>
+    </div>
+</div>

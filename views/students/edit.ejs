@@ -1,0 +1,86 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/students" class="back-link"><i class="fas fa-arrow-left"></i> Back to Students</a>
+            </div>
+
+            <div class="form-workspace-card">
+                <div class="form-card-header">
+                    <h3><i class="fas fa-user-edit"></i> Edit Student Profile</h3>
+                    <p>Update the student's personal details, class assignment, and contact information.</p>
+                </div>
+
+                <form action="/students/edit/<%= student.student_id %>" method="POST" class="standard-system-form">
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="admission_no">Admission Number <span class="required">*</span></label>
+                            <input type="text" id="admission_no" name="admission_no" required value="<%= student.admission_no %>">
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required value="<%= student.email %>">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="first_name">First Name <span class="required">*</span></label>
+                            <input type="text" id="first_name" name="first_name" required value="<%= student.first_name %>">
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="last_name">Last Name <span class="required">*</span></label>
+                            <input type="text" id="last_name" name="last_name" required value="<%= student.last_name %>">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="form">Class Level <span class="required">*</span></label>
+                            <select id="form" name="form" required>
+                                <option value="1" <%= student.form == 1 ? 'selected' : '' %>>Form 1</option>
+                                <option value="2" <%= student.form == 2 ? 'selected' : '' %>>Form 2</option>
+                                <option value="3" <%= student.form == 3 ? 'selected' : '' %>>Form 3</option>
+                                <option value="4" <%= student.form == 4 ? 'selected' : '' %>>Form 4</option>
+                            </select>
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="stream">Stream <span class="required">*</span></label>
+                            <input type="text" id="stream" name="stream" required value="<%= student.stream %>">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-two-columns">
+                        <div class="input-field-wrapper">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" value="<%= student.phone %>" placeholder="e.g. +254 712 345678">
+                        </div>
+
+                        <div class="input-field-wrapper">
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="Active" <%= student.status === 'Active' ? 'selected' : '' %>>Active</option>
+                                <option value="Inactive" <%= student.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-action-footer-row">
+                        <a href="/students" class="btn btn-muted">Discard Changes</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

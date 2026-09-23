@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+<div class="app-layout-container">
+    <%- include('../partials/sidebar') %>
+    
+    <div class="main-content-window">
+        <%- include('../partials/navbar') %>
+        
+        <main class="workspace-viewport">
+            <div class="back-navigation-row">
+                <a href="/dashboard" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+
+            <div class="page-header">
+                <div>
+                    <h2>Add Payment</h2>
+                    <p>Record a student payment for a club.</p>
+                </div>
+            </div>
+
+            <div class="card">
+    <form action="/finance/payments/add" method="POST" class="standard-system-form">
+        <div class="form-grid-two-columns">
+            <div class="input-field-wrapper">
+                <label for="student_id">Student</label>
+                <select id="student_id" name="student_id" required>
+                    <option value="" disabled selected>Select student</option>
+                    <% if (students && students.length > 0) { %>
+                        <% students.forEach(student => { %>
+                            <option value="<%= student.student_id %>"><%= student.first_name %> <%= student.last_name %></option>
+                        <% }) %>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="input-field-wrapper">
+                <label for="club_id">Club</label>
+                <select id="club_id" name="club_id" required>
+                    <option value="" disabled selected>Select club</option>
+                    <% if (clubs && clubs.length > 0) { %>
+                        <% clubs.forEach(club => { %>
+                            <option value="<%= club.club_id %>"><%= club.club_name %></option>
+                        <% }) %>
+                    <% } %>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-grid-two-columns">
+            <div class="input-field-wrapper">
+                <label for="amount">Amount (KES)</label>
+                <input type="number" id="amount" name="amount" step="0.01" required>
+            </div>
+
+            <div class="input-field-wrapper">
+                <label for="payment_date">Payment Date</label>
+                <input type="date" id="payment_date" name="payment_date" required>
+            </div>
+        </div>
+
+        <div class="input-field-wrapper">
+            <label for="payment_method">Payment Method</label>
+            <input type="text" id="payment_method" name="payment_method" placeholder="Cash, Mpesa, Bank">
+        </div>
+
+        <div class="form-action-footer-row">
+            <a href="/finance/payments" class="btn btn-muted">Cancel</a>
+            <button type="submit" class="btn btn-success">Save Payment</button>
+        </div>
+    </form>
+</div>
+
+        </main>
+        
+        <%- include('../partials/footer') %>
+    </div>
+</div>

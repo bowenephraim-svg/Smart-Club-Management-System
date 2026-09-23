@@ -1,0 +1,81 @@
+<%- include('../partials/header') %>
+
+<div class="app-layout-container">
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="main-content-window">
+
+        <%- include('../partials/navbar') %>
+
+        <main class="workspace-viewport">
+
+            <div class="page-header-actions">
+                <div class="header-text-block">
+                    <h2>All Patrons</h2>
+                    <p>Registered club patrons and their assigned clubs.</p>
+                </div>
+                <a href="/patrons/add" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Add Patron
+                </a>
+            </div>
+
+            <div class="table-card-container" style="margin-top:1rem;">
+                <div class="table-controls-bar">
+                    <h3 class="table-title-heading">
+                        <i class="fas fa-user-tie"></i> Patron Registry
+                        <span style="font-size:.8rem;color:var(--text-muted);font-weight:400;margin-left:.5rem;">
+                            (<%= patrons ? patrons.length : 0 %> total)
+                        </span>
+                    </h3>
+                </div>
+                <div class="table-responsive-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Department</th>
+                                <th>Assigned Clubs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (patrons && patrons.length > 0) { %>
+                                <% patrons.forEach(function(p, idx) { %>
+                                <tr>
+                                    <td><%= idx + 1 %></td>
+                                    <td>
+                                        <strong><%= p.full_name %></strong>
+                                    </td>
+                                    <td><%= p.email || '—' %></td>
+                                    <td><%= p.phone || '—' %></td>
+                                    <td><%= p.department || '—' %></td>
+                                    <td>
+                                        <span class="status-badge status-info">
+                                            <%= p.assigned_clubs_count || 0 %> Club<%= (p.assigned_clubs_count || 0) !== 1 ? 's' : '' %>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">
+                                        <i class="fas fa-user-slash" style="display:block;font-size:1.5rem;margin-bottom:.5rem;opacity:.4;"></i>
+                                        No patrons found in the system.
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <%- include('../partials/footer') %>
+
+    </div>
+
+</div>
