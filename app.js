@@ -173,10 +173,6 @@ app.use(async (req, res, next) => {
 
 });
 
-// Keep profile images available for existing installations as well as fresh databases.
-db.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_image VARCHAR(255) NULL AFTER password')
-    .catch(err => console.error('Profile image column check failed:', err.message));
-
 // Admins monitor the system; patrons perform operational changes.
 app.use(adminReadOnly);
 
@@ -497,11 +493,34 @@ app.use((err, req, res, next) => {
 // ===============================
 
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log('====================================');
-    console.log(
-        `🚀 Victory School Smart Club System running on port ${PORT}`
-    );
-    console.log('====================================');
-});
+async function startServer() {
+    try {
+        const [columns] = await db.query('SHOW COLUMNS FROM users');
+        const columnNames = new Set(columns.map(column => column.Field));
+
+        if (!columnNames.has('profile_image')) {
+            await db.query(
+                'ALTER TABLE users ADD COLUMN profile_image VARCHAR(255) NULL AFTER password'
+            );
+        }
+
+        if (!columnNames.has('status')) {
+            await db.query(
+                "ALTER TABLE users ADD COLUMN status ENUM('Pending Payment','Pending Approval','Approved','Rejected') NOT NULL DEFAULT 'Approved'"
+            );
+        }
+    } catch (err) {
+        console.error('User schema migration failed:', err.message);
+    }
+
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log('====================================');
+        console.log(
+            `🚀 Victory School Smart Club System running on port ${PORT}`
+        );
+        console.log('====================================');
+    });
+}
+
+startServer();
 
