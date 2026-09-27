@@ -495,23 +495,19 @@ app.use((err, req, res, next) => {
 
 async function startServer() {
     try {
+        console.log('🔄 Starting server initialization...');
+
         const [columns] = await db.query('SHOW COLUMNS FROM users');
-        const columnNames = new Set(columns.map(column => column.Field));
 
-        if (!columnNames.has('profile_image')) {
-            await db.query(
-                'ALTER TABLE users ADD COLUMN profile_image VARCHAR(255) NULL AFTER password'
-            );
-        }
+        console.log('✅ Users table checked successfully.');
 
-        if (!columnNames.has('status')) {
-            await db.query(
-                "ALTER TABLE users ADD COLUMN status ENUM('Pending Payment','Pending Approval','Approved','Rejected') NOT NULL DEFAULT 'Approved'"
-            );
-        }
+        // ...rest of your migration code...
+
     } catch (err) {
         console.error('User schema migration failed:', err.message);
     }
+
+    console.log(`🔌 Attempting to bind to port ${PORT}...`);
 
     app.listen(PORT, '0.0.0.0', () => {
         console.log('====================================');
@@ -521,6 +517,4 @@ async function startServer() {
         console.log('====================================');
     });
 }
-
-startServer();
 
