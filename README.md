@@ -91,23 +91,6 @@ The project was developed to demonstrate practical full-stack software developme
 
 ---
 
-# 🖼️ System Preview
-
-> **Add screenshots here after uploading them to your repository.**
-
-```text
-📷 Dashboard Screenshot
-
-📷 Students Module
-
-📷 Clubs Module
-
-📷 Events Module
-
-📷 Finance Module
-```
-
----
 
 # 🛠️ Built With
 
