@@ -1,4 +1,4 @@
-# 🎓 Victory School Smart Club Management System
+# 🎓 Smart Club Management System
 
 <p align="center">
 
@@ -14,7 +14,7 @@
 
 ## 📖 About The Project
 
-The **Victory School Smart Club Management System** is a modern web application designed to digitize the management of school clubs. It enables administrators to efficiently manage students, clubs, memberships, events, attendance, finances, and notifications through a centralized dashboard.
+The **Smart Club Management System** is a modern web application designed to digitize the management of school clubs. It enables administrators to efficiently manage students, clubs, memberships, events, attendance, finances, and notifications through a centralized dashboard.
 
 The project was developed to demonstrate practical full-stack software development skills using **Node.js**, **Express.js**, **MySQL**, **EJS**, **HTML**, **CSS**, and **JavaScript**.
 
@@ -211,13 +211,13 @@ Make sure you have installed:
 Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/Victory-School-Smart-Club-System.git
+git clone https://github.com/yourusername/Smart-Club-System.git
 ```
 
 Move into the project
 
 ```bash
-cd Victory-School-Smart-Club-System
+cd Smart-Club-System
 ```
 
 Install dependencies
