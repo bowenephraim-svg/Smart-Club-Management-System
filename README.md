@@ -194,7 +194,7 @@ Make sure you have installed:
 Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/Smart-Club-System.git
+git clone https://github.com/bowenephraim-svg/Smart-Club-System.git
 ```
 
 Move into the project
@@ -268,8 +268,6 @@ http://localhost:3000
 * Excel Export
 * Parent Portal
 * Club Leader Dashboard
-* Student Portal
-* Dark Mode
 * Mobile Application
 * REST API
 * React Frontend
