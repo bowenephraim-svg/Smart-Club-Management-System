@@ -14,24 +14,39 @@
 
 ## 📖 About The Project
 
-The **Smart Club Management System** is a modern web application designed to digitize the management of school clubs. It enables administrators to efficiently manage students, clubs, memberships, events, attendance, finances, and notifications through a centralized dashboard.
+The **Smart Club Management System** is a modern full-stack web application designed to digitize and streamline the management of school clubs. It enables administrators and club patrons to efficiently manage students, clubs, memberships, events, attendance, finances, and notifications through a centralized, role-protected dashboard.
 
-The project was developed to demonstrate practical full-stack software development skills using **Node.js**, **Express.js**, **MySQL**, **EJS**, **HTML**, **CSS**, and **JavaScript**.
+Developed as a capstone project following full-stack software development training at **EldoHub Academy**, this project demonstrates practical software engineering skills using **Node.js**, **Express.js**, **MySQL**, **EJS**, **HTML5**, **CSS3**, and **JavaScript**.
+
+---
+
+## 🇩🇪 Projektübersicht (German Summary)
+
+Das **Smart Club Management System** ist eine Full-Stack-Webanwendung zur Digitalisierung und Verwaltung von Schulclubs. Über ein zentrales Dashboard können Administratoren und Betreuer Schülerdaten, Club-Mitgliedschaften, Veranstaltungen, Anwesenheitslisten, Finanzen und Benachrichtigungen effizient verwalten.
+
+* **Schwerpunkte:** Rollenbasierte Zugriffskontrolle (RBAC), relationale Datenbankmodellierung (MySQL), sichere SQL-Abfragen (Prepared Statements) und MVC-Architektur.
+* **Tech-Stack:** Node.js, Express.js, MySQL, EJS, HTML5, CSS3, JavaScript, Git.
+
+---
+
+## 🖼️ Application Preview
+
+> *Tip: Save screenshots of your running application inside `public/images/` and replace the placeholders below to showcase your UI to recruiters:*
+
+* **Admin Dashboard:** `![Dashboard Preview](public/images/dashboard-preview.png)`
+* **Membership & Event Management:** `![Events Preview](public/images/events-preview.png)`
 
 ---
 
 ## ✨ Features
 
 ### 🔐 Authentication
-
-* Secure Login
-* Logout
+* Secure Login & Logout
 * Session Management
-* Protected Routes
-* Role-Based Access Control
+* Protected Routes & Authentication Middleware
+* Role-Based Access Control (RBAC)
 
 ### 👨‍🎓 Student Management
-
 * Register Students
 * Edit Student Information
 * Delete Students
@@ -39,7 +54,6 @@ The project was developed to demonstrate practical full-stack software developme
 * View Student Profiles
 
 ### 🎭 Club Management
-
 * Create Clubs
 * Edit Clubs
 * Delete Clubs
@@ -47,97 +61,83 @@ The project was developed to demonstrate practical full-stack software developme
 * Registration Fee Management
 
 ### 📝 Membership Management
-
-* Join Club
-* Leave Club
+* Join Club & Leave Club Workflows
 * Approve Memberships
-* Membership Statistics
+* Live Membership Statistics
 
 ### 📅 Event Management
-
-* Create Events
-* Update Events
-* Delete Events
-* Club Activities
+* Create, Update & Delete Events
+* Club Activities Tracking
 * Event Scheduling
 
 ### ✅ Attendance
-
 * Record Attendance
 * Attendance Reports
 * Participation Tracking
 
 ### 💰 Finance
-
-* Registration Fees
-* Donations
-* Club Expenses
+* Registration Fees Tracking
+* Donations Ledger
+* Club Expenses Management
 * Financial Reports
 
 ### 🔔 Notifications
-
 * School Announcements
 * Event Notifications
 * Membership Updates
 
 ### 📊 Dashboard
-
-* Total Students
-* Total Clubs
-* Total Memberships
-* Total Events
-* Attendance Statistics
-* Financial Overview
+* Total Students & Total Clubs Overview
+* Total Memberships & Total Events Metrics
+* Attendance Statistics & Financial Overview
 
 ---
 
+## 🛠️ Built With
 
-# 🛠️ Built With
-
-| Technology | Purpose             |
-| ---------- | ------------------- |
-| HTML5      | Structure           |
-| CSS3       | Styling             |
-| JavaScript | Client-side Logic   |
-| EJS        | Templating Engine   |
-| Node.js    | Runtime Environment |
-| Express.js | Backend Framework   |
-| MySQL      | Database            |
-| Git        | Version Control     |
-| GitHub     | Source Code Hosting |
+| Technology | Purpose |
+| :--- | :--- |
+| **HTML5** | Semantic Page Structure |
+| **CSS3** | Responsive Styling & Layout |
+| **JavaScript** | Client-Side Logic & Interactivity |
+| **EJS** | Server-Side Templating Engine |
+| **Node.js** | Runtime Environment |
+| **Express.js** | Backend Web Framework |
+| **MySQL** | Relational Database |
+| **Git & GitHub** | Version Control & Source Code Hosting |
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```text
-Victory-School-Smart-Club-System
+Smart-Club-Management-System
 │
 ├── config
-│   └── db.js
+│   └── db.js                  # MySQL connection configuration
 │
 ├── middleware
-│   └── auth.js
+│   └── auth.js                # Route protection & role authorization
 │
 ├── public
-│   ├── css
-│   ├── js
-│   ├── images
-│   └── uploads
+│   ├── css                    # Custom stylesheets
+│   ├── js                     # Client-side scripts
+│   ├── images                 # Static assets & UI screenshots
+│   └── uploads                # Uploaded files
 │
 ├── routes
-│   ├── auth.js
-│   ├── dashboard.js
-│   ├── students.js
-│   ├── clubs.js
-│   ├── memberships.js
-│   ├── events.js
-│   ├── attendance.js
-│   ├── finance.js
-│   └── notifications.js
+│   ├── auth.js                # Login, logout & session endpoints
+│   ├── dashboard.js           # Dashboard metrics & analytics
+│   ├── students.js            # Student CRUD endpoints
+│   ├── clubs.js               # Club management endpoints
+│   ├── memberships.js         # Membership approval workflows
+│   ├── events.js              # Event scheduling endpoints
+│   ├── attendance.js          # Attendance recording & reports
+│   ├── finance.js             # Fees, donations & expense tracking
+│   └── notifications.js       # System announcements
 │
 ├── views
-│   ├── partials
+│   ├── partials               # Reusable header, sidebar & footer templates
 │   ├── dashboard.ejs
 │   ├── students.ejs
 │   ├── clubs.ejs
@@ -149,9 +149,9 @@ Victory-School-Smart-Club-System
 │   └── login.ejs
 │
 ├── database
-│   └── victory_school.sql
+│   └── victory_school.sql     # Complete MySQL schema & seed data
 │
-├── app.js
+├── app.js                     # Express application entry point
 ├── package.json
 ├── package-lock.json
 └── README.md
@@ -159,196 +159,155 @@ Victory-School-Smart-Club-System
 
 ---
 
-# 🗄️ Database Tables
+## 🗄️ Database Tables
 
-The system includes the following tables:
+The MySQL relational database (`victory_school_membership_system`) includes **9 structured tables**:
 
-* Users
-* Students
-* Clubs
-* Patrons
-* Memberships
-* Events
-* Attendance
-* Finance
-* Notifications
+* `Users`
+* `Students`
+* `Clubs`
+* `Patrons`
+* `Memberships`
+* `Events`
+* `Attendance`
+* `Finance`
+* `Notifications`
 
 ---
 
-# 🚀 Getting Started
+## 🚀 Getting Started
 
-## Prerequisites
+### Prerequisites
 
 Make sure you have installed:
-
-* Node.js
-* MySQL
-* Git
+* [Node.js](https://nodejs.org/)
+* [MySQL](https://www.mysql.com/) / XAMPP
+* [Git](https://git-scm.com/)
 * Visual Studio Code
-* XAMPP (or another MySQL server)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/bowenephraim-svg/Smart-Club-Management-System.git
+   ```
+
+2. **Move into the project directory**
+   ```bash
+   cd Smart-Club-Management-System
+   ```
+
+3. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Create a `.env` file in the root directory**
+   ```env
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=
+   DB_NAME=victory_school_membership_system
+
+   SESSION_SECRET=your_secret_key
+
+   PORT=3000
+   ```
+
+5. **Import the SQL database**
+   Create a database named `victory_school_membership_system` in MySQL/phpMyAdmin and import:
+   ```text
+   database/victory_school.sql
+   ```
+
+6. **Start the server**
+   ```bash
+   npm start
+   ```
+   *(or `node app.js`)*
+
+7. **Open your browser**
+   ```text
+   http://localhost:3000
+   ```
 
 ---
 
-## Installation
+## 🔒 Security Features
 
-Clone the repository
-
-```bash
-git clone https://github.com/bowenephraim-svg/Smart-Club-System.git
-```
-
-Move into the project
-
-```bash
-cd Smart-Club-System
-```
-
-Install dependencies
-
-```bash
-npm install
-```
-
-Create a `.env` file
-
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=victory_school_membership_system
-
-SESSION_SECRET=your_secret_key
-
-PORT=3000
-```
-
-Import the SQL database
-
-```
-database/victory_school.sql
-```
-
-Start the server
-
-```bash
-npm start
-```
-
-or
-
-```bash
-node app.js
-```
-
-Open your browser
-
-```
-http://localhost:3000
-```
+* Session-Based Authentication
+* Protected Routes & Authentication Middleware
+* SQL Parameterized Queries (Prepared Statements against SQL Injection)
+* Input Validation & Error Handling
 
 ---
 
-# 🔒 Security Features
+## 📈 Future Improvements
 
-* Session Authentication
-* Route Protection
-* SQL Parameterized Queries
-* Input Validation
-* Error Handling
-* Authentication Middleware
-
----
-
-# 📈 Future Improvements
-
-* Email Notifications
-* SMS Integration
-* QR Code Attendance
-* PDF Report Generation
-* Excel Export
-* Parent Portal
-* Club Leader Dashboard
-* Mobile Application
-* REST API
-* React Frontend
-* Cloud Deployment
+* REST API & React Frontend Migration
+* Email & SMS Notifications
+* QR Code Event Attendance
+* PDF & Excel Financial/Attendance Report Exports
+* Parent Portal & Club Leader Dashboard
+* Mobile Application & Cloud Deployment
 
 ---
 
-# 📚 What I Learned
+## 📚 What I Learned
 
-This project strengthened my skills in:
-
-* Full Stack Development
-* Node.js
-* Express.js
-* MySQL
-* CRUD Operations
-* Authentication
-* Database Design
-* MVC Architecture
-* EJS Templates
-* Session Management
-* Git & GitHub
-* Responsive Design
+This project strengthened my practical engineering skills in:
+* Full-Stack Web Development (Node.js, Express.js, MySQL, EJS)
+* Relational Database Design & CRUD Operations
+* Session Authentication & Role-Based Security
+* MVC Architecture & Modular Routing
+* Git & GitHub Version Control
+* Responsive UI Design
 
 ---
 
-# 🤝 Contributing
+## 🤝 Contributing
 
-Contributions are welcome.
-
-If you would like to improve this project:
+Contributions are welcome:
 
 1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Commit your changes
-5. Push your branch
-6. Open a Pull Request
+2. Create a new branch (`git checkout -b feature/AmazingFeature`)
+3. Make your changes and commit (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-# 👨‍💻 Developer
+## 👨‍💻 Developer
 
-**Ephraim Bowen**
-
-Full Stack Software Development Student
-
-📍 Kenya
+**Ephraim Bowen**  
+Aspiring Software Engineer (*Fachinformatiker für Anwendungsentwicklung*) | Full-Stack Software Developer  
+📍 Eldoret, Kenya  
+🔗 [GitHub Profile](https://github.com/bowenephraim-svg)
 
 ---
 
-# 📄 License
+## 📄 License
 
 This project is licensed for educational and portfolio purposes.
 
 ---
 
-# 🙏 Acknowledgements
+## 🙏 Acknowledgements
 
 Special thanks to:
-
-* Eldohub Academy
+* **EldoHub Academy**
 * My instructors and mentors
-* The open-source community
+* The open-source developer community
 * Everyone who contributed ideas and feedback
 
 ---
 
-# ⭐ Support
+## ⭐ Support
 
 If you found this project useful:
-
-⭐ Star the repository
-
-🍴 Fork the project
-
-🐛 Report issues
-
-💡 Suggest improvements
-
----
+* ⭐ Star the repository
+* 🍴 Fork the project
+* 🐛 Report issues or suggest improvements
 
 <p align="center">
 
